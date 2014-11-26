@@ -29,21 +29,7 @@ function init(){
     // modes erstellen
 }
 
-/**
- * Type User
- * @param {string} name
- * @constructor
- */
-function User(name){
-    /** @type {int} */
-    this.id = 0;
-    /** @type {string} */
-    this.name = name;
-    /** @type {int} */
-    this.points = 0;
-    /** @type {boolean} */
-    this.admin = false;
-}
+
 
 /**
  * Type GameMode
