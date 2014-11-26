@@ -1,4 +1,4 @@
-(function(receiver){
+(function(castReceiver){
 
     //private variables and methods
     var privVar = '...';
@@ -7,7 +7,7 @@
     }
 
     //expose a function
-    receiver.myFunc = function(){
+    castReceiver.myFunc = function(){
         //alert('funfunfun');
     };
 
