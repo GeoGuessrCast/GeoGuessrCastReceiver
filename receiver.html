@@ -14,10 +14,17 @@
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
     <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
     <script src="js/customgm.js"></script>
+    <script src="js/json2.js"></script>
+    <script src="js/EventManager.js"></script>
+    <script src="js/DataManager.js"></script>
+    <script src="js/UserManager.js"></script>
+    <script src="js/GameModeManager.js"></script>
     <script>
         google.maps.event.addDomListener(window, 'load', initialize);
     </script>
     <script type="text/javascript">
+
+//        eventManager.myFunc();
         window.onload = function() {
             cast.receiver.logger.setLevelValue(0);
             window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
