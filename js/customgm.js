@@ -29,21 +29,7 @@ function init(){
     // modes erstellen
 }
 
-/**
- * Type User
- * @param {string} name
- * @constructor
- */
-function User(name){
-    /** @type {int} */
-    this.id = 0;
-    /** @type {string} */
-    this.name = name;
-    /** @type {int} */
-    this.points = 0;
-    /** @type {boolean} */
-    this.admin = false;
-}
+
 
 /**
  * Type GameMode
@@ -84,36 +70,6 @@ function GeoEntity(lat, lon, name){
     this.name = name;
 }
 
-/**
- * Checks support for local storage
- * @returns {boolean}
- * @private
- */
-function _checkStorageSupport() {
-    return typeof(Storage)!=="undefined";
-}
 
-/**
- * returns the value for a given key, null if not found
- * @param {string} key
- * @returns {string|boolean|number}
- * @private
- */
-function _getValue(key){
-    //if(!localStorage.hasOwnProperty(key)) return null;
-    return localStorage.getItem(key);
-}
-
-/**
- * sets the value for a given key in local storage
- * @param {string} key
- * @param {boolean|number|string} value
- * @returns {boolean|number|string}
- * @private
- */
-function _setValue(key, value){
-    localStorage.setItem(key, value);
-    return value;
-}
 
 
