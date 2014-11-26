@@ -1,12 +1,13 @@
 # Created by https://www.gitignore.io
 
-### PhpStorm ###
+
+### Reciever ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
 
-*.iml
+Reciever/*.iml
 
 ## Directory-based project format:
-.idea/
+Reciever/.idea/
 # if you remove the above rule, at least ignore the following:
 
 # User-specific stuff:
@@ -29,22 +30,36 @@
 # .idea/mongoSettings.xml
 
 ## File-based project format:
-*.ipr
-*.iws
+Reciever/*.ipr
+Reciever/*.iws
 
 ## Plugin-specific files:
 
 # IntelliJ
-out/
+Reciever/out/
 
 # mpeltonen/sbt-idea plugin
-.idea_modules/
+Reciever/.idea_modules/
 
 # JIRA plugin
-atlassian-ide-plugin.xml
+Reciever/atlassian-ide-plugin.xml
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
-com_crashlytics_export_strings.xml
-crashlytics.properties
-crashlytics-build.properties
+Reciever/com_crashlytics_export_strings.xml
+Reciever/crashlytics.properties
+Reciever/crashlytics-build.properties
 
+
+
+### AndroidSender ###
+AndroidSender/.gradle/
+AndroidSender/local.properties
+AndroidSender/.idea/
+AndroidSender/build
+AndroidSender/*/*/build/
+AndroidSender/*.map
+AndroidSender/*.md5
+
+
+# .DS_Store for Mac
+.DS_Store
