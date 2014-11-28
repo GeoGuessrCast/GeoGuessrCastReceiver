@@ -13,9 +13,8 @@
         }
 
         var id = window.castReceiverManager.getSender(event.data).id;
-        var user = new userManager.User(id, 'Sender1', firstUser);
+        var user = new userManager.User(id, 'Sender-'+id, firstUser);
         userManager.addUser(user);
-        // is first user ?
 
     };
 
