@@ -1,17 +1,4 @@
-function initialize() {
-    var myLatlng = new google.maps.LatLng(-25.363882,131.044922);
-    var mapOptions = {
-        zoom: 4,
-        center: myLatlng
-    };
-    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-    var marker = new google.maps.Marker({
-        position: myLatlng,
-        map: map,
-        title: 'Hello World!'
-    });
-}
 
 /**
  *
@@ -31,26 +18,7 @@ function init(){
 
 
 
-/**
- * Type GameMode
- * @param {string} name
- * @param {string} mapType
- * @param {int} pointsMax
- * @param {Array.<GeoEntity>} geoEntities
- * @constructor
- */
-function GameMode(name, mapType, pointsMax, geoEntities){
-    /** @type {int} */
-    this.id = 0;
-    /** @type {string} */
-    this.name = name;
-    /** @type {string} */
-    this.mapType = mapType;
-    /** @type {int} */
-    this.pointsMax = 0;
-    /** @type {Array.<GeoEntity>} */
-    this.geoEntities = geoEntities;
-}
+
 
 /**
  * Type GeoEntity
