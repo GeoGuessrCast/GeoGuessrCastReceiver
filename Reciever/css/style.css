@@ -1,0 +1,41 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0
+}
+
+#map-canvas {
+    position: absolute;
+    margin: auto;
+    height: 100vh;
+    width: 100vw;
+
+}
+
+#userList {
+    position: absolute;
+    bottom: 0;
+    height: 70px;
+    width: 100vw;
+    background-color: rgba(30, 30, 30, 0.5);
+}
+
+#userList > ul {
+    list-style: none;
+}
+
+#userList > ul:after {
+    clear: both;
+}
+
+#userList > ul > li {
+    display: block;
+    float: left;
+    padding-left: 10px;
+    margin-right: 50px;
+    margin-top: 10px;
+    height: 60px;
+    width: 150px;
+    font-size: larger;
+    color: #ffffff;
+}

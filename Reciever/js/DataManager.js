@@ -1,8 +1,9 @@
 (function(castReceiver){
-
-    //private variables and methods
-    var privVar = '...';
-
+    // init
+    // checks
+    if(!_checkStorageSupport()) {
+        alert('No Local Storage support!');
+    }
 
     /**
      * Checks support for local storage

@@ -1,14 +1,20 @@
 (function(castReceiver){
 
-    //private variables and methods
-    var privVar = '...';
-    function privateMethod(){
-        alert('private');
-    }
+    // init
+    // set empty gamemode
+    dataManager.setValue('gameMode_currentId', 0);
+    dataManager.setValue('gameMode_currentRound', 0);
 
-    //expose a function
-    castReceiver.myFunc = function(){
-        //alert('funfunfun');
+    castReceiver.getAvailableGameModes = function(){
+
     };
+
+    /**
+     * set the Id of the current GameMode
+     * @param {number} gameModeId
+     */
+    castReceiver.setGameMode = function(gameModeId){
+        dataManager.setValue('gameMode_currentId', gameModeId);
+    }
 
 }(this.gameModeManager = this.gameModeManager || {}));

@@ -5,16 +5,14 @@
     <meta charset="utf-8">
     <title>Simple markers</title>
     <style>
-        html, body, #map-canvas {
-            height: 100%;
-            margin: 0px;
-            padding: 0px
-        }
+
     </style>
+    <link rel="stylesheet" href="css/reset.css" type="text/css" media="all">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="all">
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-    <script type="text/javascript" src="http://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+    <!--<script type="text/javascript" src="http://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>-->
     <script src="js/customgm.js"></script>
-    <script src="js/json2.js"></script>
+    <!--<script src="js/json2.js"></script>-->
     <script src="js/EventManager.js"></script>
     <script src="js/DataManager.js"></script>
     <script src="js/UserManager.js"></script>
@@ -32,12 +30,16 @@
             castReceiverManager.onReady = function(event) {
                 console.log('Received Ready event: ' + JSON.stringify(event.data));
                 window.castReceiverManager.setApplicationState("Application status is ready...");
+
+                eventManager.event_onReady(event);
             };
 
             // handler for 'senderconnected' event
             castReceiverManager.onSenderConnected = function(event) {
                 console.log('Received Sender Connected event: ' + event.data);
                 console.log(window.castReceiverManager.getSender(event.data).userAgent);
+
+                eventManager.event_onSenderConnected(event);
             };
 
             // handler for 'senderdisconnected' event
@@ -46,12 +48,16 @@
                 if (window.castReceiverManager.getSenders().length == 0) {
                     window.close();
                 }
+
+                eventManager.event_onSenderDisconnected(event);
             };
 
             // handler for 'systemvolumechanged' event
             castReceiverManager.onSystemVolumeChanged = function(event) {
                 console.log('Received System Volume Changed event: ' + event.data['level'] + ' ' +
                 event.data['muted']);
+
+                eventManager.event_onSystemVolumeChanged(event);
             };
 
             // create a CastMessageBus to handle messages for a custom namespace
@@ -85,5 +91,11 @@
 <body>
 <div id="map-canvas"></div>
 <div style="position: absolute; top: 0px; left: 0px ;height: 80px; width: 300px; background-color:#fff;" id="message"></div>
+<div id="userList">
+    <ul>
+        <li id="sender-232">SenderName 1</li>
+        <li id="sender-352">SenderName 2</li>
+    </ul>
+</div>
 </body>
 </html>

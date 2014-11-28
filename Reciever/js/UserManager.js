@@ -1,23 +1,33 @@
 (function(castReceiver){
 
+    // init
+    // set empty user list
+    dataManager.setValue('userList', JSON.stringify([]));
+
+
     /**
-     *
-     * @param name
+     * Type User
+     * @param {number} senderId
+     * @param {string} name
+     * @param {boolean} admin
      * @constructor
      */
-    function User(name){
-        /** @type {int} */
-        this.id = 0;
+    castReceiver.User = function(senderId, name, admin){
+        /** @type {number} */
+        this.senderId = senderId;
         /** @type {string} */
         this.name = name;
-        /** @type {int} */
+        /** @type {number} */
         this.pointsInCurrentGame = 0;
         /** @type {boolean} */
-        this.admin = false;
-    }
-    //private variables and methods
-    var privVar = '...';
+        this.admin = admin;
+    };
 
+    /**
+     * get the list of current users
+     * @returns {Array.<User>}
+     * @private
+     */
     function _getUserList(){
         //dataManager.get
         var userList = dataManager.getValue('userList') || "[]";
@@ -25,11 +35,13 @@
     }
 
     /**
-     * add a {User}
+     * add a User
      * @param {User} user
      */
     castReceiver.addUser = function(user) {
-
+        // update user list
+        // update #userList
+        $('#userList').find('ul').append('<li id="sender-'+user.senderId+'">'+user.name+'</li>')
     };
 
     /**
@@ -37,6 +49,8 @@
      * @param {number} userId
      */
     castReceiver.removeUser = function(userId){
-
+        // update user list
+        // update #userList
+        $('#sender-'+userId).remove();
     };
 }(this.userManager = this.userManager || {}));
