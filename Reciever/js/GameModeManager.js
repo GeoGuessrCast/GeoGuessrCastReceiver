@@ -5,6 +5,7 @@
     dataManager.setValue('gameMode_currentId', 0);
     dataManager.setValue('gameMode_currentRound', 0);
 
+
     castReceiver.getAvailableGameModes = function(){
 
     };
@@ -15,6 +16,10 @@
      */
     castReceiver.setGameMode = function(gameModeId){
         dataManager.setValue('gameMode_currentId', gameModeId);
-    }
+        // call mode function
+    };
+
+    // set game mode functions
 
 }(this.gameModeManager = this.gameModeManager || {}));
+
