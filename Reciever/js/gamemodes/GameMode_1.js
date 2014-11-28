@@ -2,6 +2,7 @@
 
 castReceiver.init = function(parameters){
     var map = window.map;
+    alert('loaded');
     var style =[
         {
             "featureType": "administrative.locality",
