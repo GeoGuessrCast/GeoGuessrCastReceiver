@@ -23,7 +23,7 @@
     };
 
     /**
-     * get the array of current users
+     * get the array of current {User}s
      * @returns {Array.<User>}
      * @private
      */
@@ -34,13 +34,26 @@
     }
 
     /**
-     * add a {User}
+     * sets the {User} list
+     * @param {Array.<User>} userList
+     * @private
+     */
+    function _setUserList(userList) {
+        var userListLocal = userList || [];
+        dataManager.setValue('userList', JSON.stringify(userListLocal));
+        return userListLocal;
+    }
+
+    /**
+     * adds a {User}
      * @param {User} user
      */
     castReceiver.addUser = function(user) {
         // update user list
         var userList = _getUserList();
         userList.push(user);
+        _setUserList(userList);
+
         // update #userList
         $('#userList').find('ul').append('<li id="sender-'+user.senderId+'">'+user.name+'</li>');
     };
@@ -59,6 +72,16 @@
      */
     castReceiver.removeUser = function(userId){
         // update user list
+        var userList = _getUserList();
+        var userLength = userList.length;
+        for(var i = 0; i < userLength; i++){
+            if(userList[0].senderId === userId){
+                userList.splice(i, 1);
+                break;
+            }
+        }
+        _setUserList(userList);
+
         // update #userList
         $('#sender-'+userId).remove();
     };
