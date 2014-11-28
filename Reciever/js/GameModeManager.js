@@ -4,7 +4,7 @@
     // set empty gamemode
     dataManager.setValue('gameMode_currentId', 0);
     dataManager.setValue('gameMode_currentRound', 0);
-
+    gameMode_1.init();
 
     castReceiver.getAvailableGameModes = function(){
 
