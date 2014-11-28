@@ -4,10 +4,10 @@
 ### Reciever ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
 
-Reciever/*.iml
+Receiver/*.iml
 
 ## Directory-based project format:
-Reciever/.idea/
+Receiver/.idea/
 # if you remove the above rule, at least ignore the following:
 
 # User-specific stuff:
@@ -30,24 +30,24 @@ Reciever/.idea/
 # .idea/mongoSettings.xml
 
 ## File-based project format:
-Reciever/*.ipr
-Reciever/*.iws
+Receiver/*.ipr
+Receiver/*.iws
 
 ## Plugin-specific files:
 
 # IntelliJ
-Reciever/out/
+Receiver/out/
 
 # mpeltonen/sbt-idea plugin
-Reciever/.idea_modules/
+Receiver/.idea_modules/
 
 # JIRA plugin
-Reciever/atlassian-ide-plugin.xml
+Receiver/atlassian-ide-plugin.xml
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
-Reciever/com_crashlytics_export_strings.xml
-Reciever/crashlytics.properties
-Reciever/crashlytics-build.properties
+Receiver/com_crashlytics_export_strings.xml
+Receiver/crashlytics.properties
+Receiver/crashlytics-build.properties
 
 
 

@@ -21,9 +21,12 @@ import java.util.ArrayList;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.view.MenuItemCompat;
@@ -33,6 +36,7 @@ import android.support.v7.app.MediaRouteActionProvider;
 import android.support.v7.media.MediaRouteSelector;
 import android.support.v7.media.MediaRouter;
 import android.support.v7.media.MediaRouter.RouteInfo;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -80,15 +84,15 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(new ColorDrawable(
-                android.R.color.transparent));
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setBackgroundDrawable(new ColorDrawable(
+//                android.R.color.transparent));
 
         final EditText playernameEditText = (EditText) findViewById(R.id.playername);
         playernameEditText.setText(getAndroidUsername(this));
 
-        Button berlinBtn = (Button) findViewById(R.id.startbtn);
-        berlinBtn.setOnClickListener(new View.OnClickListener() {
+        Button startBtn = (Button) findViewById(R.id.startbtn);
+        startBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(mApiClient!=null){
                     String playername = playernameEditText.getText().toString();
@@ -398,6 +402,7 @@ public class MainActivity extends ActionBarActivity {
         public void onMessageReceived(CastDevice castDevice, String namespace,
                                       String message) {
             Log.d(TAG, "onMessageReceived: " + message);
+
         }
 
     }
@@ -411,6 +416,13 @@ public class MainActivity extends ActionBarActivity {
         String email= accounts[0].name;
         String name = email.split("@")[0];
         return name;
+    }
+
+    private String getDeviceMacAddr(Context context){
+        WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = manager.getConnectionInfo();
+        String macAddr = info.getMacAddress();
+        return macAddr;
     }
 
 }

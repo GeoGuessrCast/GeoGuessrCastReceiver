@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="android:Theme.Material.Light">
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <!-- customize the color palette -->
+        <item name="colorPrimary">#1976D2</item>
+        <item name="colorPrimaryDark">#1976D2</item>
+        <item name="colorAccent">#69F0AE</item>
+        <item name="android:colorButtonNormal">#1976D2</item>
     </style>
 </resources>
