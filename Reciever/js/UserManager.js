@@ -4,7 +4,6 @@
     // set empty user list
     dataManager.setValue('userList', JSON.stringify([]));
 
-
     /**
      * Type User
      * @param {number} senderId
@@ -24,7 +23,7 @@
     };
 
     /**
-     * get the list of current users
+     * get the array of current users
      * @returns {Array.<User>}
      * @private
      */
@@ -35,13 +34,23 @@
     }
 
     /**
-     * add a User
+     * add a {User}
      * @param {User} user
      */
     castReceiver.addUser = function(user) {
         // update user list
+        var userList = _getUserList();
+        userList.push(user);
         // update #userList
-        $('#userList').find('ul').append('<li id="sender-'+user.senderId+'">'+user.name+'</li>')
+        $('#userList').find('ul').append('<li id="sender-'+user.senderId+'">'+user.name+'</li>');
+    };
+
+    /**
+     * returns an array of current users
+     * @returns {Array.<User>}
+     */
+    castReceiver.getUserList = function(){
+        return _getUserList();
     };
 
     /**

@@ -1,22 +1,21 @@
 (function(castReceiver){
 
-
-    //private variables and methods
-    var privVar = '...';
-    function privateMethod(){
-        alert('private');
-    }
-
-    //expose a function
-    castReceiver.myFunc = function(){
-        alert('exposed function');
-    };
-
     castReceiver.event_onReady = function(event) {
-
+        // TODO fm: create initial user ?
     };
 
     castReceiver.event_onSenderConnected = function(event){
+        // get sender
+        // TODO fm: check for id already in storage?
+        var firstUser = false;
+        if(userManager.getUserList().length === 0) {
+            firstUser = true;
+        }
+
+        var id = window.castReceiverManager.getSender(event.data).id;
+        var user = new userManager.User(id, 'Sender1', firstUser);
+        userManager.addUser(user);
+        // is first user ?
 
     };
 
