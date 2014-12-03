@@ -91,6 +91,7 @@ public class MainActivity extends ActionBarActivity {
         //init main page fragment
         getFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.animator.fragment_fade_enter , R.animator.fragment_fade_exit)
                 .add(R.id.main_page_container, new MainPageFragment())
                 .commit();
 
