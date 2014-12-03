@@ -93,10 +93,7 @@ public class MainPageFragment extends Fragment {
                         // rotations when switching to the back of the card, as well as animator
                         // resources representing rotations when flipping back to the front (e.g. when
                         // the system Back button is pressed).
-//                .setCustomAnimations(
-//                        R.animator.card_flip_right_in, R.animator.card_flip_right_out,
-//                        R.animator.card_flip_left_in, R.animator.card_flip_left_out)
-
+                .setCustomAnimations(R.animator.fragment_slide_in , R.animator.fragment_slide_out)
                         // Replace any fragments currently in the container view with a fragment
                         // representing the next page (indicated by the just-incremented currentPage
                         // variable).
@@ -119,9 +116,7 @@ public class MainPageFragment extends Fragment {
                         // rotations when switching to the back of the card, as well as animator
                         // resources representing rotations when flipping back to the front (e.g. when
                         // the system Back button is pressed).
-//                .setCustomAnimations(
-//                        R.animator.card_flip_right_in, R.animator.card_flip_right_out,
-//                        R.animator.card_flip_left_in, R.animator.card_flip_left_out)
+                .setCustomAnimations(R.animator.fragment_slide_in , R.animator.fragment_slide_out)
 
                         // Replace any fragments currently in the container view with a fragment
                         // representing the next page (indicated by the just-incremented currentPage
