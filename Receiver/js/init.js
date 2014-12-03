@@ -59,13 +59,13 @@ function initialize() {
     // create a CastMessageBus to handle messages for a custom namespace
     window.messageBus =
     window.castReceiverManager.getCastMessageBus(
-    'urn:x-cast:com.google.cast.sample.helloworld');
+    'urn:x-cast:com.google.cast.sample.helloworld', cast.receiver.CastMessageBus.MessageType.JSON);
 
     // handler for the CastMessageBus message event
     window.messageBus.onMessage = function(event) {
         console.log('Message [' + event.senderId + ']: ' + event.data);
         // display the message from the sender
-        displayText(event.data);
+        displayText(event.data.userMac);
         // inform all senders on the CastMessageBus of the incoming message event
         // sender message listener will be invoked
         window.messageBus.send(event.senderId, event.data);
