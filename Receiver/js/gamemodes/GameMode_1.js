@@ -1,6 +1,8 @@
 (function(castReceiver){
 
 castReceiver.init = function(parameters){
+    console.log('running gameMode_1.init');
+
     var map = window.map;
     var style =[
         {
@@ -54,6 +56,8 @@ castReceiver.init = function(parameters){
     });
     //map.panTo(new google.maps.)
     layer.setMap(map);
+    console.log('gameMode_1 initialized');
+
 }
 
 }(this.gameMode_1 = this.gameMode_1 || {}));
