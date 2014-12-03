@@ -68,6 +68,7 @@ function initialize() {
         eventManager.event_onMessage(event);
 
         // WOZU IST DAS ?
+        //TODO clean up code !!!
         window.messageBus.send(event.senderId, event.data);
     };
 
