@@ -65,6 +65,7 @@ function initialize() {
         displayText(event.data);
         // inform all senders on the CastMessageBus of the incoming message event
         // sender message listener will be invoked
+        eventManager.event_onMessage(event);
         window.messageBus.send(event.senderId, event.data);
     };
 
