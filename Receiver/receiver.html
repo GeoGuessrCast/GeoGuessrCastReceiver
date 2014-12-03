@@ -21,7 +21,7 @@
     <script type="text/javascript">
         function displayText(text) {
             console.log(text);
-            document.getElementById("message").innerHTML=text;
+            document.getElementById("testConsole").innerHTML=text;
             window.castReceiverManager.setApplicationState(text);
         }
     </script>
@@ -30,13 +30,14 @@
 
 <body>
     <div id="map-canvas"></div>
+    <div id="gameOverlay">
+        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        <h1>Geo Guessing</h1>
+        waiting for users to connect...
+    </div>
 
     <!--testing output "console"-->
-    <div id="message"></div>
+    <div id="testConsole"></div>
 
-    <div id="userList">
-        <ul>
-        </ul>
-    </div>
 </body>
 </html>

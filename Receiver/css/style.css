@@ -12,13 +12,34 @@ html, body {
 
 }
 
-#message {
+#testConsole {
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 2px;
+    left: 10px;
     height: 80px;
     width: 300px;
     background-color: rgba(30, 30, 30, 0.5);
+    color: #ffffff;
+}
+
+#gameOverlay {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    color: #ffffff;
+    text-align: center;
+}
+
+#mainMenuUserList {
+    position: absolute;
+    top: 20%;
+    right: 3px;
+    height: 60%;
+    width: 20%;
+    background-color: rgba(30, 30, 30, 0.5);
+    color: #ffffff;
 }
 
 #userList {

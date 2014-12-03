@@ -1,6 +1,7 @@
 (function(castReceiver){
 
     castReceiver.event_onReady = function(event) {
+        gameMode_1.init();
         // TODO fm: create initial user ?
     };
 

@@ -72,7 +72,7 @@ function initialize() {
     window.adminMessageBus.onMessage = function(event) {
         console.log('Message [' + event.senderId + ']: ' + event.data);
         // display the message from the sender
-        displayText(event.data);
+        displayText(JSON.stringify(event.data));
         // inform all senders on the CastMessageBus of the incoming message event
         // sender message listener will be invoked
         window.adminMessageBus.send(event.senderId, event.data);
@@ -81,4 +81,6 @@ function initialize() {
     // initialize the CastReceiverManager with an application status message
     window.castReceiverManager.start({statusText: "Application is starting"});
     console.log('Receiver Manager started');
+
+
 }
