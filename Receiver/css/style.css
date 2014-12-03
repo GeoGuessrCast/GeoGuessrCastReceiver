@@ -12,6 +12,15 @@ html, body {
 
 }
 
+#message {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 80px;
+    width: 300px;
+    background-color: rgba(30, 30, 30, 0.5);
+}
+
 #userList {
     position: absolute;
     bottom: 0;

@@ -1,6 +1,4 @@
-/**
- * Created by Stefan on 28.11.2014.
- */
+
 
 var map;
 function initialize() {
@@ -57,18 +55,27 @@ function initialize() {
     };
 
     // create a CastMessageBus to handle messages for a custom namespace
-    window.messageBus =
-    window.castReceiverManager.getCastMessageBus(
-    'urn:x-cast:com.google.cast.sample.helloworld', cast.receiver.CastMessageBus.MessageType.JSON);
+    window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:com.google.cast.sample.helloworld');
+    window.adminMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:com.google.cast.sample.adminChannel', cast.receiver.CastMessageBus.MessageType.JSON);
 
-    // handler for the CastMessageBus message event
+    // handler for the messageBus message event
     window.messageBus.onMessage = function(event) {
         console.log('Message [' + event.senderId + ']: ' + event.data);
         // display the message from the sender
-            displayText(event.data.userMac);
+        displayText(event.data);
         // inform all senders on the CastMessageBus of the incoming message event
         // sender message listener will be invoked
         window.messageBus.send(event.senderId, event.data);
+    };
+
+    // handler for the adminMessageBus message event
+    window.adminMessageBus.onMessage = function(event) {
+        console.log('Message [' + event.senderId + ']: ' + event.data);
+        // display the message from the sender
+        displayText(event.data);
+        // inform all senders on the CastMessageBus of the incoming message event
+        // sender message listener will be invoked
+        window.adminMessageBus.send(event.senderId, event.data);
     };
 
     // initialize the CastReceiverManager with an application status message
