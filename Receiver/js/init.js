@@ -65,7 +65,7 @@ function initialize() {
     window.messageBus.onMessage = function(event) {
         console.log('Message [' + event.senderId + ']: ' + event.data);
         // display the message from the sender
-        displayText(event.data.userMac);
+            displayText(event.data.userMac);
         // inform all senders on the CastMessageBus of the incoming message event
         // sender message listener will be invoked
         window.messageBus.send(event.senderId, event.data);
