@@ -2,10 +2,13 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat">
-        <item name="colorPrimary">#1976D2</item>
-        <item name="colorPrimaryDark">#1976D2</item>
-        <item name="colorAccent">#69F0AE</item>
+        <item name="android:background">@color/background</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <!--<item name="android:colorButtonNormal">#1976D2</item>-->
+
+        <item name="android:textColorTertiary">@color/mainText</item>
     </style>
 
 </resources>

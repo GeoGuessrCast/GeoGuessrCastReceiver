@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:id="@+id/playerConfirmTip"
+        android:paddingLeft="25sp"
+        android:paddingRight="25sp">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/abc_text_size_large_material"
+            android:text="@string/tip"
+            android:paddingBottom="30sp"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/abc_text_size_medium_material"
+            android:text="@string/player_confirm_tip"
+            android:paddingBottom="30sp"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chooseMode"
+            android:text="@string/choose_mode"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/gameModes">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Game Mode 1"
+            android:id="@+id/gameMode1" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Game Mode 2"
+            android:id="@+id/gameMode2" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Game Mode 3"
+            android:id="@+id/gameMode3" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Game Mode 4"
+            android:id="@+id/gameMode4" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Game Mode 5"
+            android:id="@+id/gameMode5" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -57,12 +58,15 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Main activity to send messages to the receiver.
  */
 public class MainActivity extends ActionBarActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    public static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int REQUEST_CODE = 1;
 
@@ -70,7 +74,7 @@ public class MainActivity extends ActionBarActivity {
     private MediaRouteSelector mMediaRouteSelector;
     private MediaRouter.Callback mMediaRouterCallback;
     private CastDevice mSelectedDevice;
-    private GoogleApiClient mApiClient;
+    public GoogleApiClient mApiClient;
     private Cast.Listener mCastListener;
     private ConnectionCallbacks mConnectionCallbacks;
     private ConnectionFailedListener mConnectionFailedListener;
@@ -84,27 +88,12 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setBackgroundDrawable(new ColorDrawable(
-//                android.R.color.transparent));
+        //init main page fragment
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.main_page_container, new MainPageFragment())
+                .commit();
 
-        final EditText playernameEditText = (EditText) findViewById(R.id.playername);
-        playernameEditText.setText(getAndroidUsername(this));
-
-        Button startBtn = (Button) findViewById(R.id.startbtn);
-        startBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if(mApiClient!=null){
-                    String playername = playernameEditText.getText().toString();
-                    sendMessage(playername);
-                    Log.d(TAG, playername);
-                }
-                else{
-                    Log.d(TAG, "plz connect the Chrome Cast at first");
-                }
-
-            }
-        });
 
         // Configure Cast device discovery
         mMediaRouter = MediaRouter.getInstance(getApplicationContext());
@@ -113,7 +102,10 @@ public class MainActivity extends ActionBarActivity {
                         CastMediaControlIntent.categoryForCast(getResources()
                                 .getString(R.string.app_id))).build();
         mMediaRouterCallback = new MyMediaRouterCallback();
+
+
     }
+
 
     @Override
     protected void onResume() {
@@ -148,6 +140,16 @@ public class MainActivity extends ActionBarActivity {
         // Set the MediaRouteActionProvider selector for device discovery.
         mediaRouteActionProvider.setRouteSelector(mMediaRouteSelector);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        //Back to the prev Fragment
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            this.finish();
+        } else {
+            getFragmentManager().popBackStack();
+        }
     }
 
     /**
@@ -361,7 +363,7 @@ public class MainActivity extends ActionBarActivity {
      *
      * @param message
      */
-    private void sendMessage(String message) {
+    public void sendMessage(String message) {
         if (mApiClient != null && mHelloWorldChannel != null) {
             try {
                 Cast.CastApi.sendMessage(mApiClient,
@@ -402,27 +404,9 @@ public class MainActivity extends ActionBarActivity {
         public void onMessageReceived(CastDevice castDevice, String namespace,
                                       String message) {
             Log.d(TAG, "onMessageReceived: " + message);
-
         }
-
     }
 
-    /**
-     * get username of this android device
-     */
-    private String getAndroidUsername(Context context){
-        AccountManager accountManager = AccountManager.get(context);
-        Account[] accounts = accountManager.getAccountsByType("com.google");
-        String email= accounts[0].name;
-        String name = email.split("@")[0];
-        return name;
-    }
 
-    private String getDeviceMacAddr(Context context){
-        WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        WifiInfo info = manager.getConnectionInfo();
-        String macAddr = info.getMacAddress();
-        return macAddr;
-    }
 
 }
