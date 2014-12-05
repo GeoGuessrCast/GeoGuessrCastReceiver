@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Simple markers</title>
-    <style>
+   <!-- <style>
         /*  html, body, #map-canvas {
               height: 100%;
               margin: 0px;
@@ -23,7 +23,7 @@
             height: 400px;
             width: 500px;
         }
-    </style>
+    </style>-->
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
 
@@ -46,7 +46,7 @@
     <script src="js/init.js"></script>
 
     <script type="text/javascript">
-        google.maps.event.addDomListener(document.getElementById('search'),
+ /*       google.maps.event.addDomListener(document.getElementById('search'),
                 'click', function (e) {
                     var address = document.getElementById('address').value;
 
@@ -66,7 +66,7 @@
                     var selectedTemplate = this.value;
                     layer.set('templateId', selectedTemplate);
                 });
-
+*/
         google.maps.event.addDomListener(window, 'load', initialize);
 
         function displayText(text) {
@@ -86,7 +86,7 @@
         <h1>Geo Guessing</h1>
         waiting for users to connect...
     </div>
-    <div>
+   <!-- <div>
         <input type="text" value="Dresden" id="address">
         <input type="button" id="search" value="Go">
         <label>Select style:</label>
@@ -99,7 +99,7 @@
             <option value="1">Simple template</option>
             <option value="2">Template with address</option>
         </select>
-    </div>
+    </div>-->
     <!--testing output "console"-->
     <div id="testConsole"></div>
 
