@@ -1,8 +1,9 @@
 (function(castReceiver){
 
     castReceiver.event_onReady = function(event) {
+        //TODO testing...
         gameMode_1.init();
-        // TODO fm: create initial user ?
+
     };
 
     castReceiver.event_onSenderConnected = function(event){
@@ -24,7 +25,11 @@
     };
 
     castReceiver.event_onMessage = function(event){
+        displayText(event.data);
+    };
 
+    castReceiver.event_onAdminMessage = function(event){
+        displayJson(event.data);
     };
 
     castReceiver.event_onSystemVolumeChanged = function(event){
