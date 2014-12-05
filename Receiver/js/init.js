@@ -10,6 +10,7 @@ function initialize() {
         mapTypeId: google.maps.MapTypeId.SATELLITE
     });
 
+    $.ajaxSetup({async:false, cache:true});
     $.getScript( "js/EventManager.js" );
     $.getScript( "js/DataManager.js" );
     $.getScript( "js/UserManager.js" );
