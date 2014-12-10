@@ -2,7 +2,7 @@
 
     castReceiver.event_onReady = function(event) {
         //TODO testing...
-        gameMode_1.init();
+        mainMenu.init();
 
     };
 
