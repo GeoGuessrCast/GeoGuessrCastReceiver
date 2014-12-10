@@ -8,7 +8,6 @@
 
     castReceiver.event_onSenderConnected = function(event){
 
-
     };
 
     castReceiver.event_onSenderDisconnected = function(event){

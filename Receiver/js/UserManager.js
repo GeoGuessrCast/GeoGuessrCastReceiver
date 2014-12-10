@@ -87,7 +87,7 @@
     };
 
     /**
-     * when user with this userId already exists in the localStorage, then return true, otherwise return false
+     * when user with this userId already exists in localStorage, then return true, otherwise return false
      * @returns {boolean}
      * @param {number} userId
      */
