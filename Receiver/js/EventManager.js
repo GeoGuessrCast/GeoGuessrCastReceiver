@@ -18,7 +18,6 @@
 
     castReceiver.event_onUserMessage = function(event){
         var hasUser = userManager.hasUser(event.senderId);
-        console.log(hasUser)
         if(!hasUser){
             //add new User
             var isAdmin = false;

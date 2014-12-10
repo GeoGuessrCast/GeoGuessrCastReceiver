@@ -502,15 +502,17 @@ public class MainActivity extends ActionBarActivity {
 
         /*
          * Receive message from the receiver app
+         * If the User is the game leader, then start ChooseModeFragment
+         * else start WaitingFragment
          */
         @Override
         public void onMessageReceived(CastDevice castDevice, String namespace,
                                       String message) {
             if(message=="true"){
-
+                startChooseModeFragment();
             }
             else{
-
+                startWaitingFragment();
             }
             Log.d(TAG, "onMessageReceived from UserChannel: " + message);
         }
@@ -533,6 +535,52 @@ public class MainActivity extends ActionBarActivity {
                                       String message) {
             Log.d(TAG, "onMessageReceived from AdminChannel: " + message);
         }
+    }
+
+    private void startWaitingFragment(){
+        getFragmentManager()
+                .beginTransaction()
+
+                        // Replace the default fragment animations with animator resources representing
+                        // rotations when switching to the back of the card, as well as animator
+                        // resources representing rotations when flipping back to the front (e.g. when
+                        // the system Back button is pressed).
+                .setCustomAnimations(R.animator.fragment_fade_enter , R.animator.fragment_fade_exit)
+                        // Replace any fragments currently in the container view with a fragment
+                        // representing the next page (indicated by the just-incremented currentPage
+                        // variable).
+                .replace(R.id.main_page_container, new WaitingFragment())
+
+                        // Add this transaction to the back stack, allowing users to press Back
+                        // to get to the front of the card.
+                .addToBackStack(null)
+
+                        // Commit the transaction.
+                .commit();
+    }
+
+
+    private void startChooseModeFragment(){
+        getFragmentManager()
+                .beginTransaction()
+
+                        // Replace the default fragment animations with animator resources representing
+                        // rotations when switching to the back of the card, as well as animator
+                        // resources representing rotations when flipping back to the front (e.g. when
+                        // the system Back button is pressed).
+                .setCustomAnimations(R.animator.fragment_fade_enter , R.animator.fragment_fade_exit)
+
+                        // Replace any fragments currently in the container view with a fragment
+                        // representing the next page (indicated by the just-incremented currentPage
+                        // variable).
+                .replace(R.id.main_page_container, new ChooseModeFragment())
+
+                        // Add this transaction to the back stack, allowing users to press Back
+                        // to get to the front of the card.
+                .addToBackStack(null)
+
+                        // Commit the transaction.
+                .commit();
     }
 
 }

@@ -54,8 +54,6 @@ public class MainPageFragment extends Fragment {
                     }
                     mActivity.sendMessage(mActivity.mHelloWorldChannel, userData.toString());
                     Log.d(mActivity.TAG, userData.toString());
-
-                    replaceOfChooseModeFragment();
                 }
                 else{
                     Log.d(mActivity.TAG, "plz connect the Chrome Cast at first");
@@ -85,49 +83,5 @@ public class MainPageFragment extends Fragment {
         return macAddr;
     }
 
-    private void replaceOfWaitingFragment(){
-        getFragmentManager()
-                .beginTransaction()
 
-                        // Replace the default fragment animations with animator resources representing
-                        // rotations when switching to the back of the card, as well as animator
-                        // resources representing rotations when flipping back to the front (e.g. when
-                        // the system Back button is pressed).
-                .setCustomAnimations(R.animator.fragment_fade_enter , R.animator.fragment_fade_exit)
-                        // Replace any fragments currently in the container view with a fragment
-                        // representing the next page (indicated by the just-incremented currentPage
-                        // variable).
-                .replace(R.id.main_page_container, new WaitingFragment())
-
-                        // Add this transaction to the back stack, allowing users to press Back
-                        // to get to the front of the card.
-                .addToBackStack(null)
-
-                        // Commit the transaction.
-                .commit();
-    }
-
-
-    private void replaceOfChooseModeFragment(){
-        getFragmentManager()
-                .beginTransaction()
-
-                        // Replace the default fragment animations with animator resources representing
-                        // rotations when switching to the back of the card, as well as animator
-                        // resources representing rotations when flipping back to the front (e.g. when
-                        // the system Back button is pressed).
-                .setCustomAnimations(R.animator.fragment_fade_enter , R.animator.fragment_fade_exit)
-
-                        // Replace any fragments currently in the container view with a fragment
-                        // representing the next page (indicated by the just-incremented currentPage
-                        // variable).
-                .replace(R.id.main_page_container, new ChooseModeFragment())
-
-                        // Add this transaction to the back stack, allowing users to press Back
-                        // to get to the front of the card.
-                .addToBackStack(null)
-
-                        // Commit the transaction.
-                .commit();
-    }
 }
