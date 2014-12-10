@@ -15,12 +15,10 @@
 
     };
 
-    castReceiver.event_onMessage = function(event){
-        displayText(event.data);
-    };
 
     castReceiver.event_onUserMessage = function(event){
         var hasUser = userManager.hasUser(event.senderId);
+        console.log(hasUser)
         if(!hasUser){
             //add new User
             var isAdmin = false;
@@ -30,8 +28,9 @@
             var user = new userManager.User(event.senderId, event.data.userName, event.data.userMac, isAdmin );
             userManager.addUser(user);
             //inform the Sender if the user is game leader
-            window.messageBus.send(event.senderId, isAdmin);
+            window.userMessageBus.send(event.senderId, isAdmin);
         }
+        // update View or sth...
     };
 
     castReceiver.event_onAdminMessage = function(event){

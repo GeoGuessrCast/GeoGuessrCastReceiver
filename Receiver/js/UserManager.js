@@ -97,10 +97,10 @@
         var userLength = userList.length;
         for(var i = 0; i < userLength; i++){
             if(userList[i].senderId === userId){
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     };
 
 }(this.userManager = this.userManager || {}));
