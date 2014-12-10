@@ -1,17 +1,68 @@
+
 html,body {
     font-family: Arial, sans-serif;
-    font-size: 12px;
+    font-size: 12pt;
+    color: #ffffff;
 }
 
-html, body, #map-canvas {
+html, body, #map-canvas, #gameOverlay {
     height: 100%;
     width: 100%;
 }
 
-#visualization {
-    height: 400px;
-    width: 500px;
+
+#gameOverlay {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    text-align: center;
 }
+
+.roundedMenu {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    position: absolute;
+    border: 1px solid;
+    border-radius: 20px;
+    border-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+
+.headers {
+    width: 100%;
+    height: 10%;
+    background-image: url(../images/mountain_3d.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    padding-top: 10pt;
+    padding-left: 50pt;
+    font-size: 2em;
+    text-align: left;
+}
+
+#mainHeader {
+    background-image: url(../images/mountain_3d.png);   /*other icon here ?*/
+}
+
+.centeredMenu {
+    top: 20%;
+    left: 33%;
+    width: 33%;
+    height: 60%;
+}
+
+#mainMenuUserList {
+    top: 20%;
+    right: 3px;
+    height: 60%;
+    width: 20%;
+}
+
+
+
 #testConsole {
     position: absolute;
     bottom: 4px;
@@ -19,46 +70,8 @@ html, body, #map-canvas {
     height: 80px;
     width: 300px;
     background-color: rgba(30, 30, 30, 0.5);
-    color: #ffffff;
 }
 
-#gameOverlay {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    height: 100%;
-    width: 100%;
-    color: #ffffff;
-    text-align: center;
-}
-
-
-.header {
-    width: 100%;
-    height: 10%;
-    background-image: url(../images/mountain_3d.png);
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-color: rgba(30, 30, 30, 0.5);
-
-    padding-left: 20pt;
-    font-size: 3em;
-
-}
-
-#mainHeader {
-
-}
-
-#mainMenuUserList {
-    position: absolute;
-    top: 20%;
-    right: 3px;
-    height: 60%;
-    width: 20%;
-    background-color: rgba(30, 30, 30, 0.5);
-    color: #ffffff;
-}
 
 
 
@@ -67,7 +80,6 @@ html, body, #map-canvas {
     bottom: 0;
     height: 5%;
     width: 100%;
-    background-color: rgba(30, 30, 30, 0.5);
 }
 
 #userList > ul {
@@ -87,5 +99,4 @@ html, body, #map-canvas {
     height: 60px;
     width: 150px;
     font-size: larger;
-    color: #ffffff;
 }

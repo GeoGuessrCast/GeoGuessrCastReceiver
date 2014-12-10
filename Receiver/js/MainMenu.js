@@ -2,8 +2,9 @@
 
     castReceiver.init = function(){
         console.log('running mainMenu.init');
-
-        $('#gameOverlay').html('<div class="header" id="mainHeader">Geo Guessing</div>');
+        $('#gameOverlay').load('templates/MainMenu.html', function (data) {
+            $(this).html(data);
+        })
 
         console.log('mainMenu initialized');
     }
