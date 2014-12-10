@@ -44,23 +44,23 @@ public class MainPageFragment extends Fragment {
         Button startBtn = (Button) mActivity.findViewById(R.id.startbtn);
         startBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-//                if(mActivity.mApiClient!=null){
-                String playername = playernameEditText.getText().toString();
-                JSONObject userData = new JSONObject();
-                try {
-                    userData.put("dataType", "userData").put("userName", playername).put("userMac", getDeviceMacAddr(mActivity));
-                }catch (JSONException ex) {
-                    throw new RuntimeException(ex);
-                }
-                mActivity.sendMessage(userData.toString());
-                Log.d(mActivity.TAG, userData.toString());
+                if(mActivity.mApiClient!=null){
+                    String playername = playernameEditText.getText().toString();
+                    JSONObject userData = new JSONObject();
+                    try {
+                        userData.put("userName", playername).put("userMac", getDeviceMacAddr(mActivity));
+                    }catch (JSONException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    mActivity.sendMessage(mActivity.mHelloWorldChannel, userData.toString());
+                    Log.d(mActivity.TAG, userData.toString());
 
-                replaceOfChooseModeFragment();
-//                }
-//                else{
-//                    Log.d(TAG, "plz connect the Chrome Cast at first");
-//
-//                }
+                    replaceOfChooseModeFragment();
+                }
+                else{
+                    Log.d(mActivity.TAG, "plz connect the Chrome Cast at first");
+
+                }
             }
         });
     }

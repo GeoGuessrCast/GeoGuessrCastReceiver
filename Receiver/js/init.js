@@ -42,18 +42,25 @@ function initialize() {
     };
 
 
-    window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:com.google.cast.sample.helloworld');
-    window.adminMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:com.google.cast.sample.adminChannel', cast.receiver.CastMessageBus.MessageType.JSON);
+    window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.helloworld');
+    window.userMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.userChanel', cast.receiver.CastMessageBus.MessageType.JSON);
+    window.adminMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.adminChannel', cast.receiver.CastMessageBus.MessageType.JSON);
 
     window.messageBus.onMessage = function(event) {
         console.log('messageBus [' + event.senderId + ']: ' + event.data);
         eventManager.event_onMessage(event);
     };
 
+    window.userMessageBus.onMessage = function(event) {
+        console.log('userMessageBus [' + event.senderId + ']: ' + event.data);
+        eventManager.event_onUserMessage(event);
+    };
+
     window.adminMessageBus.onMessage = function(event) {
         console.log('adminMessageBus [' + event.senderId + ']: ' + event.data);
         eventManager.event_onAdminMessage(event);
     };
+
 
     window.castReceiverManager.start({statusText: "Application is starting"});
     console.log('Receiver Manager started');

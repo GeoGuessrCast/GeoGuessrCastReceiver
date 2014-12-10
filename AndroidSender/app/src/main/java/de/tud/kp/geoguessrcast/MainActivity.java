@@ -78,7 +78,9 @@ public class MainActivity extends ActionBarActivity {
     private Cast.Listener mCastListener;
     private ConnectionCallbacks mConnectionCallbacks;
     private ConnectionFailedListener mConnectionFailedListener;
-    private HelloWorldChannel mHelloWorldChannel;
+    public HelloWorldChannel mHelloWorldChannel;
+    public UserChannel mUserChannel;
+    public AdminChannel mAdminChannel;
     private boolean mApplicationStarted;
     private boolean mWaitingForReconnect;
     private String mSessionId;
@@ -238,6 +240,14 @@ public class MainActivity extends ActionBarActivity {
                                     mApiClient,
                                     mHelloWorldChannel.getNamespace(),
                                     mHelloWorldChannel);
+                            Cast.CastApi.setMessageReceivedCallbacks(
+                                    mApiClient,
+                                    mUserChannel.getNamespace(),
+                                    mUserChannel);
+                            Cast.CastApi.setMessageReceivedCallbacks(
+                                    mApiClient,
+                                    mAdminChannel.getNamespace(),
+                                    mAdminChannel);
                         } catch (IOException e) {
                             Log.e(TAG, "Exception while creating channel", e);
                         }
@@ -280,6 +290,8 @@ public class MainActivity extends ActionBarActivity {
                                                 // Create the custom message
                                                 // channel
                                                 mHelloWorldChannel = new HelloWorldChannel();
+                                                mUserChannel = new UserChannel();
+                                                mAdminChannel = new AdminChannel();
                                                 try {
                                                     Cast.CastApi
                                                             .setMessageReceivedCallbacks(
@@ -287,6 +299,20 @@ public class MainActivity extends ActionBarActivity {
                                                                     mHelloWorldChannel
                                                                             .getNamespace(),
                                                                     mHelloWorldChannel);
+                                                    Cast.CastApi
+                                                            .setMessageReceivedCallbacks(
+                                                                    mApiClient,
+                                                                    mUserChannel
+                                                                            .getNamespace(),
+                                                                    mUserChannel);
+
+                                                    Cast.CastApi
+                                                            .setMessageReceivedCallbacks(
+                                                                    mApiClient,
+                                                                    mAdminChannel
+                                                                            .getNamespace(),
+                                                                    mAdminChannel);
+
                                                 } catch (IOException e) {
                                                     Log.e(TAG,
                                                             "Exception while creating channel",
@@ -295,7 +321,7 @@ public class MainActivity extends ActionBarActivity {
 
                                                 // set the initial instructions
                                                 // on the receiver
-                                                sendMessage(getString(R.string.instructions));
+//                                                sendMessage(getString(R.string.instructions));
                                             } else {
                                                 Log.e(TAG,
                                                         "application could not launch");
@@ -345,6 +371,18 @@ public class MainActivity extends ActionBarActivity {
                                     mHelloWorldChannel.getNamespace());
                             mHelloWorldChannel = null;
                         }
+                        if (mUserChannel != null) {
+                            Cast.CastApi.removeMessageReceivedCallbacks(
+                                    mApiClient,
+                                    mUserChannel.getNamespace());
+                            mUserChannel = null;
+                        }
+                        if (mAdminChannel != null) {
+                            Cast.CastApi.removeMessageReceivedCallbacks(
+                                    mApiClient,
+                                    mAdminChannel.getNamespace());
+                            mAdminChannel = null;
+                        }
                     } catch (IOException e) {
                         Log.e(TAG, "Exception while removing channel", e);
                     }
@@ -364,11 +402,11 @@ public class MainActivity extends ActionBarActivity {
      *
      * @param message
      */
-    public void sendMessage(String message) {
-        if (mApiClient != null && mHelloWorldChannel != null) {
+    public void sendMessage(HelloWorldChannel channel, String message) {
+        if (mApiClient != null && channel != null) {
             try {
                 Cast.CastApi.sendMessage(mApiClient,
-                        mHelloWorldChannel.getNamespace(), message)
+                        channel.getNamespace(), message)
                         .setResultCallback(new ResultCallback<Status>() {
                             @Override
                             public void onResult(Status result) {
@@ -385,6 +423,51 @@ public class MainActivity extends ActionBarActivity {
                     .show();
         }
     }
+
+    public void sendMessage(UserChannel channel, String message) {
+        if (mApiClient != null && channel != null) {
+            try {
+                Cast.CastApi.sendMessage(mApiClient,
+                        channel.getNamespace(), message)
+                        .setResultCallback(new ResultCallback<Status>() {
+                            @Override
+                            public void onResult(Status result) {
+                                if (!result.isSuccess()) {
+                                    Log.e(TAG, "Sending message failed");
+                                }
+                            }
+                        });
+            } catch (Exception e) {
+                Log.e(TAG, "Exception while sending message", e);
+            }
+        } else {
+            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+    public void sendMessage(AdminChannel channel, String message) {
+        if (mApiClient != null && channel != null) {
+            try {
+                Cast.CastApi.sendMessage(mApiClient,
+                        channel.getNamespace(), message)
+                        .setResultCallback(new ResultCallback<Status>() {
+                            @Override
+                            public void onResult(Status result) {
+                                if (!result.isSuccess()) {
+                                    Log.e(TAG, "Sending message failed");
+                                }
+                            }
+                        });
+            } catch (Exception e) {
+                Log.e(TAG, "Exception while sending message", e);
+            }
+        } else {
+            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
 
     /**
      * Custom message channel
@@ -408,6 +491,48 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    class UserChannel implements MessageReceivedCallback {
 
+        /**
+         * @return custom namespace
+         */
+        public String getNamespace() {
+            return getString(R.string.userChannel);
+        }
+
+        /*
+         * Receive message from the receiver app
+         */
+        @Override
+        public void onMessageReceived(CastDevice castDevice, String namespace,
+                                      String message) {
+            if(message=="true"){
+
+            }
+            else{
+
+            }
+            Log.d(TAG, "onMessageReceived from UserChannel: " + message);
+        }
+    }
+
+    class AdminChannel implements MessageReceivedCallback {
+
+        /**
+         * @return custom namespace
+         */
+        public String getNamespace() {
+            return getString(R.string.adminChannel);
+        }
+
+        /*
+         * Receive message from the receiver app
+         */
+        @Override
+        public void onMessageReceived(CastDevice castDevice, String namespace,
+                                      String message) {
+            Log.d(TAG, "onMessageReceived from AdminChannel: " + message);
+        }
+    }
 
 }

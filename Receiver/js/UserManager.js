@@ -11,7 +11,7 @@
      * @param {boolean} admin
      * @constructor
      */
-    castReceiver.User = function(senderId, name, admin){
+    castReceiver.User = function(senderId, name, mac, admin){
         /** @type {number} */
         this.senderId = senderId;
         /** @type {string} */
@@ -85,4 +85,22 @@
         // update #userList
         $('#sender-'+userId).remove();
     };
+
+    /**
+     * when user with this userId already exists in the localStorage, then return true, otherwise return false
+     * @returns {boolean}
+     * @param {number} userId
+     */
+    castReceiver.hasUser = function(userId){
+        // update user list
+        var userList = _getUserList();
+        var userLength = userList.length;
+        for(var i = 0; i < userLength; i++){
+            if(userList[i].senderId === userId){
+                return false;
+            }
+        }
+        return true;
+    };
+
 }(this.userManager = this.userManager || {}));

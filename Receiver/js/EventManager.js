@@ -7,16 +7,7 @@
     };
 
     castReceiver.event_onSenderConnected = function(event){
-        // get sender
-        // TODO fm: check for id already in storage?
-        var firstUser = false;
-        if(userManager.getUserList().length === 0) {
-            firstUser = true;
-        }
 
-        var id = window.castReceiverManager.getSender(event.data).id;
-        var user = new userManager.User(id, 'Sender-'+id, firstUser);
-        userManager.addUser(user);
 
     };
 
@@ -26,6 +17,21 @@
 
     castReceiver.event_onMessage = function(event){
         displayText(event.data);
+    };
+
+    castReceiver.event_onUserMessage = function(event){
+        var hasUser = userManager.hasUser(event.senderId);
+        if(!hasUser){
+            //add new User
+            var isAdmin = false;
+            if(userManager.getUserList().length === 0) {
+                isAdmin = true;
+            }
+            var user = new userManager.User(event.senderId, event.data.userName, event.data.userMac, isAdmin );
+            userManager.addUser(user);
+            //inform the Sender if the user is game leader
+            window.messageBus.send(event.senderId, isAdmin);
+        }
     };
 
     castReceiver.event_onAdminMessage = function(event){
