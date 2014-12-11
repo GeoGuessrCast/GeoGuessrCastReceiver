@@ -188,7 +188,8 @@
     castReceiver.onChosenMessage = function(event){
         var eventType = event.data.type;
         var userId = event.senderId;
-        if (eventType == "chosen" && gameState == "started"){
+        // && gameState == "started"
+        if (eventType == "chosen"){
             var answer = event.data.answer;
             console.log("New Guess: "+userId+" : "+answer);
             _calculateGuess(answer,userId);
