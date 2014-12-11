@@ -213,7 +213,7 @@
                 _setMarker(pos, player);
 
                 // get Distance to right answer (if not the same)
-                var dist = _getDistance(guess,goal);
+                var dist = _getDistance(pos,goal);
                 var points = 0;
 
                 if (dist == 0){
