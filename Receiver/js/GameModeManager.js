@@ -57,7 +57,11 @@
         window.gameMessageBus.broadcast(data);
     };
 
-    castReceiver.setGameRoundAnswer = function(gameModeId, answer) {
+    /**
+     * 
+     * @param event
+     */
+    castReceiver.setGameRoundAnswer = function(event) {
         switch(dataManager.getValue('gameMode_currentId')){
             case 1:
                 gameMode_1.onChosenMessage(event);
