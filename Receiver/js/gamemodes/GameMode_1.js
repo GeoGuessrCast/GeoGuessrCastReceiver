@@ -93,7 +93,9 @@
         var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
 
         //asynchronous call to handle query data
-        var jqxhr = $.get(queryurl, '_dataHandler(response)' , "jsonp");
+        var jqxhr = $.get(queryurl, function(data){
+            _dataHandler(data);
+        } , "jsonp");
         console.log("Game Mode 1 started: "+jqxhr);
         //reset user map
         guesses = {};
