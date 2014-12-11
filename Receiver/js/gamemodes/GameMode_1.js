@@ -9,158 +9,174 @@
     var offset, limit;
     var goal,guess;
 
-castReceiver.init = function(parameters){
-    console.log('running gameMode_1.init');
+    /**
+     *
+     * @param parameters
+     */
+    castReceiver.init = function(parameters){
+        console.log('running gameMode_1.init');
 
-    var map = window.map;
-    geocoder = new google.maps.Geocoder();
+        var map = window.map;
+        geocoder = new google.maps.Geocoder();
 
-    var style = [
-        {
-            "featureType": "administrative.locality",
-            "elementType": "labels.text",
-            "stylers": [
-                {"visibility": "off"}
-            ]
-        },
-        {
-            featureType: 'road.highway',
-            elementType: 'all',
-            stylers: [
-                {visibility: 'off'}
-            ]
-        },
-        {
-            "featureType": "administrative.country",
-            "elementType": "labels",
-            "stylers": [
-                {"visibility": "off"}
-            ]
-        }
-    ];
-    var styledMapType = new google.maps.StyledMapType(style, {
-        map: map,
-        name: 'Styled Map'
+        var style = [
+            {
+                "featureType": "administrative.locality",
+                "elementType": "labels.text",
+                "stylers": [
+                    {"visibility": "off"}
+                ]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'all',
+                stylers: [
+                    {visibility: 'off'}
+                ]
+            },
+            {
+                "featureType": "administrative.country",
+                "elementType": "labels",
+                "stylers": [
+                    {"visibility": "off"}
+                ]
+            }
+        ];
+        var styledMapType = new google.maps.StyledMapType(style, {
+            map: map,
+            name: 'Styled Map'
 
-    });
-    map.mapTypes.set('map-style', styledMapType);
-    map.setMapTypeId('map-style');
-
-
-    var min = 1;
-    var max = 98; //TODO: dynamisch über Anzahl an Rows machen?
-    var x = Math.floor(Math.random() * (max - min)) + min;
-    //var query = new google.maps.FusionTablesQuery();
-    layer = new google.maps.FusionTablesLayer({
-        query: {
-            select: locationColumn,
-            from: ftTableId,
-            where: where,
-            //orderBy: "RAND()",
-            offset: x,
-            limit: "1"
-        },
-        options: {
-            styleId: 1,
-            templateId: 1
-        }
-
-    });
-
-    //map.panTo(new google.maps.)
-    layer.setMap(map);
-    console.log("Done");
-    // Builds a Fusion Tables SQL query and hands the result to  dataHandler
-
-    var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
-    var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
-
-    // write your SQL as normal, then encode it
-    var query = "SELECT * FROM " + ftTableId + " WHERE "+where+" OFFSET "+ x+" LIMIT 1";
-    console.log(query);
-    var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
-
-    var jqxhr = $.get(queryurl, dataHandler, "jsonp");geocoder = new google.maps.Geocoder();
-    map = new google.maps.Map(document.getElementById('map-canvas'), {
-        center: new google.maps.LatLng(45.74167213456433, 38.26884827734375),
-        zoom: 3,
-        mapTypeControl: true,
-        disableDefaultUI: true,
-        mapTypeId: google.maps.MapTypeId.SATELLITE
-
-    });
-    var style = [
-        {
-            "featureType": "administrative.locality",
-            "elementType": "labels.text",
-            "stylers": [
-                {"visibility": "off"}
-            ]
-        },
-        {
-            featureType: 'road.highway',
-            elementType: 'all',
-            stylers: [
-                {visibility: 'off'}
-            ]
-        },
-        {
-            "featureType": "administrative.country",
-            "elementType": "labels",
-            "stylers": [
-                {"visibility": "off"}
-            ]
-        }
-    ];
-    var styledMapType = new google.maps.StyledMapType(style, {
-        map: map,
-        name: 'Styled Map'
-
-    });
-    map.mapTypes.set('map-style', styledMapType);
-    map.setMapTypeId('map-style');
+        });
+        map.mapTypes.set('map-style', styledMapType);
+        map.setMapTypeId('map-style');
 
 
-    var min = 1;
-    var max = 98; //TODO: dynamisch über Anzahl an Rows machen?
-    var x = Math.floor(Math.random() * (max - min)) + min;
-    //var query = new google.maps.FusionTablesQuery();
-    layer = new google.maps.FusionTablesLayer({
-        query: {
-            select: locationColumn,
-            from: ftTableId,
-            where: where,
-            //orderBy: "RAND()",
-            offset: x,
-            limit: "1"
-        },
-        options: {
-            styleId: 1,
-            templateId: 1
-        }
+        var min = 1;
+        var max = 98; //TODO: dynamisch über Anzahl an Rows machen?
+        var x = Math.floor(Math.random() * (max - min)) + min;
+        //var query = new google.maps.FusionTablesQuery();
+        layer = new google.maps.FusionTablesLayer({
+            query: {
+                select: locationColumn,
+                from: ftTableId,
+                where: where,
+                //orderBy: "RAND()",
+                offset: x,
+                limit: "1"
+            },
+            options: {
+                styleId: 1,
+                templateId: 1
+            }
 
-    });
+        });
 
-    //map.panTo(new google.maps.)
-    layer.setMap(map);
-    console.log("Done");
-    // Builds a Fusion Tables SQL query and hands the result to  dataHandler
+        //map.panTo(new google.maps.)
+        layer.setMap(map);
+        console.log("Done");
+        // Builds a Fusion Tables SQL query and hands the result to  dataHandler
 
-    var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
-    var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
+        var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
+        var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
 
-    // write your SQL as normal, then encode it
-    var query = "SELECT * FROM " + ftTableId + " WHERE "+where+" OFFSET "+ x+" LIMIT 1";
-    console.log(query);
-    var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
+        // write your SQL as normal, then encode it
+        var query = "SELECT * FROM " + ftTableId + " WHERE "+where+" OFFSET "+ x+" LIMIT 1";
+        console.log(query);
+        var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
 
-    var jqxhr = $.get(queryurl, dataHandler, "jsonp");
-    console.log('gameMode_1 initialized');
+        var jqxhr = $.get(queryurl, dataHandler, "jsonp");geocoder = new google.maps.Geocoder();
+        map = new google.maps.Map(document.getElementById('map-canvas'), {
+            center: new google.maps.LatLng(45.74167213456433, 38.26884827734375),
+            zoom: 3,
+            mapTypeControl: true,
+            disableDefaultUI: true,
+            mapTypeId: google.maps.MapTypeId.SATELLITE
 
-}
-    var getDistance = function(p1, p2) {
-        return google.maps.geometry.spherical.computeDistanceBetween (p1, p2);; // returns the distance in meter
+        });
+        var style = [
+            {
+                "featureType": "administrative.locality",
+                "elementType": "labels.text",
+                "stylers": [
+                    {"visibility": "off"}
+                ]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'all',
+                stylers: [
+                    {visibility: 'off'}
+                ]
+            },
+            {
+                "featureType": "administrative.country",
+                "elementType": "labels",
+                "stylers": [
+                    {"visibility": "off"}
+                ]
+            }
+        ];
+        var styledMapType = new google.maps.StyledMapType(style, {
+            map: map,
+            name: 'Styled Map'
+
+        });
+        map.mapTypes.set('map-style', styledMapType);
+        map.setMapTypeId('map-style');
+
+
+        var min = 1;
+        var max = 98; //TODO: dynamisch über Anzahl an Rows machen?
+        var x = Math.floor(Math.random() * (max - min)) + min;
+        //var query = new google.maps.FusionTablesQuery();
+        layer = new google.maps.FusionTablesLayer({
+            query: {
+                select: locationColumn,
+                from: ftTableId,
+                where: where,
+                //orderBy: "RAND()",
+                offset: x,
+                limit: "1"
+            },
+            options: {
+                styleId: 1,
+                templateId: 1
+            }
+
+        });
+
+        //map.panTo(new google.maps.)
+        layer.setMap(map);
+        console.log("Done");
+        // Builds a Fusion Tables SQL query and hands the result to  dataHandler
+
+        var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
+        var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
+
+        // write your SQL as normal, then encode it
+        var query = "SELECT * FROM " + ftTableId + " WHERE "+where+" OFFSET "+ x+" LIMIT 1";
+        console.log(query);
+        var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
+
+        var jqxhr = $.get(queryurl, dataHandler, "jsonp");
+        console.log('gameMode_1 initialized');
+
     };
+
+    /**
+     *
+     * @param p1
+     * @param p2
+     * @returns {number}
+     */
+    var getDistance = function(p1, p2) {
+        return google.maps.geometry.spherical.computeDistanceBetween (p1, p2); // returns the distance in meter
+    };
+
+    /**
+     *
+     * @param response
+     */
     function dataHandler(response) {
         //do something with the data using response.rows
         var address = response.rows[0][0];
@@ -179,10 +195,15 @@ castReceiver.init = function(parameters){
         marker.setMap(map);
     };
 
+    /**
+     *
+     * @param address
+     * @param player
+     */
     function calculateGuess(address, player) {
         // get Geolocation
         // set Marker
-        console.debug("get Address")
+        console.debug("get Address");
         geocoder.geocode({
             address: address
         }, function (results, status) {
@@ -204,9 +225,14 @@ castReceiver.init = function(parameters){
                 console.log('Address could not be geocoded: ' + status);
             }
         });
-    };
+    }
+
+    /**
+     *
+     * @param address
+     */
     var zoomToAddress = function (address) {
-        console.debug("Clicked on Go")
+        console.debug("Clicked on Go");
         geocoder.geocode({
             address: address
         }, function (results, status) {

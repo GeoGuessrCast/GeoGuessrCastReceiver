@@ -8,6 +8,7 @@
      * Type User
      * @param {number} senderId
      * @param {string} name
+     * @param {string} mac
      * @param {boolean} admin
      * @constructor
      */
@@ -18,6 +19,8 @@
         this.name = name;
         /** @type {number} */
         this.pointsInCurrentGame = 0;
+        /** @type {string} */
+        this.mac = mac;
         /** @type {boolean} */
         this.admin = admin;
     };
