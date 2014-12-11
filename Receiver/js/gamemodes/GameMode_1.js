@@ -20,7 +20,7 @@
         console.log('running gameMode_1.init');
         dataManager.setValue('gameMode_currentId', 1);
         _disableMainManu();
-        var map = window.map;
+        map = window.map;
         geocoder = new google.maps.Geocoder();
 
         map = new google.maps.Map(document.getElementById('map-canvas'), {
@@ -145,14 +145,16 @@
         //do something with the data using response.rows
         console.log("New Round");
         var address = response.rows[0][0];
-        console.log(address);
+        console.log("Address: "+address);
         geocoder.geocode({
             address: address
         }, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var pos = results[0].geometry.location;
+                console.log("Position: "+pos);
                 map.setCenter(pos);
                 map.setZoom(5);
+                //Set global goal var
                 goal = pos;
             } else {
                 console.log('Address could not be geocoded: ' + status);
