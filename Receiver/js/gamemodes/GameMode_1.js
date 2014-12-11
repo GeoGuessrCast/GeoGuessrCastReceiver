@@ -107,8 +107,10 @@
         gameState = "started";
         gameModeManager.setGameModeStarted(1);
         //Set Timer
-        var timer = $.timer(_gameEnded(),10000,true);
+        var timer = $.timer(_gameEnded(),30000,false);
 
+
+        timer.play(true);
     };
 
 
@@ -153,7 +155,7 @@
                 var pos = results[0].geometry.location;
                 console.log("Position: "+pos);
                 map.setCenter(pos);
-                map.setZoom(5);
+                map.setZoom(6);
                 //Set global goal var
                 goal = pos;
             } else {
