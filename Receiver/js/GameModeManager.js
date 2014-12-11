@@ -58,7 +58,7 @@
     };
 
     /**
-     * 
+     *
      * @param event
      */
     castReceiver.setGameRoundAnswer = function(event) {
@@ -76,7 +76,7 @@
         }
     };
 
-    castReceiver.setGameRoundResult = function (results) {
+    castReceiver.setGameRoundResults = function (results) {
         // results = array[userId]
         // get user list
     };
