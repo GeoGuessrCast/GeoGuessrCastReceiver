@@ -45,6 +45,18 @@ html, body, #map-canvas, #gameOverlay {
     margin: 7pt;
 }
 
+.menuButton {
+    border-top: 2pt solid #dddddd;
+    border-left: 2pt solid #dddddd;
+    border-bottom: 2pt solid #454545;
+    border-right: 2pt solid #454545;
+    border-radius: 10px;
+    background-color: rgba(244, 244, 244, 0.70);
+    margin: 16pt;
+    padding: 5pt;
+    font-size: 2em;
+    color: #000000;
+}
 
 .headers {
     width: 100%;
