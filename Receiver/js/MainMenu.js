@@ -9,5 +9,4 @@
         console.log('mainMenu initialized');
     }
 
-
 }(this.mainMenu = this.mainMenu || {}));

@@ -17,6 +17,8 @@
         this.senderId = senderId;
         /** @type {string} */
         this.name = name;
+        /** @type {string} */
+        this.mac = mac;
         /** @type {number} */
         this.pointsInCurrentGame = 0;
         /** @type {string} */
@@ -58,7 +60,7 @@
         _setUserList(userList);
 
         // update #userList
-        $('#userList').find('ul').append('<li id="sender-'+user.senderId+'">'+user.name+'</li>');
+        $('#mainMenuUserList').find('ul').append('<li id="sender-'+user.senderId+'">'+user.name+'</li>');
     };
 
     /**
