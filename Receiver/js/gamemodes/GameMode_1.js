@@ -19,62 +19,6 @@
         var map = window.map;
         geocoder = new google.maps.Geocoder();
 
-        var style = [
-            {
-                "featureType": "administrative.locality",
-                "elementType": "labels.text",
-                "stylers": [
-                    {"visibility": "off"}
-                ]
-            },
-            {
-                featureType: 'road.highway',
-                elementType: 'all',
-                stylers: [
-                    {visibility: 'off'}
-                ]
-            },
-            {
-                "featureType": "administrative.country",
-                "elementType": "labels",
-                "stylers": [
-                    {"visibility": "off"}
-                ]
-            }
-        ];
-        var styledMapType = new google.maps.StyledMapType(style, {
-            map: map,
-            name: 'Styled Map'
-
-        });
-        map.mapTypes.set('map-style', styledMapType);
-        map.setMapTypeId('map-style');
-
-
-        var min = 1;
-        var max = 98; //TODO: dynamisch über Anzahl an Rows machen?
-        var x = Math.floor(Math.random() * (max - min)) + min;
-        //var query = new google.maps.FusionTablesQuery();
-        layer = new google.maps.FusionTablesLayer({
-            query: {
-                select: locationColumn,
-                from: ftTableId,
-                where: where,
-                //orderBy: "RAND()",
-                offset: x,
-                limit: "1"
-            },
-            options: {
-                styleId: 1,
-                templateId: 1
-            }
-
-        });
-
-        //map.panTo(new google.maps.)
-        layer.setMap(map);
-        console.log("Done");
-
         map = new google.maps.Map(document.getElementById('map-canvas'), {
             center: new google.maps.LatLng(45.74167213456433, 38.26884827734375),
             zoom: 3,
@@ -164,18 +108,22 @@
     };
 
     /**
-     *
+     * gets the callback from the geocoder with the address and zooms into the address
      * @param response
      */
-    function dataHandler(response) {
+    function _dataHandler(response) {
         //do something with the data using response.rows
         var address = response.rows[0][0];
         console.log(address);
         zoomToAddress(address);
     }
 
-
-    var setMarker = function (pos,player){
+    /**
+     * Sets an Marker with the Player as Title
+     * @param pos
+     * @param player
+     */
+    var _setMarker = function (pos,player){
         var marker = new google.maps.Marker({
             position: pos,
             //map: map,
@@ -186,7 +134,7 @@
     };
 
     /**
-     *
+     * Calculates the distance between the guess and the goal coordinates
      * @param address
      * @param player
      */
