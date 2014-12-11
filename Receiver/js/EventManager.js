@@ -29,10 +29,22 @@
             window.userMessageBus.send(event.senderId, isAdmin);
         }
         // update View or sth...
+        var eventData = event.data;
+        if(eventData.event_type === 'chosen') {
+            displayText('[AMB] chosen - event received');
+            // do sth.
+        }
     };
 
     castReceiver.event_onAdminMessage = function(event){
         displayJson(event.data);
+        var eventData = event.data;
+
+        if(eventData.event_type === 'setGameMode'){
+            displayText('[AMB] setGameMode - event received');
+            // set game mode // init
+            gameModeManager.setGameMode(eventData.gameMode);
+        }
     };
 
     castReceiver.event_onGameMessage = function(event){

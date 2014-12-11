@@ -4,26 +4,14 @@
     // set empty gameMode
     dataManager.setValue('gameMode_currentId', 0);
     dataManager.setValue('gameMode_currentRound', 0);
-    dataManager.setValue('gameModes', JSON.stringify([]));
+    //dataManager.setValue('gameModes', JSON.stringify([]));
     //gameMode_1.init();
 
-    castReceiver.addGameMode = function(gameModeId){
-        var gameModeArray = JSON.parse(dataManager.getValue('gameModes'));
-        gameModeId.push(gameModeId);
-        dataManager.setValue('gameModes', JSON.stringify(gameModeArray));
-    };
     /**
      * sets the current round to 0
      */
     castReceiver.clearRounds = function(){
         dataManager.setValue('gameMode_currentRound', 0);
-    };
-
-    /**
-     * gets a list of available game modes
-     */
-    castReceiver.getAvailableGameModes = function(){
-
     };
 
     /**
@@ -37,14 +25,35 @@
     };
 
     /**
-     * set the Id of the current GameMode
+     * sets the Id of the current GameMode
      * @param {number} gameModeId
      */
     castReceiver.setGameMode = function(gameModeId){
         dataManager.setValue('gameMode_currentId', gameModeId);
         // call mode function
+        // init game mode statically
+
+        switch(gameModeId){
+            case 1:
+                gameMode_1.init();
+                break;
+            case 2:
+                //gameMode_2.init();
+                break;
+            case 3:
+                //gameMode_3.init();
+                break;
+            default : gameMode_1.init();
+        }
+
     };
 
-    // set game mode functions
-
+    /**
+     * send gameModeStarted Event to all connected sender
+     * @param {number} gameModeId
+     */
+    castReceiver.setGameModeStarted = function(gameModeId){
+        var data = {gameMode : gameModeId, started: true};
+        window.gameMessageBus.broadcast(JSON.stringify(data));
+    };
 }(this.gameModeManager = this.gameModeManager || {}));
