@@ -35,6 +35,16 @@
         displayJson(event.data);
     };
 
+    castReceiver.event_onGameMessage = function(event){
+        // aktueller game mode?
+        // aktuelle runde?
+        // was koennen fuer msg kommen?
+        // next round
+        // game started
+        // game ended
+
+    };
+
     castReceiver.event_onSystemVolumeChanged = function(event){
 
     };

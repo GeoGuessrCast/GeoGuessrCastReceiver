@@ -1,13 +1,39 @@
 (function(castReceiver){
 
     // init
-    // set empty gamemode
+    // set empty gameMode
     dataManager.setValue('gameMode_currentId', 0);
     dataManager.setValue('gameMode_currentRound', 0);
+    dataManager.setValue('gameModes', JSON.stringify([]));
     //gameMode_1.init();
 
+    castReceiver.addGameMode = function(gameModeId){
+        var gameModeArray = JSON.parse(dataManager.getValue('gameModes'));
+        gameModeId.push(gameModeId);
+        dataManager.setValue('gameModes', JSON.stringify(gameModeArray));
+    };
+    /**
+     * sets the current round to 0
+     */
+    castReceiver.clearRounds = function(){
+        dataManager.setValue('gameMode_currentRound', 0);
+    };
+
+    /**
+     * gets a list of available game modes
+     */
     castReceiver.getAvailableGameModes = function(){
 
+    };
+
+    /**
+     * increases the current round
+     */
+    castReceiver.incCurrentRound = function(){
+        // get current round
+        var currentRound = parseInt( dataManager.getValue('gameMode_currentRound') || 0 );
+        currentRound = currentRound + 1;
+        dataManager.setValue('gameMode_currentRound', currentRound);
     };
 
     /**
@@ -22,26 +48,3 @@
     // set game mode functions
 
 }(this.gameModeManager = this.gameModeManager || {}));
-
-
- /**
- * Type GameMode
- * @param {string} name
- * @param {string} mapType
- * @param {int} pointsMax
- * @param {Array.<GeoEntity>} geoEntities
- * @constructor
- */
-//
-//function GameMode(name, mapType, pointsMax, geoEntities){
-//    /** @type {int} */
-//    this.id = 0;
-//    /** @type {string} */
-//    this.name = name;
-//    /** @type {string} */
-//    this.mapType = mapType;
-//    /** @type {int} */
-//    this.pointsMax = 0;
-//    /** @type {Array.<GeoEntity>} */
-//    this.geoEntities = geoEntities;
-//}
