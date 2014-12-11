@@ -1,20 +1,24 @@
 (function(castReceiver){
-    var map, layer, geocoder, ftTableId;
-    var gftUrl = 'http://www.google.com/fusiontables/api/query?';
-    ftTableId = "13Ajs8twEaALtd19pa6LxRpYHLRxFwzdDGKQ2iu-2";
+    var map, layer, geocoder;
+    //Fusion Table ID:
+    var ftTableId = "13Ajs8twEaALtd19pa6LxRpYHLRxFwzdDGKQ2iu-2";
     var locationColumn = "col1";
-    var jsonUrlTail = '&jsonCallback=?';
     var where = "col4 \x3e\x3d 100000 and col3 contains ignoring case \x27DE\x27";
-    var query = 'select ' + locationColumn + ' from ' + ftTableId + ' where ' + where;
-    var offset, limit;
     var goal,guess;
-
+    var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
+    //Google API Key
+    var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
+    var guesses = {}; // Map UserID:Answer
+    var results = {}; // Map UserId:Points
+    var gameState;
     /**
-     *
+     * Intializes Game Mode 1
+     * TODO {sh} : Parameters: Choices = true/false
      * @param parameters
      */
     castReceiver.init = function(parameters){
         console.log('running gameMode_1.init');
+        dataManager.setValue('gameMode_currentId', 1);
 
         var map = window.map;
         geocoder = new google.maps.Geocoder();
@@ -22,7 +26,7 @@
         map = new google.maps.Map(document.getElementById('map-canvas'), {
             center: new google.maps.LatLng(45.74167213456433, 38.26884827734375),
             zoom: 3,
-            mapTypeControl: true,
+            mapTypeControl: false,
             disableDefaultUI: true,
             mapTypeId: google.maps.MapTypeId.SATELLITE
 
@@ -57,12 +61,13 @@
         });
         map.mapTypes.set('map-style', styledMapType);
         map.setMapTypeId('map-style');
-
-
+        gameState = "initialized";
+        console.log('gameMode_1 initialized');
         var min = 1;
         var max = 98; //TODO: dynamisch über Anzahl an Rows machen?
+        // Creates Random X
         var x = Math.floor(Math.random() * (max - min)) + min;
-        //var query = new google.maps.FusionTablesQuery();
+
         layer = new google.maps.FusionTablesLayer({
             query: {
                 select: locationColumn,
@@ -79,98 +84,58 @@
 
         });
 
-        //map.panTo(new google.maps.)
         layer.setMap(map);
         console.log("Done");
         // Builds a Fusion Tables SQL query and hands the result to  dataHandler
-
-        var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
-        var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
-
         // write your SQL as normal, then encode it
         var query = "SELECT * FROM " + ftTableId + " WHERE "+where+" OFFSET "+ x+" LIMIT 1";
         console.log(query);
         var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
 
-        var jqxhr = $.get(queryurl, dataHandler, "jsonp");
-        console.log('gameMode_1 initialized');
+        //asynchronous call to handle query data
+        var jqxhr = $.get(queryurl, '_dataHandler(response)' , "jsonp");
+        console.log("Game Mode 1 started: "+jqxhr);
+        //reset user map
+        guesses = {};
+        results = {};
+        // GMB: send prepare()
+        gameState = "started";
+        // GameModeManager setGameModeStarted(gamemodeid)
+
+        //Set Timer
+        var timer = $.timer(_gameEnded,10000,true);
 
     };
 
+
+
+    function _gameEnded(){
+        gameState = "ended";
+        // calculate results, set markers visible
+
+        //gamemodemanager.inc round
+    }
     /**
+     * Returns the distance between two location points in meters
      *
-     * @param p1
-     * @param p2
-     * @returns {number}
+     * @param p1 (Lat,len)
+     * @param p2 (lat,len)
+     * @returns {number} distance in meter
      */
-    var getDistance = function(p1, p2) {
+    function _getDistance(p1, p2) {
+        //TODO {sh} : in case of rate limit, use formular not api
         return google.maps.geometry.spherical.computeDistanceBetween (p1, p2); // returns the distance in meter
-    };
+    }
 
     /**
-     * gets the callback from the geocoder with the address and zooms into the address
+     * gets the data from the sql query with the address and zooms into the address
      * @param response
      */
     function _dataHandler(response) {
         //do something with the data using response.rows
+        console.log("New Round");
         var address = response.rows[0][0];
         console.log(address);
-        zoomToAddress(address);
-    }
-
-    /**
-     * Sets an Marker with the Player as Title
-     * @param pos
-     * @param player
-     */
-    var _setMarker = function (pos,player){
-        var marker = new google.maps.Marker({
-            position: pos,
-            //map: map,
-            title: "Player: "+player,
-            animation: google.maps.Animation.DROP
-        });
-        marker.setMap(map);
-    };
-
-    /**
-     * Calculates the distance between the guess and the goal coordinates
-     * @param address
-     * @param player
-     */
-    function calculateGuess(address, player) {
-        // get Geolocation
-        // set Marker
-        console.debug("get Address");
-        geocoder.geocode({
-            address: address
-        }, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                var pos = results[0].geometry.location;
-                console.log("Pos: "+pos);
-                setMarker(pos, player);
-                guess = pos;
-                if (guess == goal){
-                    console.log("richtig");
-                }
-                // get Distance to right answer (if not the same)
-                var dist = getDistance(guess,goal);
-                console.log("Dist: "+dist);
-                // profit
-
-
-            } else {
-                console.log('Address could not be geocoded: ' + status);
-            }
-        });
-    }
-
-    /**
-     *
-     * @param address
-     */
-    var zoomToAddress = function (address) {
-        console.debug("Clicked on Go");
         geocoder.geocode({
             address: address
         }, function (results, status) {
@@ -183,7 +148,80 @@
                 console.log('Address could not be geocoded: ' + status);
             }
         });
+    }
+
+    /**
+     * Sets an Marker with the Player as Title
+     * @param pos
+     * @param player
+     */
+    function _setMarker(pos,player){
+        var marker = new google.maps.Marker({
+            position: pos,
+            //map: map,
+            title: "Player: "+player,
+            animation: google.maps.Animation.DROP
+        });
+        marker.setMap(map);
+    }
+
+    /**
+     * Called from event handler to calculate right/wrong answers
+     * @param event
+     */
+    castReceiver.onChosenMessage = function(event){
+        var eventType = event.data.type;
+        var userId = event.senderId;
+        if (eventType == "chosen" && gameState == "started"){
+            var answer = event.data.answer;
+            console.log("New Guess: "+userId+" : "+answer);
+            //guesses[userId] = answer;
+            _calculateGuess(answer,userId);
+            // TODO {sh}: maybe delay because of rate limit
+            // TODO {sh}: Set Markers invisble and only show after round finishes
+        }
+
     };
+    /**
+     * Calculates the distance between the guess and the goal coordinates
+     * @param address
+     * @param playerId
+     */
+    function _calculateGuess(address, player){
+        // get Geolocation
+        // set Marker
+        console.debug("get Address");
+        geocoder.geocode({
+            address: address
+        }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                var pos = results[0].geometry.location;
+                console.log("Pos: "+pos);
+                _setMarker(pos, player);
+
+                // get Distance to right answer (if not the same)
+                var dist = _getDistance(guess,goal);
+                var points = 0;
+
+                if (dist == 0){
+                    console.log("richtig");
+                    points = 1;
+                } else {
+                    points = 1 - (1 / (dist*1000));
+                }
+                console.log("Player: "+player+ "Dist: "+dist+" Points: "+points);
+                // dist save
+                guesses[player] = dist;
+
+                results[player] = points;
+
+
+            } else {
+                console.log('Address could not be geocoded: ' + status);
+            }
+        });
+    }
+
 
 
 }(this.gameMode_1 = this.gameMode_1 || {}));
