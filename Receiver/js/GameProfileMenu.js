@@ -9,4 +9,4 @@
         console.log('gameProfileMenu initialized');
     }
 
-}(this.mainMenu = this.mainMenu || {}));
+}(this.gameProfileMenu = this.gameProfileMenu || {}));
