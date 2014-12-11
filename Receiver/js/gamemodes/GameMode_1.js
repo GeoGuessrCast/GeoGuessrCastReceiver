@@ -19,7 +19,7 @@
     castReceiver.init = function(parameters){
         console.log('running gameMode_1.init');
         dataManager.setValue('gameMode_currentId', 1);
-
+        _disableMainManu();
         var map = window.map;
         geocoder = new google.maps.Geocoder();
 
@@ -172,7 +172,11 @@
         });
         marker.setMap(map);
     }
-
+    function _disableMainManu(){
+        $('#gameOverlay').load('templates/GameMode_1.html', function (data) {
+            $(this).html(data);
+        });
+    }
     /**
      * Called from event handler to calculate right/wrong answers
      * @param event
