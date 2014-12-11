@@ -32,8 +32,9 @@
         var eventData = event.data;
         if(eventData.event_type === 'chosen') {
             displayText('[AMB] chosen - event received');
-            // do sth.
         }
+        // do sth.
+        gameModeManager.setGameRoundAnswer(event);
     };
 
     castReceiver.event_onAdminMessage = function(event){

@@ -53,7 +53,27 @@
      * @param {number} gameModeId
      */
     castReceiver.setGameModeStarted = function(gameModeId){
-        var data = {gameMode : gameModeId, started: true};
-        window.gameMessageBus.broadcast(JSON.stringify(data));
+        var data = '{"gameMode": : '+gameModeId+', "started": true}';
+        window.gameMessageBus.broadcast(data);
+    };
+
+    castReceiver.setGameRoundAnswer = function(gameModeId, answer) {
+        switch(dataManager.getValue('gameMode_currentId')){
+            case 1:
+                gameMode_1.onChosenMessage(event);
+                break;
+            case 2:
+                //gameMode_2.init();
+                break;
+            case 3:
+                //gameMode_3.init();
+                break;
+            default : gameMode_1.onChosenMessage(event);
+        }
+    };
+
+    castReceiver.setGameRoundResult = function (results) {
+        // results = array[userId]
+        // get user list
     };
 }(this.gameModeManager = this.gameModeManager || {}));
