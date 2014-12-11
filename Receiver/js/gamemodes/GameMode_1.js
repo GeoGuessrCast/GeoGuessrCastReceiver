@@ -74,17 +74,7 @@
         //map.panTo(new google.maps.)
         layer.setMap(map);
         console.log("Done");
-        // Builds a Fusion Tables SQL query and hands the result to  dataHandler
 
-        var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
-        var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
-
-        // write your SQL as normal, then encode it
-        var query = "SELECT * FROM " + ftTableId + " WHERE "+where+" OFFSET "+ x+" LIMIT 1";
-        console.log(query);
-        var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
-
-        var jqxhr = $.get(queryurl, dataHandler, "jsonp");geocoder = new google.maps.Geocoder();
         map = new google.maps.Map(document.getElementById('map-canvas'), {
             center: new google.maps.LatLng(45.74167213456433, 38.26884827734375),
             zoom: 3,
