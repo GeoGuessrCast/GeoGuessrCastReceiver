@@ -105,7 +105,7 @@
         gameState = "started";
         gameModeManager.setGameModeStarted(1);
         //Set Timer
-        var timer = $.timer(_gameEnded,10000,true);
+        var timer = $.timer(_gameEnded(),10000,true);
 
     };
 
@@ -197,7 +197,7 @@
     function _calculateGuess(address, player){
         // get Geolocation
         // set Marker
-        console.debug("get Address");
+        console.debug("get Address: "+address+" for player:" +player);
         geocoder.geocode({
             address: address
         }, function (results, status) {
