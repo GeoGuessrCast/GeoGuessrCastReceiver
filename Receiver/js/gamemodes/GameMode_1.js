@@ -99,9 +99,11 @@
         guesses = {};
         results = {};
         // GMB: send prepare()
+        // describes game mode properties
+        var data = '{"gameMode" : "1", "timerRound" : "10000", "choices" = "null"}';
+        window.gameMessageBus.broadcast(JSON.stringify(data));
         gameState = "started";
-        // GameModeManager setGameModeStarted(gamemodeid)
-
+        gameModeManager.setGameModeStarted(1);
         //Set Timer
         var timer = $.timer(_gameEnded,10000,true);
 
@@ -114,6 +116,12 @@
         // calculate results, set markers visible
 
         //gamemodemanager.inc round
+        console.log("Round ended")
+
+        gameModeManager.incCurrentRound();
+
+        gameModeManager.setGameRoundResults(results);
+
     }
     /**
      * Returns the distance between two location points in meters
@@ -175,7 +183,6 @@
         if (eventType == "chosen" && gameState == "started"){
             var answer = event.data.answer;
             console.log("New Guess: "+userId+" : "+answer);
-            //guesses[userId] = answer;
             _calculateGuess(answer,userId);
             // TODO {sh}: maybe delay because of rate limit
             // TODO {sh}: Set Markers invisble and only show after round finishes
@@ -212,7 +219,7 @@
                 console.log("Player: "+player+ "Dist: "+dist+" Points: "+points);
                 // dist save
                 guesses[player] = dist;
-
+                // results maybe later
                 results[player] = points;
 
 
