@@ -9,7 +9,6 @@
     castReceiver.gm1 = {
         iconUrl: 'string',
         header: 'string',
-        profileName : 'Profile #1'
 
     };
 

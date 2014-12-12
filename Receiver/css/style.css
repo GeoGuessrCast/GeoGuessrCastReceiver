@@ -24,6 +24,7 @@ html, body, #map-canvas, #gameOverlay {
     border-radius: 2.0vh;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.70);
     background-color: rgba(218, 218, 218, 0.70);
+    z-index: 1;
 }
 h1 {
     font-size: 7vh;
@@ -152,10 +153,15 @@ h3 {
     position: absolute;
     bottom: 10%;
     left: 3%;
-
     width: 40%;
+
     background-color: rgba(30, 30, 30, 0.0);
     font-size: 2vh;
+
+    display: table-cell;
+    vertical-align: bottom;
+
+
 }
 #testConsoleOutput {
     height: 20%;
@@ -163,4 +169,8 @@ h3 {
     color: #C30000;
     text-shadow: 0.0vh 0.0vh 1.3vh #FFFFFF;
     font-weight: bold;
+    display: table-cell;
+    vertical-align: bottom;
+    text-indent: -5vh;
+    padding-left: 5vh;
 }
