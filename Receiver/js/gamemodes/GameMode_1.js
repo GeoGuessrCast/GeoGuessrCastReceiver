@@ -103,9 +103,9 @@
         results = {};
         // GMB: send prepare()
         // describes game mode properties
-        var data = '{"gameMode" : "1", "timerRound" : "10000", "choices" = "null"}';
+        var data = '{"event_type":"gameDetail" , "gameMode" : "1", "timerRound" : "10000", "choices" = "null"}';
         console.log("Prepare");
-        window.gameMessageBus.broadcast(JSON.stringify(data));
+        window.gameMessageBus.broadcast(data);
         console.log("Send prepare!");
         gameState = "started";
         gameModeManager.setGameModeStarted(1);
@@ -192,7 +192,7 @@
      * @param event
      */
     castReceiver.onChosenMessage = function(event){
-        var eventType = event.data.type;
+        var eventType = event.data.event_type;
         var userId = event.senderId;
         // && gameState == "started"
         if (eventType == "chosen"){
