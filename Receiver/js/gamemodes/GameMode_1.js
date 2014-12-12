@@ -103,7 +103,7 @@
         results = {};
         // GMB: send prepare()
         // describes game mode properties
-        var data = '{"event_type":"gameDetail" , "gameMode" : "1", "timerRound" : "10000", "choices" = "null"}';
+        var data = '{"event_type":"gameDetail" , "gameMode" : "1", "timerRound" : "10000", "choices" : "null"}';
         console.log("Prepare");
         window.gameMessageBus.broadcast(data);
         console.log("Send prepare!");
