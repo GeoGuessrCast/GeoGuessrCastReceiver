@@ -11,6 +11,8 @@
             $('#profile_2').html('test');
             $('#profile_3').html('test');
             $('#profile_4').html('test');
+
+            userManager.rebuildUserList();
         });
         console.log('gameProfileMenu initialized');
     }

@@ -96,12 +96,17 @@ h3 {
 #mainMenuUserList > ul > li {
     background-repeat: no-repeat;
     background-size: contain;
-    background-image: url(../images/user.png);
 
     margin: 1.5vh 3vh;
     font-size: 3vh;
     padding-left: 4vh;
     text-align: left;
+}
+.admin {
+    background-image: url(../images/userAdmin.png);
+}
+.user {
+    background-image: url(../images/user.png);
 }
 
 #bottomScoreboard {
@@ -160,8 +165,12 @@ h3 {
 
     display: table-cell;
     vertical-align: bottom;
-
-
+}
+#testConsole > input {
+    font-family: "Arial Narrow",sans-serif;
+    background-color: rgba(218, 218, 218, 0.40);
+    cursor:pointer;
+    padding: 0;
 }
 #testConsoleOutput {
     height: 20%;

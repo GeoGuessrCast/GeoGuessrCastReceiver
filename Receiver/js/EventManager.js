@@ -32,7 +32,7 @@
     castReceiver.event_onUserMessage = function(event){
         displayEvent('onUserMessage', event);
         //var hasUser = userManager.hasUserMac(event.data.userMac);
-        var hasUser = userManager.hasUser(event.senderId);
+        var hasUser = userManager.hasUserMac(event.data.userMac);
         if(!hasUser){
             //add new User
             var isAdmin = false;

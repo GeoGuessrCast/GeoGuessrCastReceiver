@@ -9,6 +9,7 @@
             $(this).html(data);
         });
 
+        userManager.rebuildUserList();
         console.log('mainMenu initialized');
     }
 

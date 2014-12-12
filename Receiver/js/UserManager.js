@@ -57,9 +57,23 @@
         userList.push(user);
         _setUserList(userList);
 
-        // update #userList
-        $('#mainMenuUserList').find('ul').append('<li id="sender-'+user.senderId+'">'+user.name+'</li>');
+        userManager.rebuildUserList();
     };
+
+    castReceiver.rebuildUserList = function() {     //TODO: check gameState and rebuild bottom scoreboard instead - if game is running
+        var userCssClass;
+        var userList = _getUserList();
+        var userLength = userList.length;
+        $('#mainMenuUserList').find('ul').html('');
+        for(var i = 0; i < userLength; i++){
+            if (userList[i].admin) {
+                userCssClass = 'admin';
+            } else {
+                userCssClass = 'user';
+            }
+            $('#mainMenuUserList').find('ul').append('<li class="' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
+        }
+    }
 
     /**
      * returns an array of current users
@@ -118,7 +132,7 @@
         _setUserList(userList);
 
         // update #userList
-        $('#sender-'+userId).remove();
+        $('#sender-'+userId).remove(); //TODO use MAC as userId, completly remove senderIds
     };
 
     /**
