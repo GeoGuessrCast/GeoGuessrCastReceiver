@@ -1,14 +1,7 @@
 
 
-var map;
+
 function initialize() {
-    map = window.map = new google.maps.Map(document.getElementById('map-canvas'), {
-        center: new google.maps.LatLng(45.74167213456433, 38.26884827734375),
-        zoom: 3,
-        mapTypeControl: true,
-        disableDefaultUI: true,
-        mapTypeId: google.maps.MapTypeId.SATELLITE
-    });
 
     $.ajaxSetup({async:false, cache:true});
     $.getScript( "js/EventManager.js" );
@@ -18,7 +11,6 @@ function initialize() {
     $.getScript( "js/gamemodes/GameMode_1.js" );
     $.getScript( "js/MainMenu.js" );
     $.getScript( "js/GameProfileMenu.js" );
-    $.ajaxSetup({async:true, cache:true});
 
     cast.receiver.logger.setLevelValue(0);
     window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
@@ -33,15 +25,16 @@ function initialize() {
     castReceiverManager.onSenderConnected = function(event) {
         console.log('Received Sender Connected event: ' + event.data);
         console.log(window.castReceiverManager.getSender(event.data).userAgent);
+        displayJson(event.data);
         eventManager.event_onSenderConnected(event);
     };
 
     castReceiverManager.onSenderDisconnected = function(event) {
         console.log('Received Sender Disconnected event: ' + event.data);
+        eventManager.event_onSenderDisconnected(event);
         if (window.castReceiverManager.getSenders().length == 0) {
             window.close();
         }
-        eventManager.event_onSenderDisconnected(event);
     };
 
 
@@ -67,10 +60,20 @@ function initialize() {
     };
 
 
-
+    loadDefaultMap();
 
     window.castReceiverManager.start({statusText: "Application is starting"});
     console.log('Receiver Manager started');
 
 
+}
+
+function loadDefaultMap() {
+    window.map = new google.maps.Map(document.getElementById('map-canvas'), {
+        center: new google.maps.LatLng(45.74167213456433, 38.26884827734375),
+        zoom: 3,
+        mapTypeControl: true,
+        disableDefaultUI: true,
+        mapTypeId: google.maps.MapTypeId.SATELLITE
+    });
 }

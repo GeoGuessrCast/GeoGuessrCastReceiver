@@ -1,16 +1,23 @@
 (function(castReceiver){
 
     castReceiver.event_onReady = function(event) {
-        //TODO testing...
+        try {
+            displayEvent(event);
+        } catch (Exeption) {
+            displayText('event_onReady got NULL parameter');
+            console.log('event_onReady got NULL parameter')
+        }
         mainMenu.init();
 
     };
 
     castReceiver.event_onSenderConnected = function(event){
+        displayEvent(event);
 
     };
 
     castReceiver.event_onSenderDisconnected = function(event){
+        displayEvent(event);
         var userList = userManager.getUserList();
         if(userList.length === 0) {
 
@@ -28,6 +35,7 @@
      * @param event
      */
     castReceiver.event_onUserMessage = function(event){
+        displayEvent(event);
         //var hasUser = userManager.hasUserMac(event.data.userMac);
         var hasUser = userManager.hasUser(event.senderId);
         if(!hasUser){
@@ -57,7 +65,7 @@
      * @param event
      */
     castReceiver.event_onAdminMessage = function(event){
-        displayJson(event.data);
+        displayEvent(event);
         var eventData = event.data;
 
         if(eventData.event_type === 'setGameMode'){
@@ -72,6 +80,7 @@
      * @param event
      */
     castReceiver.event_onGameMessage = function(event){
+        displayEvent(event);
         // aktueller game mode?
         // aktuelle runde?
         // was koennen fuer msg kommen?
@@ -82,6 +91,7 @@
     };
 
     castReceiver.event_onSystemVolumeChanged = function(event){
+        displayEvent(event);
 
     };
 

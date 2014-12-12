@@ -2,6 +2,9 @@
 
     castReceiver.init = function(){
         console.log('running mainMenu.init');
+
+        loadDefaultMap();
+
         $('#gameOverlay').load('templates/MainMenu.html', function (data) {
             $(this).html(data);
         });
