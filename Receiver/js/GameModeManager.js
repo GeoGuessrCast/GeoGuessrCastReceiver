@@ -77,7 +77,22 @@
     };
 
     castReceiver.setGameRoundResults = function (results) {
-        // results = array[userId]
+        // results = array[senderId]
         // get user list
+        var resultLength = results.length;
+        var userList = userManager.getUserList();
+
+        //for(var i = 0; i < resultLength; i++){
+        //    // sender id
+        //    if(results[0])
+        //}
+
+        //for(var key in results) {
+        //    if (key === 'length' || !results.hasOwnProperty(key)) continue;
+        //    // key is senderId
+        //    if()
+        //
+        //}
+
     };
 }(this.gameModeManager = this.gameModeManager || {}));

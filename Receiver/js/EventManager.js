@@ -11,11 +11,24 @@
     };
 
     castReceiver.event_onSenderDisconnected = function(event){
+        var userList = userManager.getUserList();
+        if(userList.length === 0) {
 
+        }
     };
 
 
+    // neues vorgehen
+    // onUserMessage sends event.data.userMac
+    // does user with mac address exists?
+    //
+
+    /**
+     * on message on user message bus
+     * @param event
+     */
     castReceiver.event_onUserMessage = function(event){
+        //var hasUser = userManager.hasUserMac(event.data.userMac);
         var hasUser = userManager.hasUser(event.senderId);
         if(!hasUser){
             //add new User
@@ -27,6 +40,9 @@
             userManager.addUser(user);
             //inform the Sender if the user is game leader
             window.userMessageBus.send(event.senderId, isAdmin);
+        } else {
+            // update name and senderId
+            userManager.updateUser(event.data.userMac, event.data.userName, event.senderId);
         }
         // update View or sth...
         var eventData = event.data;
@@ -36,7 +52,10 @@
         // do sth.
         gameModeManager.setGameRoundAnswer(event);
     };
-
+    /**
+     * on message on admin message bus
+     * @param event
+     */
     castReceiver.event_onAdminMessage = function(event){
         displayJson(event.data);
         var eventData = event.data;
@@ -48,6 +67,10 @@
         }
     };
 
+    /**
+     * on message on game message bus
+     * @param event
+     */
     castReceiver.event_onGameMessage = function(event){
         // aktueller game mode?
         // aktuelle runde?
