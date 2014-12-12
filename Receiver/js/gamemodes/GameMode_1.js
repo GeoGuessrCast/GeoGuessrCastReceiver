@@ -103,16 +103,19 @@
         // GMB: send prepare()
         // describes game mode properties
         var data = '{"gameMode" : "1", "timerRound" : "10000", "choices" = "null"}';
+        console.log("Prepare");
         window.gameMessageBus.broadcast(JSON.stringify(data));
+        console.log("Send prepare!");
         gameState = "started";
         gameModeManager.setGameModeStarted(1);
         //Set Timer
-        var timer = $.timer(_gameEnded(),30000,false);
-
-
-        timer.play(true);
+        var worker = new Worker('js/timer.js'); //External script
+        worker.onmessage = function(event) {    //Method called by external script
+            console.log("Timer ended");
+            _gameEnded();
+        };
+        console.log("Timer is async.")
     };
-
 
 
     function _gameEnded(){

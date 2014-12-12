@@ -18,6 +18,7 @@ function initialize() {
     $.getScript( "js/gamemodes/GameMode_1.js" );
     $.getScript( "js/MainMenu.js" );
     $.getScript( "js/GameProfileMenu.js" );
+    $.ajaxSetup({async:true, cache:true});
 
     cast.receiver.logger.setLevelValue(0);
     window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
