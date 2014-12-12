@@ -21,7 +21,7 @@
         console.log('running gameMode_1.init');
         dataManager.setValue('gameMode_currentId', 1);
         _disableMainManu();
-        map = window.map;
+        //map = window.map;
         geocoder = new google.maps.Geocoder();
 
         map = new google.maps.Map(document.getElementById('map-canvas'), {

@@ -19,16 +19,19 @@
     <script type="text/javascript" src="https://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
     <script src="js/init.js"></script>
 
+
+
     <script type="text/javascript">
         google.maps.event.addDomListener(window, 'load', initialize);
 
         function displayText(text) {
-//            document.getElementById("testConsole").innerHTML=text;
-            $('#testConsole').prepend(text+'<br/>');
+            $('#testConsoleOutput').prepend(text+'<br/>');
         }
         function displayJson(data) {
-//            document.getElementById("testConsole").innerHTML=JSON.stringify(data);
-            $('testConsole').prepend(JSON.stringify(data)+'<br/>');
+            $('#testConsoleOutput').prepend(JSON.stringify(data)+'<br/>');
+        }
+        function displayEvent(event) {
+            $('#testConsoleOutput').prepend(event.getName()+' -> '+JSON.stringify(event.data)+'<br/>');
         }
     </script>
 
@@ -45,13 +48,15 @@
             <br><br><br><br><br><br><br><br>
             waiting for users to connect...
         </div>
-
-
     </div>
+
+
     <!--testing output "console"-->
     <div id="testConsole">
+        <div id="testConsoleOutput">console ready...</div>
         <input type="button" onclick="eventManager.event_onReady(null)" value="onReady"/>
-
+        <input type="button" onclick="eventManager.event_onReady(null)" value="..."/>
     </div>
+
 </body>
 </html>
