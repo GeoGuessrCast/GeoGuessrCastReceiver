@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<script>
+    function func(){
+        var worker = new Worker('timer.js'); //External script
+        worker.onmessage = function(event) {    //Method called by external script
+            console.debug("DONE");
+
+        };
+    }
+</script>
+<body onload="func()">
+
+</body>
+</html>
