@@ -57,9 +57,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import de.tud.kp.geoguessrcast.beans.eventJsonBeans.GameMessage;
 
 /**
  * Main activity to send messages to the receiver.
@@ -555,19 +558,43 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onMessageReceived(CastDevice castDevice, String namespace,
                                       String message) {
-//            JSONObject gameMessageJSON = null;
+            Log.d(TAG, "onMessageReceived from GameChannel: " + message);
+//            JSONObject gameMessage = null;
 //            try{
-//                gameMessageJSON = new JSONObject(message);
-//                if(gameMessageJSON.get("start")=="true"){
-//                    //switch gameMode to start GameMode
-//                    if(gameMessageJSON.get("gameMode")=="1")
-//                    startGameMode1Fragment();
+//                gameMessage = new JSONObject(message.substring(message.indexOf("{"), message.lastIndexOf("}") + 1));
+//                if(gameMessage.get("event_type").equals("startGame")){
+//                    if(gameMessage.get("started").equals("true")){
+//                        //switch gameMode to start GameMode
+//                        if(gameMessage.get("gameMode").equals("1"))
+//                            startGameMode1Fragment();
+//                    }
 //                }
-//            }catch (JSONException ex) {
+//                else if(gameMessage.get("event_type").equals("gameDetail")){
+//
+//                }
+//            }
+//            catch (JSONException ex) {
 //                throw new RuntimeException(ex);
 //            }
-            startGameMode1Fragment();
-            Log.d(TAG, "onMessageReceived from GameChannel: " + message);
+
+            message = "{\"event_type\":\"gameDetail\" , \"gameMode\" : \"1\", \"timerRound\" : \"10000\", \"choices\" : \"null\"}";
+            GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
+
+            Log.d(TAG,message);
+            Log.d(TAG,"\"{\"event_type\":\"gameDetail\" , \"gameMode\" : \"1\", \"timerRound\" : \"10000\", \"choices\" : \"null\"}\"");
+
+            if(gameMessage.getEvent_type().equals("startGame")){
+                if(gameMessage.getStarted().equals("true")){
+                    //switch gameMode to start GameMode
+                    if(gameMessage.getGameMode().equals("1"))
+                        startGameMode1Fragment();
+                }
+            }
+            else if(gameMessage.getEvent_type().equals("gameDetail")){
+
+            }
+
+//            startGameMode1Fragment();
         }
     }
 

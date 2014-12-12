@@ -38,10 +38,11 @@ public class GameMode1Fragment extends Fragment {
         mActivity = (MainActivity)getActivity();
 
         Button sendCityNameBtn = (Button) mActivity.findViewById(R.id.sendCityName);
+
         sendCityNameBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 final EditText cityNameEditText = (EditText) mActivity.findViewById(R.id.cityNameEditText);
-                String cityNameJSON = "{\"type\":\"chosen\" , \"answer\":" + "\"" + cityNameEditText.getText().toString() +  "\""+ "}";
+                String cityNameJSON = "{\"event_type\":\"chosen\" , \"answer\":" + "\"" + cityNameEditText.getText().toString() +  "\""+ "}";
                 Log.d(mActivity.TAG, cityNameJSON);
                 mActivity.sendMessage(mActivity.mUserChannel, cityNameJSON);
             }

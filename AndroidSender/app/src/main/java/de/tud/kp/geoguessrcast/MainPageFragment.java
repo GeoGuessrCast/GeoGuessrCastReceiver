@@ -47,7 +47,6 @@ public class MainPageFragment extends Fragment {
         startBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(mActivity.mApiClient!=null){
-
                     String userName = playernameEditText.getText().toString();
                     String userMac = getDeviceMacAddr(mActivity);
                     User user = new User(userName, userMac);
