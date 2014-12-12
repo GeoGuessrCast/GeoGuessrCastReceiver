@@ -21,8 +21,6 @@
         this.mac = mac;
         /** @type {number} */
         this.pointsInCurrentGame = 0;
-        /** @type {string} */
-        this.mac = mac;
         /** @type {boolean} */
         this.admin = admin;
     };
@@ -72,6 +70,38 @@
     };
 
     /**
+     * checks if an {User} with a given senderId exists in storage
+     * @param {string} senderId
+     * @returns {boolean}
+     */
+    castReceiver.hasUser = function(senderId){
+        var userList = _getUserList();
+        var userLength = userList.length;
+        for(var i = 0; i < userLength; i++){
+            if(userList[i].senderId === senderId){
+                return true;
+            }
+        }
+        return false;
+    };
+
+    /**
+     * checks if an {User} with a given mac address exists in local storage
+     * @returns {boolean}
+     * @param {string} mac
+     */
+    castReceiver.hasUserMac = function(mac){
+        var userList = _getUserList();
+        var userLength = userList.length;
+        for(var i = 0; i < userLength; i++){
+            if(userList[i].mac === mac){
+                return true;
+            }
+        }
+        return false;
+    };
+
+    /**
      * removes a {User} with the given id
      * @param {number} userId
      */
@@ -92,20 +122,21 @@
     };
 
     /**
-     * when user with this userId already exists in localStorage, then return true, otherwise return false
-     * @returns {boolean}
-     * @param {number} userId
+     * update an {User}'s name and senderId
+     * @param {string} mac
+     * @param {string} userName
+     * @param {string} senderId
      */
-    castReceiver.hasUser = function(userId){
-        // update user list
+    castReceiver.updateUser = function(mac, userName, senderId){
         var userList = _getUserList();
         var userLength = userList.length;
         for(var i = 0; i < userLength; i++){
-            if(userList[i].senderId === userId){
-                return true;
+            if(userList[0].mac === mac){
+                userList[0].senderId = senderId;
+                userList[0].name = userName;
+                break;
             }
         }
-        return false;
+        _setUserList(userList);
     };
-
 }(this.userManager = this.userManager || {}));
