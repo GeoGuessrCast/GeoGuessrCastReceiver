@@ -20,7 +20,7 @@
     castReceiver.init = function(gameModeOptions, mapOptions){
         console.log('running gameMode_1.init');
         dataManager.setValue('gameMode_currentId', 1);
-        _disableMainManu();
+        _loadGameUi();
         //map = window.map;
         geocoder = new google.maps.Geocoder();
 
@@ -182,9 +182,10 @@
         });
         marker.setMap(map);
     }
-    function _disableMainManu(){
+    function _loadGameUi(){
         $('#gameOverlay').load('templates/GameMode_1.html', function (data) {
             $(this).html(data);
+            userManager.refreshBottomScoreboard();
         });
     }
     /**
@@ -242,6 +243,8 @@
                 console.log('Address could not be geocoded: ' + status);
             }
         });
+        
+        userManager.refreshBottomScoreboard(); //TODO test !
     }
 
 

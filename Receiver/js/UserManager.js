@@ -57,10 +57,12 @@
         userList.push(user);
         _setUserList(userList);
 
+
         userManager.rebuildUserList();
+        userManager.refreshBottomScoreboard(); //TODO call only 1 function - depending on gameState
     };
 
-    castReceiver.rebuildUserList = function() {     //TODO: check gameState and rebuild bottom scoreboard instead - if game is running
+    castReceiver.rebuildUserList = function() {
         var userCssClass;
         var userList = _getUserList();
         var userLength = userList.length;
@@ -72,6 +74,22 @@
                 userCssClass = 'user';
             }
             $('#mainMenuUserList').find('ul').append('<li class="' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
+        }
+    }
+
+    castReceiver.refreshBottomScoreboard = function() {
+        var userCssClass;
+        var userList = _getUserList();
+        var userLength = userList.length;
+        $('#bottomScoreboard').find('ul').html('');
+        for(var i = 0; i < userLength; i++){
+            if (userList[i].admin) {
+                userCssClass = 'admin';
+            } else {
+                userCssClass = 'user';
+            }
+            $('#bottomScoreboard').find('ul').append('<li class="' + userCssClass + '" id="'+userList[i].mac
+            + '"><span>' + userList[i].name + ': <span class="score">' + userList[i].pointsInCurrentGame + '</span></span></li>');
         }
     }
 
