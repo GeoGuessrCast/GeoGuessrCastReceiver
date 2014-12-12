@@ -66,7 +66,7 @@
      * @param {number} gameModeId
      */
     castReceiver.setGameModeStarted = function(gameModeId){
-        var data = {"event_type":"startGame", "gameMode": '+gameModeId+', "started": true};
+        var data = {"event_type":"startGame", "gameMode": gameModeId, "started": true};
         window.gameMessageBus.broadcast(data);
     };
 

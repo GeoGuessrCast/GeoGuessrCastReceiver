@@ -577,12 +577,8 @@ public class MainActivity extends ActionBarActivity {
 //                throw new RuntimeException(ex);
 //            }
 
-            message = "{\"event_type\":\"gameDetail\" , \"gameMode\" : \"1\", \"timerRound\" : \"10000\", \"choices\" : \"null\"}";
-            GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
-
-            Log.d(TAG,message);
-            Log.d(TAG,"\"{\"event_type\":\"gameDetail\" , \"gameMode\" : \"1\", \"timerRound\" : \"10000\", \"choices\" : \"null\"}\"");
-
+           GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
+            Log.d(TAG,gameMessage.getEvent_type() + gameMessage.getStarted());
             if(gameMessage.getEvent_type().equals("startGame")){
                 if(gameMessage.getStarted().equals("true")){
                     //switch gameMode to start GameMode
