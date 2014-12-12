@@ -34,9 +34,16 @@ public class ChooseModeFragment extends Fragment {
         Button chooseModeBtn = (Button) mActivity.findViewById(R.id.chooseMode);
         chooseModeBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Log.d(mActivity.TAG, "clicked");
                 mActivity.findViewById(R.id.playerConfirmTip).setVisibility(View.GONE);
                 mActivity.findViewById(R.id.gameModes).setVisibility(View.VISIBLE);
+            }
+        });
+
+        //nur zum Test
+        Button gameMode1Btn = (Button) mActivity.findViewById(R.id.gameMode1);
+        gameMode1Btn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mActivity.sendMessage(mActivity.mAdminChannel, "{\"event_type\": \"setGameMode\", \"gameMode\": \"1\"}");
             }
         });
     }

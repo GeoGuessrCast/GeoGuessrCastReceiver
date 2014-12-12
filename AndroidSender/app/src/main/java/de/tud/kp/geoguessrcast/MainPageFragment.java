@@ -51,7 +51,7 @@ public class MainPageFragment extends Fragment {
                     String userName = playernameEditText.getText().toString();
                     String userMac = getDeviceMacAddr(mActivity);
                     User user = new User(userName, userMac);
-                    mActivity.sendMessage(mActivity.mHelloWorldChannel, user.toJSONString());
+                    mActivity.sendMessage(mActivity.mUserChannel, user.toJSONString());
                     Log.d(mActivity.TAG, user.toJSONString());
                 }
                 else{

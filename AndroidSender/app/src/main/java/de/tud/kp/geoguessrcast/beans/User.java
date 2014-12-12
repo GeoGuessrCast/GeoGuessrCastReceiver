@@ -9,10 +9,12 @@ import org.json.JSONObject;
 public class User {
     private String userName;
     private String userMac;
+    private boolean isAdmin;
 
     public User(String userName, String userMac) {
         this.userName = userName;
         this.userMac = userMac;
+        this.isAdmin = false;
     }
 
     public String toJSONString(){
@@ -39,5 +41,9 @@ public class User {
 
     public void setUserMac(String userMac) {
         this.userMac = userMac;
+    }
+
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 }

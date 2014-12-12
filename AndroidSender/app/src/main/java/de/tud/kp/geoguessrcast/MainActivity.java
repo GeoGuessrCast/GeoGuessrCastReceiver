@@ -81,6 +81,7 @@ public class MainActivity extends ActionBarActivity {
     public HelloWorldChannel mHelloWorldChannel;
     public UserChannel mUserChannel;
     public AdminChannel mAdminChannel;
+    public GameChannel mGameChannel;
     private boolean mApplicationStarted;
     private boolean mWaitingForReconnect;
     private String mSessionId;
@@ -238,16 +239,16 @@ public class MainActivity extends ActionBarActivity {
                         try {
                             Cast.CastApi.setMessageReceivedCallbacks(
                                     mApiClient,
-                                    mHelloWorldChannel.getNamespace(),
-                                    mHelloWorldChannel);
-                            Cast.CastApi.setMessageReceivedCallbacks(
-                                    mApiClient,
                                     mUserChannel.getNamespace(),
                                     mUserChannel);
                             Cast.CastApi.setMessageReceivedCallbacks(
                                     mApiClient,
                                     mAdminChannel.getNamespace(),
                                     mAdminChannel);
+                            Cast.CastApi.setMessageReceivedCallbacks(
+                                    mApiClient,
+                                    mGameChannel.getNamespace(),
+                                    mGameChannel);
                         } catch (IOException e) {
                             Log.e(TAG, "Exception while creating channel", e);
                         }
@@ -292,13 +293,9 @@ public class MainActivity extends ActionBarActivity {
                                                 mHelloWorldChannel = new HelloWorldChannel();
                                                 mUserChannel = new UserChannel();
                                                 mAdminChannel = new AdminChannel();
+                                                mGameChannel = new GameChannel();
                                                 try {
-                                                    Cast.CastApi
-                                                            .setMessageReceivedCallbacks(
-                                                                    mApiClient,
-                                                                    mHelloWorldChannel
-                                                                            .getNamespace(),
-                                                                    mHelloWorldChannel);
+
                                                     Cast.CastApi
                                                             .setMessageReceivedCallbacks(
                                                                     mApiClient,
@@ -312,6 +309,12 @@ public class MainActivity extends ActionBarActivity {
                                                                     mAdminChannel
                                                                             .getNamespace(),
                                                                     mAdminChannel);
+                                                    Cast.CastApi
+                                                            .setMessageReceivedCallbacks(
+                                                                    mApiClient,
+                                                                    mGameChannel
+                                                                            .getNamespace(),
+                                                                    mGameChannel);
 
                                                 } catch (IOException e) {
                                                     Log.e(TAG,
@@ -365,12 +368,6 @@ public class MainActivity extends ActionBarActivity {
                 if (mApiClient.isConnected()  || mApiClient.isConnecting()) {
                     try {
                         Cast.CastApi.stopApplication(mApiClient, mSessionId);
-                        if (mHelloWorldChannel != null) {
-                            Cast.CastApi.removeMessageReceivedCallbacks(
-                                    mApiClient,
-                                    mHelloWorldChannel.getNamespace());
-                            mHelloWorldChannel = null;
-                        }
                         if (mUserChannel != null) {
                             Cast.CastApi.removeMessageReceivedCallbacks(
                                     mApiClient,
@@ -382,6 +379,12 @@ public class MainActivity extends ActionBarActivity {
                                     mApiClient,
                                     mAdminChannel.getNamespace());
                             mAdminChannel = null;
+                        }
+                        if (mGameChannel != null) {
+                            Cast.CastApi.removeMessageReceivedCallbacks(
+                                    mApiClient,
+                                    mGameChannel.getNamespace());
+                            mGameChannel = null;
                         }
                     } catch (IOException e) {
                         Log.e(TAG, "Exception while removing channel", e);
@@ -402,27 +405,7 @@ public class MainActivity extends ActionBarActivity {
      *
      * @param message
      */
-    public void sendMessage(HelloWorldChannel channel, String message) {
-        if (mApiClient != null && channel != null) {
-            try {
-                Cast.CastApi.sendMessage(mApiClient,
-                        channel.getNamespace(), message)
-                        .setResultCallback(new ResultCallback<Status>() {
-                            @Override
-                            public void onResult(Status result) {
-                                if (!result.isSuccess()) {
-                                    Log.e(TAG, "Sending message failed");
-                                }
-                            }
-                        });
-            } catch (Exception e) {
-                Log.e(TAG, "Exception while sending message", e);
-            }
-        } else {
-            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT)
-                    .show();
-        }
-    }
+
 
     public void sendMessage(UserChannel channel, String message) {
         if (mApiClient != null && channel != null) {
@@ -468,7 +451,27 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-
+    public void sendMessage(GameChannel channel, String message) {
+        if (mApiClient != null && channel != null) {
+            try {
+                Cast.CastApi.sendMessage(mApiClient,
+                        channel.getNamespace(), message)
+                        .setResultCallback(new ResultCallback<Status>() {
+                            @Override
+                            public void onResult(Status result) {
+                                if (!result.isSuccess()) {
+                                    Log.e(TAG, "Sending message failed");
+                                }
+                            }
+                        });
+            } catch (Exception e) {
+                Log.e(TAG, "Exception while sending message", e);
+            }
+        } else {
+            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
     /**
      * Custom message channel
      */
@@ -508,7 +511,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onMessageReceived(CastDevice castDevice, String namespace,
                                       String message) {
-            if(message=="true"){
+            if(message.equals("true")){
                 startChooseModeFragment();
             }
             else{
@@ -537,7 +540,38 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    private void startWaitingFragment(){
+    class GameChannel implements MessageReceivedCallback {
+
+        /**
+         * @return custom namespace
+         */
+        public String getNamespace() {
+            return getString(R.string.gameChannel);
+        }
+
+        /*
+         * Receive message from the receiver app
+         */
+        @Override
+        public void onMessageReceived(CastDevice castDevice, String namespace,
+                                      String message) {
+//            JSONObject gameMessageJSON = null;
+//            try{
+//                gameMessageJSON = new JSONObject(message);
+//                if(gameMessageJSON.get("start")=="true"){
+//                    //switch gameMode to start GameMode
+//                    if(gameMessageJSON.get("gameMode")=="1")
+//                    startGameMode1Fragment();
+//                }
+//            }catch (JSONException ex) {
+//                throw new RuntimeException(ex);
+//            }
+            startGameMode1Fragment();
+            Log.d(TAG, "onMessageReceived from GameChannel: " + message);
+        }
+    }
+
+    public void startWaitingFragment(){
         getFragmentManager()
                 .beginTransaction()
 
@@ -560,27 +594,21 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-    private void startChooseModeFragment(){
+    public void startChooseModeFragment(){
         getFragmentManager()
                 .beginTransaction()
-
-                        // Replace the default fragment animations with animator resources representing
-                        // rotations when switching to the back of the card, as well as animator
-                        // resources representing rotations when flipping back to the front (e.g. when
-                        // the system Back button is pressed).
-                .setCustomAnimations(R.animator.fragment_fade_enter , R.animator.fragment_fade_exit)
-
-                        // Replace any fragments currently in the container view with a fragment
-                        // representing the next page (indicated by the just-incremented currentPage
-                        // variable).
+                .setCustomAnimations(R.animator.fragment_fade_enter, R.animator.fragment_fade_exit)
                 .replace(R.id.main_page_container, new ChooseModeFragment())
-
-                        // Add this transaction to the back stack, allowing users to press Back
-                        // to get to the front of the card.
                 .addToBackStack(null)
-
-                        // Commit the transaction.
                 .commit();
     }
 
+    public void startGameMode1Fragment(){
+        getFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.animator.fragment_fade_enter , R.animator.fragment_fade_exit)
+                .replace(R.id.main_page_container, new GameMode1Fragment())
+                .addToBackStack(null)
+                .commit();
+    }
 }
