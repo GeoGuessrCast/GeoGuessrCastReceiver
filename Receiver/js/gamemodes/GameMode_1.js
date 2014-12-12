@@ -14,9 +14,10 @@
     /**
      * Intializes Game Mode 1
      * TODO {sh} : Parameters: Choices = true/false
-     * @param parameters
+     * @param mapOptions
+     * @param gameModeOptions
      */
-    castReceiver.init = function(parameters){
+    castReceiver.init = function(gameModeOptions, mapOptions){
         console.log('running gameMode_1.init');
         dataManager.setValue('gameMode_currentId', 1);
         _disableMainManu();

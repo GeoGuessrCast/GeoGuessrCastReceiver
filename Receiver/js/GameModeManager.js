@@ -4,8 +4,21 @@
     // set empty gameMode
     dataManager.setValue('gameMode_currentId', 0);
     dataManager.setValue('gameMode_currentRound', 0);
-    //dataManager.setValue('gameModes', JSON.stringify([]));
-    //gameMode_1.init();
+
+    // constants
+    castReceiver.gm1 = {
+        iconUrl: 'string',
+        header: 'string',
+        profileName : 'Profile #1'
+
+    };
+
+    castReceiver.p1 = {
+        profileName: 'Profile #1',
+        mapOption: {
+            mapType : 'huhu'
+        }
+    };
 
     /**
      * sets the current round to 0
