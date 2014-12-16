@@ -95,7 +95,7 @@
 
         //asynchronous call to handle query data
         var jqxhr = $.get(queryurl, function(data){
-            _dataHandler(data);
+            _getRandomPositionOfRound(data);
         } , "jsonp");
         console.log("Game Mode 1 started: "+jqxhr);
         //reset user map
@@ -113,7 +113,7 @@
         var worker = new Worker('js/timer.js'); //External script
         worker.onmessage = function(event) {    //Method called by external script
             console.log("Timer ended");
-            _gameEnded();
+            _gameEnded(); // evtl ohne ()?
         };
         console.log("Timer is async.")
     };
@@ -122,12 +122,29 @@
     function _gameEnded(){
         gameState = "ended";
         // calculate results, set markers visible
+        console.log("Calculating Results...");
+        for (player in guesses) {
 
-        //gamemodemanager.inc round
-        console.log("Round ended")
+            var points = 0;
+            var dist =  guesses[player];
+            var distInKm = dist / 1000;
+            console.log("Player:"+ player+ " Dist:"+ dist + " ("+distInKm+")");
+            points = Math.max(0,Math.min(10,(1100-distInKm)/100));
+            /* Alte Version (noch drin falls neue Formel nicht funktioniert):
+            if (dist == 0){
+                console.log("richtig");
+                points = 1;
+            } else {
+                points = 1 - (1 / (dist*1000));
+            }*/
+            results[player] = points;
+            console.log("Points: "+points);
 
+        }
+        console.log("Results calculated, Round ended");
+        // notify game mode manager that round has ended
         gameModeManager.incCurrentRound();
-
+        // send results array to gmm
         gameModeManager.setGameRoundResults(results);
 
     }
@@ -147,7 +164,7 @@
      * gets the data from the sql query with the address and zooms into the address
      * @param response
      */
-    function _dataHandler(response) {
+    function _getRandomPositionOfRound(response) {
         //do something with the data using response.rows
         console.log("New Round");
         var address = response.rows[0][0];
@@ -224,19 +241,10 @@
 
                 // get Distance to right answer (if not the same)
                 var dist = _getDistance(pos,goal);
-                var points = 0;
 
-                if (dist == 0){
-                    console.log("richtig");
-                    points = 1;
-                } else {
-                    points = 1 - (1 / (dist*1000));
-                }
-                console.log("Player: "+player+ "Dist: "+dist+" Points: "+points);
+                console.log("Player: "+player+ "Dist: "+dist);
                 // dist save
                 guesses[player] = dist;
-                // results maybe later
-                results[player] = points;
 
 
             } else {
