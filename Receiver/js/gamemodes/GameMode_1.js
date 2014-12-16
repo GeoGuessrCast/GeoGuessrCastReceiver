@@ -9,6 +9,7 @@
     //Google API Key
     var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
     var guesses = {}; // Map UserID:Answer
+    var positions = {}; //Map UserID:Guessed Position
     var results = {}; // Map UserId:Points
     var gameState;
     /**
@@ -139,6 +140,12 @@
             }*/
             results[player] = points;
             console.log("Points: "+points);
+            // get the saved guessed position for this player
+            var pos = positions[player];
+            console.log("Position: "+ pos);
+            // Now Place the marker on the map:
+            _placeMarkerOnMap(pos, player);
+
 
         }
         console.log("Results calculated, Round ended");
@@ -190,7 +197,7 @@
      * @param pos
      * @param player
      */
-    function _setMarker(pos,player){
+    function _placeMarkerOnMap(pos,player){
         var marker = new google.maps.Marker({
             position: pos,
             //map: map,
@@ -237,7 +244,8 @@
             if (status == google.maps.GeocoderStatus.OK) {
                 var pos = results[0].geometry.location;
                 console.log("Pos: "+pos);
-                _setMarker(pos, player);
+                // Saves the Position the Player guessed
+                positions[player] = pos;
 
                 // get Distance to right answer (if not the same)
                 var dist = _getDistance(pos,goal);
