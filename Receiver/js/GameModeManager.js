@@ -85,6 +85,16 @@
      * @param {number} gameModeId
      */
     castReceiver.setGameRoundEnded = function(gameModeId) {
+        switch (gameModeId){
+            case 1:
+                gameMode_1.roundEnded();
+                break;
+            case 2:
+                // gameMode_2.roundEnded();
+                break;
+            default :
+                gameMode_1.roundEnded();
+        }
         var data = {"event_type":"round_ended", "gameMode": gameModeId, "ended": true};
         window.gameMessageBus.broadcast(data);
     };
