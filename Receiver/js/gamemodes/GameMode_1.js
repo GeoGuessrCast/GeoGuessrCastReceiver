@@ -235,6 +235,7 @@
      */
     castReceiver.onChosenMessage = function(userMac, answer){
         console.log("New Guess: "+userMac+" : "+answer);
+        displayText("New Guess: "+userMac+" chose "+answer);
         _calculateGuess(answer,userMac);
     };
     /**

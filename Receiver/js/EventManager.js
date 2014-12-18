@@ -28,23 +28,35 @@
      */
     castReceiver.event_onUserMessage = function(event){
         displayEvent('onUserMessage', event);
-        var hasUser = userManager.hasUserMac(event.data.userMac);
-        if(!hasUser){
-            //add new User
-            var isAdmin = false;
-            if(userManager.getUserList().length === 0) {
-                isAdmin = true;
-            }
-            var user = new userManager.User(event.senderId, event.data.userName, event.data.userMac, isAdmin );
-            userManager.addUser(user);
-            //inform the Sender if the user is game leader
-            window.userMessageBus.send(event.senderId, isAdmin);
-        } else {
-            // update name and senderId
-            userManager.updateUser(event.data.userMac, event.data.userName, event.senderId);
-        }
-        // update View or sth...
         var eventData = event.data;
+
+        /*
+        switch (eventData.event_type) {
+            case 'createUser':
+
+        }*/
+
+        if(eventData.event_type === 'createUser') { //TODO USE ENUM !!!!!!!
+            var hasUser = userManager.hasUserMac(event.data.userMac);
+            if (!hasUser) {
+                //add new User
+                var isAdmin = false;
+                if (userManager.getUserList().length === 0) {
+                    isAdmin = true;
+                }
+                var user = new userManager.User(event.senderId, event.data.userName, event.data.userMac, isAdmin);
+                userManager.addUser(user);
+                //inform the Sender if the user is game leader
+                window.userMessageBus.send(event.senderId, isAdmin);
+            } else {
+                // update name and senderId
+                userManager.updateUser(event.data.userMac, event.data.userName, event.senderId);
+            }
+        }
+
+
+
+        // update View or sth...
         if(eventData.event_type === 'gameRound_answerChosen') {
             gameModeManager.setGameRoundAnswer(event.data.userMac, event.data.answer);
         }
