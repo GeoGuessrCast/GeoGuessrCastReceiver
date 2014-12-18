@@ -89,11 +89,11 @@
         layer.setMap(map);
         //console.log("Done"); //TODO use meaningfull messages!  eg:  'RoundManager.js: done loading map.'
 
-        gameMode_1.startRound( 0 );
+        gameMode_1.startRound( 1 );
     };
 
     castReceiver.startRound = function(roundNumber) {
-        displayText('RoundManager: round ' + roundNumber + ' startet' );
+        displayText('RoundManager: round ' + roundNumber + ' startet.' );
         // Builds a Fusion Tables SQL query and hands the result to  dataHandler
         // write your SQL as normal, then encode it
         var query = "SELECT * FROM " + ftTableId + " WHERE "+where+" OFFSET "+ x +" LIMIT 1"; //TODO put all queries into dataManager... getGeoObjects()... etc
@@ -142,7 +142,7 @@
             var dist =  guesses[player];
             var distInKm = dist / 1000;
             console.log("Player:"+ player+ " Dist:"+ dist + " ("+distInKm+")");
-            points = Math.max(0,Math.min(10,(1100-distInKm)/100));
+            points = Math.floor(Math.max(0,Math.min(10,(1100-distInKm)/100)));
             /* Alte Version (noch drin falls neue Formel nicht funktioniert):
             if (dist == 0){
                 console.log("richtig");
