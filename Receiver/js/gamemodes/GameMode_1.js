@@ -4,12 +4,12 @@
     var ftTableId = "13Ajs8twEaALtd19pa6LxRpYHLRxFwzdDGKQ2iu-2";
     var locationColumn = "col1";
     var where = "col4 \x3e\x3d 100000 and col3 contains ignoring case \x27DE\x27";
-    var goal,guess;
+    var goal;
     var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
     //Google API Key
     var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
-    var guesses = {}; // Map UserID:Answer
-    var positions = {}; //Map UserID:Guessed Position
+    var guesses = {}; // Map UserID:Distanz zum Ziel
+    var positions = {}; //Map UserID:LatLong Position
     var results = {}; // Map UserId:Points
     var gameState;
     /**
@@ -35,7 +35,7 @@
         });
         var style = [
             {
-                "featureType": "administrative.locality",
+                "featureType": "administrative",
                 "elementType": "labels.text",
                 "stylers": [
                     {"visibility": "off"}
@@ -75,7 +75,6 @@
                 select: locationColumn,
                 from: ftTableId,
                 where: where,
-                //orderBy: "RAND()",
                 offset: x,
                 limit: "1"
             },
@@ -110,17 +109,19 @@
         console.log("Send prepare!");
         gameState = "started";
         gameModeManager.setGameModeStarted(1);
-        //Set Timer
+/*        //Set Timer
         var worker = new Worker('js/timer.js'); //External script
         worker.onmessage = function(event) {    //Method called by external script
             console.log("Timer ended");
-            _gameEnded(); // evtl ohne ()?
+            roundEnded(); // evtl ohne ()?
         };
-        console.log("Timer is async.")
+        console.log("Timer is async.")*/
     };
 
-
-    function _gameEnded(){
+    /**
+     *  Is called from GMM to end current round, all results are calculated
+     */
+    castReceiver.roundEnded = function(){
         gameState = "ended";
         // calculate results, set markers visible
         console.log("Calculating Results...");
@@ -153,6 +154,7 @@
         gameModeManager.incCurrentRound();
         // send results array to gmm
         gameModeManager.setGameRoundResults(results);
+        userManager.refreshBottomScoreboard(); //TODO test !
 
     }
     /**
@@ -213,7 +215,7 @@
         });
     }
     /**
-     * Called from event handler to calculate right/wrong answers
+     * Called from event handler to calculate answers
      * @param event
      */
     castReceiver.onChosenMessage = function(event){
@@ -225,14 +227,13 @@
             console.log("New Guess: "+userId+" : "+answer);
             _calculateGuess(answer,userId);
             // TODO {sh}: maybe delay because of rate limit
-            // TODO {sh}: Set Markers invisble and only show after round finishes
         }
 
     };
     /**
      * Calculates the distance between the guess and the goal coordinates
      * @param address
-     * @param playerId
+     * @param player
      */
     function _calculateGuess(address, player){
         // get Geolocation
@@ -260,7 +261,6 @@
             }
         });
         
-        userManager.refreshBottomScoreboard(); //TODO test !
     }
 
 
