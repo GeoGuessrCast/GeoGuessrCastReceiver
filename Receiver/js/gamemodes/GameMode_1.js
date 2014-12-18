@@ -222,9 +222,13 @@
         //});
         //styleIconClass.set("color",color);
 
+        var pinColor = color;
+        var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor);
+
         var marker = new google.maps.Marker({
             position: pos,
             //map: map,
+            icon: pinImage,
             title: "Player: "+player,
             animation: google.maps.Animation.DROP
         });
