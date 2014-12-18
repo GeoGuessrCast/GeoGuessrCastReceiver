@@ -68,6 +68,10 @@
             // set game mode // init
             gameModeManager.setGameMode(eventData.gameMode);
         }
+
+        if(eventData.event_type === 'setGameRoundEnded'){
+            gameModeManager.setGameRoundEnded(eventData.gameMode);
+        }
     };
 
     /**
@@ -76,6 +80,7 @@
      */
     castReceiver.event_onGameMessage = function(event){
         displayEvent('onGameMessage', event);
+
         // aktueller game mode?
         // aktuelle runde?
         // was koennen fuer msg kommen?

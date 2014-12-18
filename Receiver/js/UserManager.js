@@ -75,7 +75,7 @@
             }
             $('#mainMenuUserList').find('ul').append('<li class="' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
         }
-    }
+    };
 
     castReceiver.refreshBottomScoreboard = function() {
         var userCssClass;
@@ -91,7 +91,7 @@
             $('#bottomScoreboard').find('ul').append('<li class="' + userCssClass + '" id="'+userList[i].mac
             + '"><span>' + userList[i].name + ': <span class="score">' + userList[i].pointsInCurrentGame + '</span></span></li>');
         }
-    }
+    };
 
     /**
      * returns an array of current users

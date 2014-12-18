@@ -4,11 +4,12 @@
     // set empty gameMode
     dataManager.setValue('gameMode_currentId', 0);
     dataManager.setValue('gameMode_currentRound', 0);
+    dataManager.setValue('gameMode_maxRounds', 5);
 
     // constants
     castReceiver.gm1 = {
         iconUrl: 'string',
-        header: 'string',
+        header: 'string'
 
     };
 
@@ -31,9 +32,20 @@
      */
     castReceiver.incCurrentRound = function(){
         // get current round
-        var currentRound = parseInt( dataManager.getValue('gameMode_currentRound') || 0 );
+        var currentRound = parseInt( dataManager.getValue('gameMode_currentRound') || 0),
+            maxRounds = parseInt( dataManager.getValue('gameMode_maxRounds') || 0);
+
         currentRound = currentRound + 1;
         dataManager.setValue('gameMode_currentRound', currentRound);
+
+        // check if max rounds reached
+        if(currentRound === maxRounds) {
+            // end game mode
+            var data = {"ended": true, "event_type":"game_ended"};
+            window.gameMessageBus.broadcast(data);
+
+            // todo fm show final scoreboard
+        }
     };
 
     /**
@@ -57,15 +69,23 @@
                 break;
             default : gameMode_1.init();
         }
-
     };
 
     /**
-     * send gameModeStarted Event to all connected sender
+     * send gameModeStarted Event to all connected senders
      * @param {number} gameModeId
      */
     castReceiver.setGameModeStarted = function(gameModeId){
         var data = {"event_type":"startGame", "gameMode": gameModeId, "started": true};
+        window.gameMessageBus.broadcast(data);
+    };
+
+    /**
+     * send gameModeEnded Event to all connected senders
+     * @param {number} gameModeId
+     */
+    castReceiver.setGameRoundEnded = function(gameModeId) {
+        var data = {"event_type":"round_ended", "gameMode": gameModeId, "ended": true};
         window.gameMessageBus.broadcast(data);
     };
 
