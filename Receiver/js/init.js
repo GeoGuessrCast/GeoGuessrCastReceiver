@@ -25,16 +25,12 @@ function initialize() {
     castReceiverManager.onSenderConnected = function(event) {
         console.log('Received Sender Connected event: ' + event.data);
         console.log(window.castReceiverManager.getSender(event.data).userAgent);
-        displayJson(event.data);
         eventManager.event_onSenderConnected(event);
     };
 
     castReceiverManager.onSenderDisconnected = function(event) {
         console.log('Received Sender Disconnected event: ' + event.data);
         eventManager.event_onSenderDisconnected(event);
-        if (window.castReceiverManager.getSenders().length == 0) {
-            window.close();
-        }
     };
 
 

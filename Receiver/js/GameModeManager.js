@@ -77,7 +77,9 @@
      */
     castReceiver.setGameModeStarted = function(gameModeId){
         var data = {"event_type":"startGame", "gameMode": gameModeId, "started": true};
-        window.gameMessageBus.broadcast(data);
+        try {
+            window.gameMessageBus.broadcast(data);
+        } catch (Exception) {}
         displayText('[GMB] setGameModeStarted broadcasted');
     };
 
@@ -85,18 +87,9 @@
      * send gameModeEnded Event to all connected senders
      * @param {number} gameModeId
      */
-    castReceiver.setGameRoundEnded = function(gameModeId) {
-        switch (gameModeId){
-            case 1:
-                gameMode_1.roundEnded();
-                break;
-            case 2:
-                // gameMode_2.roundEnded();
-                break;
-            default :
-                gameMode_1.roundEnded();
-        }
-        var data = {"event_type":"round_ended", "gameMode": gameModeId, "ended": true};
+    castReceiver.setGameRoundEnded = function() {
+        gameMode_1.roundEnded();
+        var data = {"event_type":"round_ended", "ended": true};
         window.gameMessageBus.broadcast(data);
         displayText('[GMB] setGameRoundEnded broadcasted');
     };
@@ -107,6 +100,7 @@
      * @param {string} answer
      */
     castReceiver.setGameRoundAnswer = function(userMac, answer) {
+        displayText('setGameRoundAnswer -> ' + userMac + ', ' + answer);
         gameMode_1.onChosenMessage(userMac, answer);
     };
 

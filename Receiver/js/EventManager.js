@@ -13,17 +13,14 @@
 
     castReceiver.event_onSenderDisconnected = function(event){
         displayEvent('onSenderDisconnected', event);
-        var userList = userManager.getUserList();
-        if(userList.length === 0) {
 
+        userManager.removeUser(event.data.userMac);
+
+        if (window.castReceiverManager.getSenders().length == 0) {
+            window.close();
         }
+
     };
-
-
-    // neues vorgehen
-    // onUserMessage sends event.data.userMac
-    // does user with mac address exists?
-    //
 
     /**
      * on message on user message bus
@@ -31,7 +28,6 @@
      */
     castReceiver.event_onUserMessage = function(event){
         displayEvent('onUserMessage', event);
-        //var hasUser = userManager.hasUserMac(event.data.userMac);
         var hasUser = userManager.hasUserMac(event.data.userMac);
         if(!hasUser){
             //add new User
@@ -50,8 +46,6 @@
         // update View or sth...
         var eventData = event.data;
         if(eventData.event_type === 'gameRound_answerChosen') {
-            displayText('[AMB] chosen - event received');
-            // event.data.userMac
             gameModeManager.setGameRoundAnswer(event.data.userMac, event.data.answer);
         }
     };
@@ -64,14 +58,12 @@
         var eventData = event.data;
 
         if(eventData.event_type === 'setGameMode'){
-            displayText('[AMB] setGameMode - event received');
-            // set game mode // init
             gameModeManager.setGameMode(eventData.gameMode);
         }
 
         if(eventData.event_type === 'setGameRoundEnded'){
-            displayText('[AMB] setGameRoundEnded - event received');
-            gameModeManager.setGameRoundEnded(eventData.gameMode);
+            displayText('got setGameRoundEnded, ignoring it.');
+            //gameModeManager.setGameRoundEnded(eventData.gameMode);
         }
     };
 
@@ -92,8 +84,6 @@
     };
 
     castReceiver.event_onSystemVolumeChanged = function(event){
-
-
     };
 
 }(this.eventManager = this.eventManager || {}));

@@ -105,17 +105,19 @@
         // describes game mode properties
         var data = {"event_type":"gameDetail" , "gameMode" : "1", "timerRound" : "60000", "choices" : "null"};
         console.log("Prepare");
-        window.gameMessageBus.broadcast(data);
-        console.log("Send prepare!");
+        try {
+            window.gameMessageBus.broadcast(data);
+        } catch (Exeption) {}
+
         gameState = "started";
         gameModeManager.setGameModeStarted(1);
-        /*
         //Set Timer
+        console.log("starting RoundTimer....");
         var worker = new Worker('js/timer.js'); //External script
         worker.onmessage = function(event) {    //Method called by external script
             console.log("gamemode1: onMessage !");
-            gameMode_1.roundEnded();
-        };*/
+            gameModeManager.setGameRoundEnded();
+        };
     };
 
     /**

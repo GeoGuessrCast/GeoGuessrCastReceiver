@@ -161,12 +161,12 @@
      * removes a {User} with the given id
      * @param {number} userId
      */
-    castReceiver.removeUser = function(userId){
+    castReceiver.removeUser = function(userMac){
         // update user list
         var userList = _getUserList();
         var userLength = userList.length;
         for(var i = 0; i < userLength; i++){
-            if(userList[0].senderId === userId){
+            if(userList[i].senderId === userId){ //TODO userList[0] ????? fixme!
                 userList.splice(i, 1);
                 break;
             }
@@ -195,9 +195,9 @@
         var userList = _getUserList();
         var userLength = userList.length;
         for(var i = 0; i < userLength; i++){
-            if(userList[0].mac === mac){
-                userList[0].senderId = senderId;
-                userList[0].name = userName;
+            if(userList[i].mac === mac){
+                userList[i].senderId = senderId;
+                userList[i].name = userName;
                 break;
             }
         }
