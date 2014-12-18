@@ -199,14 +199,22 @@
      * @param pos
      * @param player
      */
-    function _placeMarkerOnMap(pos,player){
-        var marker = new google.maps.Marker({
+    function _placeMarkerOnMap(pos,player,color){
+        var styleIconClass = new StyledIcon(StyledIconTypes.CLASS,{color:"#ff0000"});
+        var styleMaker1 = new StyledMarker({
+            styleIcon: new StyledIcon(StyledIconTypes.MARKER, {text: ""}, styleIconClass),
+            position: pos,
+            map: map
+        });
+        styleIconClass.set("color",color);
+
+/*        var marker = new google.maps.Marker({
             position: pos,
             //map: map,
             title: "Player: "+player,
             animation: google.maps.Animation.DROP
         });
-        marker.setMap(map);
+        marker.setMap(map);*/
     }
     function _loadGameUi(){
         $('#gameOverlay').load('templates/GameMode_1.html', function (data) {
