@@ -103,19 +103,19 @@
         results = {};
         // GMB: send prepare()
         // describes game mode properties
-        var data = {"event_type":"gameDetail" , "gameMode" : "1", "timerRound" : "10000", "choices" : "null"};
+        var data = {"event_type":"gameDetail" , "gameMode" : "1", "timerRound" : "60000", "choices" : "null"};
         console.log("Prepare");
         window.gameMessageBus.broadcast(data);
         console.log("Send prepare!");
         gameState = "started";
         gameModeManager.setGameModeStarted(1);
-/*        //Set Timer
+        /*
+        //Set Timer
         var worker = new Worker('js/timer.js'); //External script
         worker.onmessage = function(event) {    //Method called by external script
-            console.log("Timer ended");
-            roundEnded(); // evtl ohne ()?
-        };
-        console.log("Timer is async.")*/
+            console.log("gamemode1: onMessage !");
+            gameMode_1.roundEnded();
+        };*/
     };
 
     /**
@@ -124,7 +124,7 @@
     castReceiver.roundEnded = function(){
         gameState = "ended";
         // calculate results, set markers visible
-        console.log("Calculating Results...");
+        console.log("GameMode_1.js.roundEnded: Calculating Results...");
         for (player in guesses) {
 
             var points = 0;
@@ -145,7 +145,10 @@
             var pos = positions[player];
             console.log("Position: "+ pos);
             // Now Place the marker on the map:
-            _placeMarkerOnMap(pos, player);
+            var user = userManager.getUserByMac(player);
+            var color = user.color;
+
+            _placeMarkerOnMap(pos, player,color);
 
 
         }
@@ -199,7 +202,15 @@
      * @param pos
      * @param player
      */
-    function _placeMarkerOnMap(pos,player){
+    function _placeMarkerOnMap(pos,player,color){
+        //var styleIconClass = new StyledIcon(StyledIconTypes.CLASS,{color:"#ff0000"});
+        //var styleMaker1 = new StyledMarker({
+        //    styleIcon: new StyledIcon(StyledIconTypes.MARKER, {text: ""}, styleIconClass),
+        //    position: pos,
+        //    map: map
+        //});
+        //styleIconClass.set("color",color);
+
         var marker = new google.maps.Marker({
             position: pos,
             //map: map,
@@ -214,21 +225,15 @@
             userManager.refreshBottomScoreboard();
         });
     }
+
     /**
      * Called from event handler to calculate answers
-     * @param event
+     * @param userMac
+     * @param answer
      */
-    castReceiver.onChosenMessage = function(event){
-        var eventType = event.data.event_type;
-        var userId = event.senderId;
-        // && gameState == "started"
-        if (eventType == "chosen"){
-            var answer = event.data.answer;
-            console.log("New Guess: "+userId+" : "+answer);
-            _calculateGuess(answer,userId);
-            // TODO {sh}: maybe delay because of rate limit
-        }
-
+    castReceiver.onChosenMessage = function(userMac, answer){
+        console.log("New Guess: "+userMac+" : "+answer);
+        _calculateGuess(answer,userMac);
     };
     /**
      * Calculates the distance between the guess and the goal coordinates

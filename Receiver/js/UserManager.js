@@ -23,6 +23,8 @@
         this.pointsInCurrentGame = 0;
         /** @type {boolean} */
         this.admin = admin;
+        /** @type {string} **/
+        this.color = '#' + Math.floor(Math.random()*16777215).toString(16);
     };
 
     /**
@@ -62,6 +64,9 @@
         userManager.refreshBottomScoreboard(); //TODO call only 1 function - depending on gameState
     };
 
+    /**
+     *
+     */
     castReceiver.rebuildUserList = function() {
         var userCssClass;
         var userList = _getUserList();
@@ -77,6 +82,9 @@
         }
     };
 
+    /**
+     *
+     */
     castReceiver.refreshBottomScoreboard = function() {
         var userCssClass;
         var userList = _getUserList();
@@ -91,6 +99,22 @@
             $('#bottomScoreboard').find('ul').append('<li class="' + userCssClass + '" id="'+userList[i].mac
             + '"><span>' + userList[i].name + ': <span class="score">' + userList[i].pointsInCurrentGame + '</span></span></li>');
         }
+    };
+
+    /**
+     * returns a {User} with a given max address, false otherwise
+     * @param {string} mac
+     * @returns {User|boolean}
+     */
+    castReceiver.getUserByMac = function(mac){
+        var userList = _getUserList();
+        var userLength = userList.length;
+        for(var i = 0; i < userLength; i++){
+            if(userList[i].mac === mac){
+                return userList[i];
+            }
+        }
+        return false;
     };
 
     /**
@@ -151,6 +175,14 @@
 
         // update #userList
         $('#sender-'+userId).remove(); //TODO use MAC as userId, completly remove senderIds
+    };
+
+    /**
+     * sets user list
+     * @param {Array.<User>} userList
+     */
+    castReceiver.setUserList = function(userList){
+        _setUserList(userList);
     };
 
     /**

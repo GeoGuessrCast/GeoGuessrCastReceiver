@@ -49,11 +49,11 @@
         }
         // update View or sth...
         var eventData = event.data;
-        if(eventData.event_type === 'chosen') {
+        if(eventData.event_type === 'gameRound_answerChosen') {
             displayText('[AMB] chosen - event received');
+            // event.data.userMac
+            gameModeManager.setGameRoundAnswer(event.data.userMac, event.data.answer);
         }
-        // do sth.
-        gameModeManager.setGameRoundAnswer(event);
     };
     /**
      * on message on admin message bus
@@ -70,6 +70,7 @@
         }
 
         if(eventData.event_type === 'setGameRoundEnded'){
+            displayText('[AMB] setGameRoundEnded - event received');
             gameModeManager.setGameRoundEnded(eventData.gameMode);
         }
     };

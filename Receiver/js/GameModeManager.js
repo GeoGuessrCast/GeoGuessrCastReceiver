@@ -78,6 +78,7 @@
     castReceiver.setGameModeStarted = function(gameModeId){
         var data = {"event_type":"startGame", "gameMode": gameModeId, "started": true};
         window.gameMessageBus.broadcast(data);
+        displayText('[GMB] setGameModeStarted broadcasted');
     };
 
     /**
@@ -97,44 +98,39 @@
         }
         var data = {"event_type":"round_ended", "gameMode": gameModeId, "ended": true};
         window.gameMessageBus.broadcast(data);
+        displayText('[GMB] setGameRoundEnded broadcasted');
     };
 
     /**
-     *
-     * @param event
+     * sets the {User}'s answer from sender to game mode
+     * @param {string} userMac
+     * @param {string} answer
      */
-    castReceiver.setGameRoundAnswer = function(event) {
-        switch(dataManager.getValue('gameMode_currentId')){
-            case 1:
-                gameMode_1.onChosenMessage(event);
-                break;
-            case 2:
-                //gameMode_2.init();
-                break;
-            case 3:
-                //gameMode_3.init();
-                break;
-            default : gameMode_1.onChosenMessage(event);
-        }
+    castReceiver.setGameRoundAnswer = function(userMac, answer) {
+        gameMode_1.onChosenMessage(userMac, answer);
     };
 
+    /**
+     * sets the points of current round to the {User}s
+     * @param {Array}results
+     */
     castReceiver.setGameRoundResults = function (results) {
-        // results = array[senderId]
+        // results = array[userMac]
         // get user list
-        var resultLength = results.length;
-        var userList = userManager.getUserList();
+        var resultLength = results.length,
+            userList = userManager.getUserList();
+        var userListLength = userList.length;
 
-        //for(var i = 0; i < resultLength; i++){
-        //    // sender id
-        //    if(results[0])
-        //}
-
-        //for(var key in results) {
-        //    if (key === 'length' || !results.hasOwnProperty(key)) continue;
-        //    // key is senderId
-        //    if()
-        //
-        //}
-
+        for (var key in results) {
+            if(key === 'length' || !results.hasOwnProperty(key)) continue;
+            // key is userMac
+            for(var i = 0; i<userListLength; i++){
+                if(userList[i].mac == key) {
+                    userList[i].pointsInCurrentGame = userList[i].pointsInCurrentGame + results[key];
+                    displayText('userMac: ' + userList[i].mac + ', points added: '+ results[key]);
+                }
+            }
+        }
+        userManager.setUserList(userList);
     };
 }(this.gameModeManager = this.gameModeManager || {}));
