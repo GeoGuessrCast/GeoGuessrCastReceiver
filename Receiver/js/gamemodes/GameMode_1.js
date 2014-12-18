@@ -145,7 +145,10 @@
             var pos = positions[player];
             console.log("Position: "+ pos);
             // Now Place the marker on the map:
-            _placeMarkerOnMap(pos, player);
+            var user = userManager.getUserByMac(player);
+            var color = user.color;
+
+            _placeMarkerOnMap(pos, player,color);
 
 
         }
