@@ -135,7 +135,7 @@
         gameState = "ended";
         // calculate results, set markers visible
         console.log("GameMode_1.js.roundEnded: Calculating Results...");
-        displayText('RoundManager: round ??? ended' );
+        displayText('RoundManager: round ' + dataManager.getValue('gameMode_currentRound') +  ' ended' );
         for (player in guesses) {
 
             var points = 0;
