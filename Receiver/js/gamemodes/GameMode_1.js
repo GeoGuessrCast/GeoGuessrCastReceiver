@@ -109,13 +109,13 @@
         console.log("Send prepare!");
         gameState = "started";
         gameModeManager.setGameModeStarted(1);
-/*        //Set Timer
+        /*
+        //Set Timer
         var worker = new Worker('js/timer.js'); //External script
         worker.onmessage = function(event) {    //Method called by external script
-            console.log("Timer ended");
-            roundEnded(); // evtl ohne ()?
-        };
-        console.log("Timer is async.")*/
+            console.log("gamemode1: onMessage !");
+            gameMode_1.roundEnded();
+        };*/
     };
 
     /**
@@ -124,7 +124,7 @@
     castReceiver.roundEnded = function(){
         gameState = "ended";
         // calculate results, set markers visible
-        console.log("Calculating Results...");
+        console.log("GameMode_1.js.roundEnded: Calculating Results...");
         for (player in guesses) {
 
             var points = 0;
@@ -203,21 +203,21 @@
      * @param player
      */
     function _placeMarkerOnMap(pos,player,color){
-        var styleIconClass = new StyledIcon(StyledIconTypes.CLASS,{color:"#ff0000"});
-        var styleMaker1 = new StyledMarker({
-            styleIcon: new StyledIcon(StyledIconTypes.MARKER, {text: ""}, styleIconClass),
-            position: pos,
-            map: map
-        });
-        styleIconClass.set("color",color);
+        //var styleIconClass = new StyledIcon(StyledIconTypes.CLASS,{color:"#ff0000"});
+        //var styleMaker1 = new StyledMarker({
+        //    styleIcon: new StyledIcon(StyledIconTypes.MARKER, {text: ""}, styleIconClass),
+        //    position: pos,
+        //    map: map
+        //});
+        //styleIconClass.set("color",color);
 
-/*        var marker = new google.maps.Marker({
+        var marker = new google.maps.Marker({
             position: pos,
             //map: map,
             title: "Player: "+player,
             animation: google.maps.Animation.DROP
         });
-        marker.setMap(map);*/
+        marker.setMap(map);
     }
     function _loadGameUi(){
         $('#gameOverlay').load('templates/GameMode_1.html', function (data) {
