@@ -109,13 +109,13 @@
         console.log("Send prepare!");
         gameState = "started";
         gameModeManager.setGameModeStarted(1);
-/*        //Set Timer
+        /*
+        //Set Timer
         var worker = new Worker('js/timer.js'); //External script
         worker.onmessage = function(event) {    //Method called by external script
-            console.log("Timer ended");
-            roundEnded(); // evtl ohne ()?
-        };
-        console.log("Timer is async.")*/
+            console.log("gamemode1: onMessage !");
+            gameMode_1.roundEnded();
+        };*/
     };
 
     /**
@@ -124,7 +124,7 @@
     castReceiver.roundEnded = function(){
         gameState = "ended";
         // calculate results, set markers visible
-        console.log("Calculating Results...");
+        console.log("GameMode_1.js.roundEnded: Calculating Results...");
         for (player in guesses) {
 
             var points = 0;

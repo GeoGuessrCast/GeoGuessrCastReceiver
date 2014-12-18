@@ -65,13 +65,14 @@ function initialize() {
     window.castReceiverManager.start({statusText: "Application is starting"});
     console.log('Receiver Manager started');
 
+    /*
     var worker = new Worker('js/timer.js'); //External script
     worker.onmessage = function(event) {    //Method called by external script
         console.log("init.js: onmessage !");
         eventManager.event_onReady(null);
     };
     console.log("init.js ended")
-
+    */
 }
 
 function loadDefaultMap() {
