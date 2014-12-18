@@ -24,8 +24,11 @@
         /** @type {boolean} */
         this.admin = admin;
         /** @type {string} **/
-        //this.color = '#' + Math.floor(Math.random()*16777215).toString(16);
-        this.color = '#' + Math.floor(Math.random()*50).toString(16) + Math.floor(Math.random()*50).toString(16) + Math.floor(Math.random()*50).toString(16);
+        this.color = '#' + Math.floor(Math.random()*16777215).toString(16);
+        this.color = '#'
+        + Math.floor(Math.random()*89+10).toString()
+        + Math.floor(Math.random()*89+10).toString()
+        + Math.floor(Math.random()*89+10).toString();
     };
 
     /**

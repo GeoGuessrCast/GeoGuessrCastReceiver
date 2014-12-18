@@ -247,8 +247,8 @@
      * @param answer
      */
     castReceiver.onChosenMessage = function(userMac, answer){
-        console.log("New Guess: "+userMac+" : "+answer);
-        displayText("New Guess: "+userMac+" chose "+answer);
+        //console.log("New Guess: "+userMac+" : "+answer);
+        //displayText("New Guess: "+userMac+" chose "+answer);  events werden ohnehin mit allen JSON daten angezeigt !
         _calculateGuess(answer,userMac);
     };
     /**
