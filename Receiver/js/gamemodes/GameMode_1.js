@@ -103,7 +103,7 @@
         results = {};
         // GMB: send prepare()
         // describes game mode properties
-        var data = {"event_type":"gameDetail" , "gameMode" : "1", "timerRound" : "10000", "choices" : "null"};
+        var data = {"event_type":"gameDetail" , "gameMode" : "1", "timerRound" : "60000", "choices" : "null"};
         console.log("Prepare");
         window.gameMessageBus.broadcast(data);
         console.log("Send prepare!");
@@ -145,7 +145,10 @@
             var pos = positions[player];
             console.log("Position: "+ pos);
             // Now Place the marker on the map:
-            _placeMarkerOnMap(pos, player);
+            var user = userManager.getUserByMac(player);
+            var color = user.color;
+
+            _placeMarkerOnMap(pos, player,color);
 
 
         }
@@ -199,14 +202,22 @@
      * @param pos
      * @param player
      */
-    function _placeMarkerOnMap(pos,player){
-        var marker = new google.maps.Marker({
+    function _placeMarkerOnMap(pos,player,color){
+        var styleIconClass = new StyledIcon(StyledIconTypes.CLASS,{color:"#ff0000"});
+        var styleMaker1 = new StyledMarker({
+            styleIcon: new StyledIcon(StyledIconTypes.MARKER, {text: ""}, styleIconClass),
+            position: pos,
+            map: map
+        });
+        styleIconClass.set("color",color);
+
+/*        var marker = new google.maps.Marker({
             position: pos,
             //map: map,
             title: "Player: "+player,
             animation: google.maps.Animation.DROP
         });
-        marker.setMap(map);
+        marker.setMap(map);*/
     }
     function _loadGameUi(){
         $('#gameOverlay').load('templates/GameMode_1.html', function (data) {
