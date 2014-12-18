@@ -24,7 +24,7 @@
      * sets the current round to 0
      */
     castReceiver.clearRounds = function(){
-        dataManager.setValue('gameMode_currentRound', 0);
+        dataManager.setValue('gameMode_currentRound', 0);  //TODO dont use key-value store for global variables ('magic values') and maybe dont use global vars
     };
 
     /**
@@ -45,6 +45,9 @@
             window.gameMessageBus.broadcast(data);
 
             // todo fm show final scoreboard
+        } else {
+            // next round...
+
         }
     };
 
