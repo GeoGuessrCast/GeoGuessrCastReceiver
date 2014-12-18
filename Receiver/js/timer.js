@@ -1,17 +1,13 @@
-/**
- * Created by Stefan on 12.12.2014.
- */
-console.debug("Timer");
 
 //do some things
-console.log("BBBLLLAAAAAA");
+console.log("calling timer.js");
 setTimeout(continueExecution, 10000) //wait ten seconds before continuing
-console.log("BLASDAADSASFASFSASFASF");
+console.log("timer.js: passed setTimeout line");
+
 function continueExecution()
 {
-    console.debug("Weiter");
-
+    console.log("timer.js: continueExecution()");
     postMessage(null);
-    console.debug("Weiter2");
+    console.log("timer.js: continueExecution() ends");
 
 }

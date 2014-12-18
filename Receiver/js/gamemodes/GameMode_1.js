@@ -222,21 +222,15 @@
             userManager.refreshBottomScoreboard();
         });
     }
+
     /**
      * Called from event handler to calculate answers
-     * @param event
+     * @param userMac
+     * @param answer
      */
-    castReceiver.onChosenMessage = function(event){
-        var eventType = event.data.event_type;
-        var userId = event.senderId;
-        // && gameState == "started"
-        if (eventType == "chosen"){
-            var answer = event.data.answer;
-            console.log("New Guess: "+userId+" : "+answer);
-            _calculateGuess(answer,userId);
-            // TODO {sh}: maybe delay because of rate limit
-        }
-
+    castReceiver.onChosenMessage = function(userMac, answer){
+        console.log("New Guess: "+userMac+" : "+answer);
+        _calculateGuess(answer,userMac);
     };
     /**
      * Calculates the distance between the guess and the goal coordinates
