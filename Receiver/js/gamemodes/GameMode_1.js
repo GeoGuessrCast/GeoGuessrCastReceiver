@@ -12,15 +12,19 @@
     var positions = {}; //Map UserID:LatLong Position
     var results = {}; // Map UserId:Points
     var gameState;
+    var min = 1;
+    var max = 98; //TODO use COUNT query in dataManager
+    // Creates Random X
+    var x = Math.floor(Math.random() * (max - min)) + min;
     /**
      * Intializes Game Mode 1
      * TODO {sh} : Parameters: Choices = true/false
      * @param mapOptions
      * @param gameModeOptions
      */
-    castReceiver.init = function(gameModeOptions, mapOptions){
+    castReceiver.init = function(gameModeOptions, mapOptions){ //TODO USE GAMEMODE OPTION PARAMETERS !
         console.log('running gameMode_1.init');
-        dataManager.setValue('gameMode_currentId', 1);
+        dataManager.setValue('gameMode_currentId', 1); //TODO GET gameMode_currentId FROM GAMEMODE OPTIONS !
         _loadGameUi();
         //map = window.map;
         geocoder = new google.maps.Geocoder();
@@ -63,12 +67,9 @@
         });
         map.mapTypes.set('map-style', styledMapType);
         map.setMapTypeId('map-style');
-        gameState = "initialized";
+        gameState = "initialized"; //TODO use external ENUM
         console.log('gameMode_1 initialized');
-        var min = 1;
-        var max = 98; //TODO: dynamisch über Anzahl an Rows machen?
-        // Creates Random X
-        var x = Math.floor(Math.random() * (max - min)) + min;
+
 
         layer = new google.maps.FusionTablesLayer({
             query: {
@@ -86,24 +87,30 @@
         });
 
         layer.setMap(map);
-        console.log("Done");
+        //console.log("Done"); //TODO use meaningfull messages!  eg:  'RoundManager.js: done loading map.'
+
+        gameMode_1.startRound( 0 );
+    };
+
+    castReceiver.startRound = function(roundNumber) {
+        displayText('RoundManager: round ' + roundNumber + ' startet' );
         // Builds a Fusion Tables SQL query and hands the result to  dataHandler
         // write your SQL as normal, then encode it
-        var query = "SELECT * FROM " + ftTableId + " WHERE "+where+" OFFSET "+ x+" LIMIT 1";
-        console.log(query);
+        var query = "SELECT * FROM " + ftTableId + " WHERE "+where+" OFFSET "+ x +" LIMIT 1"; //TODO put all queries into dataManager... getGeoObjects()... etc
+        //console.log(query);
         var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
 
         //asynchronous call to handle query data
         var jqxhr = $.get(queryurl, function(data){
             _getRandomPositionOfRound(data);
         } , "jsonp");
-        console.log("Game Mode 1 started: "+jqxhr);
+        //console.log("Game Mode 1 started: "+jqxhr);
         //reset user map
         guesses = {};
         results = {};
         // GMB: send prepare()
         // describes game mode properties
-        var data = {"event_type":"gameDetail" , "gameMode" : "1", "timerRound" : "60000", "choices" : "null"};
+        var data = {"event_type":"gameDetail" , "gameMode" : "1", "timerRound" : "30000", "choices" : "null"};
         console.log("Prepare");
         try {
             window.gameMessageBus.broadcast(data);
@@ -118,7 +125,8 @@
             console.log("gamemode1: onMessage !");
             gameModeManager.setGameRoundEnded();
         };
-    };
+
+    }
 
     /**
      *  Is called from GMM to end current round, all results are calculated
@@ -127,6 +135,7 @@
         gameState = "ended";
         // calculate results, set markers visible
         console.log("GameMode_1.js.roundEnded: Calculating Results...");
+        displayText('RoundManager: round ??? ended' );
         for (player in guesses) {
 
             var points = 0;
