@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -62,6 +64,7 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.tud.kp.geoguessrcast.beans.User;
 import de.tud.kp.geoguessrcast.beans.eventJsonBeans.GameMessage;
 
 /**
@@ -88,6 +91,8 @@ public class MainActivity extends ActionBarActivity {
     private boolean mApplicationStarted;
     private boolean mWaitingForReconnect;
     private String mSessionId;
+    private boolean doubleBackToExitPressedOnce;
+    public User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +106,7 @@ public class MainActivity extends ActionBarActivity {
                 .add(R.id.main_page_container, new MainPageFragment())
                 .commit();
 
+//        startFragment(new MainPageFragment());
 
         // Configure Cast device discovery
         mMediaRouter = MediaRouter.getInstance(getApplicationContext());
@@ -113,6 +119,21 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    public void onBackPressed(){
+        //double click back button to exit
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+        }
+        doubleBackToExitPressedOnce = true;
+        Toast.makeText(getApplicationContext(), "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
+    }
 
     @Override
     protected void onResume() {
@@ -147,16 +168,6 @@ public class MainActivity extends ActionBarActivity {
         // Set the MediaRouteActionProvider selector for device discovery.
         mediaRouteActionProvider.setRouteSelector(mMediaRouteSelector);
         return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        //Back to the prev Fragment
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
-            this.finish();
-        } else {
-            getFragmentManager().popBackStack();
-        }
     }
 
     /**
@@ -515,10 +526,11 @@ public class MainActivity extends ActionBarActivity {
         public void onMessageReceived(CastDevice castDevice, String namespace,
                                       String message) {
             if(message.equals("true")){
-                startChooseModeFragment();
+                user.setAdmin(true);
+                startFragment(new ChooseModeFragment());
             }
             else{
-                startWaitingFragment();
+                startFragment(new WaitingFragment());
             }
             Log.d(TAG, "onMessageReceived from UserChannel: " + message);
         }
@@ -559,78 +571,27 @@ public class MainActivity extends ActionBarActivity {
         public void onMessageReceived(CastDevice castDevice, String namespace,
                                       String message) {
             Log.d(TAG, "onMessageReceived from GameChannel: " + message);
-//            JSONObject gameMessage = null;
-//            try{
-//                gameMessage = new JSONObject(message.substring(message.indexOf("{"), message.lastIndexOf("}") + 1));
-//                if(gameMessage.get("event_type").equals("startGame")){
-//                    if(gameMessage.get("started").equals("true")){
-//                        //switch gameMode to start GameMode
-//                        if(gameMessage.get("gameMode").equals("1"))
-//                            startGameMode1Fragment();
-//                    }
-//                }
-//                else if(gameMessage.get("event_type").equals("gameDetail")){
-//
-//                }
-//            }
-//            catch (JSONException ex) {
-//                throw new RuntimeException(ex);
-//            }
 
-           GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
-            Log.d(TAG,gameMessage.getEvent_type() + gameMessage.getStarted());
+            GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
             if(gameMessage.getEvent_type().equals("startGame")){
                 if(gameMessage.getStarted().equals("true")){
                     //switch gameMode to start GameMode
                     if(gameMessage.getGameMode().equals("1"))
-                        startGameMode1Fragment();
+                        startFragment(new GameMode1Fragment());
                 }
             }
             else if(gameMessage.getEvent_type().equals("gameDetail")){
 
             }
 
-//            startGameMode1Fragment();
         }
     }
 
-    public void startWaitingFragment(){
-        getFragmentManager()
-                .beginTransaction()
-
-                        // Replace the default fragment animations with animator resources representing
-                        // rotations when switching to the back of the card, as well as animator
-                        // resources representing rotations when flipping back to the front (e.g. when
-                        // the system Back button is pressed).
-                .setCustomAnimations(R.animator.fragment_fade_enter , R.animator.fragment_fade_exit)
-                        // Replace any fragments currently in the container view with a fragment
-                        // representing the next page (indicated by the just-incremented currentPage
-                        // variable).
-                .replace(R.id.main_page_container, new WaitingFragment())
-
-                        // Add this transaction to the back stack, allowing users to press Back
-                        // to get to the front of the card.
-                .addToBackStack(null)
-
-                        // Commit the transaction.
-                .commit();
-    }
-
-
-    public void startChooseModeFragment(){
-        getFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.animator.fragment_fade_enter, R.animator.fragment_fade_exit)
-                .replace(R.id.main_page_container, new ChooseModeFragment())
-                .addToBackStack(null)
-                .commit();
-    }
-
-    public void startGameMode1Fragment(){
+    public void startFragment(Fragment fragment){
         getFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.animator.fragment_fade_enter , R.animator.fragment_fade_exit)
-                .replace(R.id.main_page_container, new GameMode1Fragment())
+                .replace(R.id.main_page_container, fragment)
                 .addToBackStack(null)
                 .commit();
     }

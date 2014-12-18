@@ -11,8 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.util.Timer;
 import java.util.TimerTask;
+
+import de.tud.kp.geoguessrcast.beans.eventJsonBeans.GameMessage;
 
 /**
  * Created by Kaijun on 11/12/14.
@@ -21,9 +25,11 @@ import java.util.TimerTask;
 public class GameMode1Fragment extends Fragment {
 
     MainActivity mActivity;
-    Timer timer = new Timer();
+    CountDownTimer timer;
+    boolean isAnswerSendet;
 
     public GameMode1Fragment() {
+        this.isAnswerSendet = false;
     }
 
     @Override
@@ -42,23 +48,43 @@ public class GameMode1Fragment extends Fragment {
         sendCityNameBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 final EditText cityNameEditText = (EditText) mActivity.findViewById(R.id.cityNameEditText);
-                String cityNameJSON = "{\"event_type\":\"chosen\" , \"answer\":" + "\"" + cityNameEditText.getText().toString() +  "\""+ "}";
-                Log.d(mActivity.TAG, cityNameJSON);
+                String cityNameJSON = "{\"event_type\":\"gameRound_answerChosen\" , \"answer\":" + "\"" + cityNameEditText.getText().toString() +  "\""+ ", \"userMac\":\"" + mActivity.user.getUserMac() + "\"}";
                 mActivity.sendMessage(mActivity.mUserChannel, cityNameJSON);
+                isAnswerSendet = true;
+                mActivity.startFragment(new WaitingFragment());
+
             }
         });
 
         final TextView timerTextView = (TextView) mActivity.findViewById(R.id.gameTimer);
 
-        new CountDownTimer(10000, 1000) {
+        timer = new CountDownTimer(60000, 1000) {
             public void onTick(long millisUntilFinished) {
                 timerTextView.setText(String.valueOf(millisUntilFinished / 1000));
             }
             public void onFinish() {
-                timerTextView.setText("done!");
-                mActivity.startWaitingFragment();
+                if(mActivity.user.isAdmin() == true){
+                    String roundEndedJSON = getRoundEndedJSONString();
+                    mActivity.sendMessage(mActivity.mAdminChannel, roundEndedJSON);
+                }
+                if(!isAnswerSendet){
+                    timerTextView.setText("Round Ended!");
+                    String cityNameJSON = "{\"event_type\":\"gameRound_answerChosen\" , \"answer\":" + "\"\""+ ", \"userMac\":\"" + mActivity.user.getUserMac() + "\"}";
+                    mActivity.sendMessage(mActivity.mUserChannel, cityNameJSON);
+                    mActivity.startFragment(new WaitingFragment());
+                }
             }
-        }.start();
+        };
+        timer.start();
+    }
+
+    private String getRoundEndedJSONString(){
+        GameMessage roundEndedMsg = new GameMessage();
+        roundEndedMsg.setEvent_type("setGameRoundEnded");
+        roundEndedMsg.setGameMode("1");
+        final Gson gson = new Gson();
+        String jsonString = gson.toJson(roundEndedMsg);
+        return jsonString;
     }
 
 

@@ -8,12 +8,15 @@ import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,9 +28,11 @@ import de.tud.kp.geoguessrcast.beans.User;
  */
 public class MainPageFragment extends Fragment {
 
-    MainActivity mActivity;
+    private MainActivity mActivity;
+    private boolean doubleBackToExitPressedOnce;
 
     public MainPageFragment() {
+        doubleBackToExitPressedOnce = false;
     }
 
     @Override
@@ -49,16 +54,46 @@ public class MainPageFragment extends Fragment {
                 if(mActivity.mApiClient!=null){
                     String userName = playernameEditText.getText().toString();
                     String userMac = getDeviceMacAddr(mActivity);
-                    User user = new User(userName, userMac);
-                    mActivity.sendMessage(mActivity.mUserChannel, user.toJSONString());
-                    Log.d(mActivity.TAG, user.toJSONString());
+                    mActivity.user = new User(userName, userMac);
+                    mActivity.sendMessage(mActivity.mUserChannel, mActivity.user.toJSONString());
+                    Log.d(mActivity.TAG, mActivity.user.toJSONString());
                 }
                 else{
-                    Log.d(mActivity.TAG, "plz connect the Chrome Cast at first");
+                    Log.d(mActivity.TAG, "Please connect the Chrome Cast at first");
 
                 }
             }
         });
+
+//        // bind EventListener for back button
+//        View fragmentView = this.getView();
+//        fragmentView.setFocusableInTouchMode(true);
+//        fragmentView.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+//                //Because OnKey bind both down/up Event, so this is the filter for up Event.
+//                if (keyEvent.getAction()!=KeyEvent.ACTION_DOWN)
+//                    return true;
+//                if( i == KeyEvent.KEYCODE_BACK )
+//                {
+//                    //double click back button to exit
+//                    if (doubleBackToExitPressedOnce) {
+//                        mActivity.onBackPressed();
+//                        return true;
+//                    }
+//                    doubleBackToExitPressedOnce = true;
+//                    Toast.makeText(mActivity, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            doubleBackToExitPressedOnce = false;
+//                        }
+//                    }, 2000);
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
     }
 
     /**

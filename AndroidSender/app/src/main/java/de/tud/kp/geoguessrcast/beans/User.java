@@ -10,17 +10,19 @@ public class User {
     private String userName;
     private String userMac;
     private boolean isAdmin;
+    private String event_type;
 
     public User(String userName, String userMac) {
         this.userName = userName;
         this.userMac = userMac;
         this.isAdmin = false;
+        this.event_type = "createUser";
     }
 
     public String toJSONString(){
         JSONObject userData = new JSONObject();
         try {
-            userData.put("userName", this.userName).put("userMac", this.userMac);
+            userData.put("userName", this.userName).put("userMac", this.userMac).put("event_type", this.event_type);
         }catch (JSONException ex) {
             throw new RuntimeException(ex);
         }
@@ -33,6 +35,10 @@ public class User {
 
     public String getUserMac() {
         return userMac;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
     }
 
     public void setUserName(String userName) {
