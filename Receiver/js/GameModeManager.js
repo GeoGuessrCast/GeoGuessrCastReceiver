@@ -47,7 +47,7 @@
             // todo fm show final scoreboard
         } else {
             // next round...
-            gameMode_1.startRound(currentRound);
+            //gameMode_1.startRound(currentRound);
         }
     };
 
