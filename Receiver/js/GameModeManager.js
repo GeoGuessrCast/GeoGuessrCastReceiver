@@ -78,6 +78,7 @@
     castReceiver.setGameModeStarted = function(gameModeId){
         var data = {"event_type":"startGame", "gameMode": gameModeId, "started": true};
         window.gameMessageBus.broadcast(data);
+        displayText('[GMB] setGameModeStarted broadcasted');
     };
 
     /**
@@ -87,6 +88,7 @@
     castReceiver.setGameRoundEnded = function(gameModeId) {
         var data = {"event_type":"round_ended", "gameMode": gameModeId, "ended": true};
         window.gameMessageBus.broadcast(data);
+        displayText('[GMB] setGameRoundEnded broadcasted');
     };
 
     /**

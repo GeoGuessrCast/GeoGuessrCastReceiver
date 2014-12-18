@@ -70,6 +70,7 @@
         }
 
         if(eventData.event_type === 'setGameRoundEnded'){
+            displayText('[AMB] setGameRoundEnded - event received');
             gameModeManager.setGameRoundEnded(eventData.gameMode);
         }
     };
