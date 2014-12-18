@@ -102,6 +102,22 @@
     };
 
     /**
+     * returns a {User} with a given max address, false otherwise
+     * @param {string} mac
+     * @returns {User|boolean}
+     */
+    castReceiver.getUserByMac = function(mac){
+        var userList = _getUserList();
+        var userLength = userList.length;
+        for(var i = 0; i < userLength; i++){
+            if(userList[i].mac === mac){
+                return userList[i];
+            }
+        }
+        return false;
+    };
+
+    /**
      * returns an array of current users
      * @returns {Array.<User>}
      */
