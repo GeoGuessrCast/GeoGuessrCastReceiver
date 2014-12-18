@@ -24,7 +24,8 @@
         /** @type {boolean} */
         this.admin = admin;
         /** @type {string} **/
-        this.color = '#' + Math.floor(Math.random()*16777215).toString(16);
+        //this.color = '#' + Math.floor(Math.random()*16777215).toString(16);
+        this.color = '#' + Math.floor(Math.random()*50).toString(16) + Math.floor(Math.random()*50).toString(16) + Math.floor(Math.random()*50).toString(16);
     };
 
     /**
@@ -78,7 +79,7 @@
             } else {
                 userCssClass = 'user';
             }
-            $('#mainMenuUserList').find('ul').append('<li class="' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
+            $('#mainMenuUserList').find('ul').append('<li style="color:' + userList[i].color + '" class="' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
         }
     };
 
@@ -97,7 +98,7 @@
                 userCssClass = 'user';
             }
             $('#bottomScoreboard').find('ul').append('<li class="' + userCssClass + '" id="'+userList[i].mac
-            + '"><span sytle="color:' + userList[i].color + '">' + userList[i].name + ': <span class="score">' + userList[i].pointsInCurrentGame + '</span></span></li>');
+            + '"><span style="color:' + userList[i].color + '">' + userList[i].name + ': <span class="score">' + userList[i].pointsInCurrentGame + '</span></span></li>');
         }
     };
 
