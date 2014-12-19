@@ -100,13 +100,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         //init main page fragment
-        getFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.animator.fragment_fade_enter , R.animator.fragment_fade_exit)
-                .add(R.id.main_page_container, new MainPageFragment())
-                .commit();
-
-//        startFragment(new MainPageFragment());
+        startFragment(new MainPageFragment());
 
         // Configure Cast device discovery
         mMediaRouter = MediaRouter.getInstance(getApplicationContext());
@@ -124,6 +118,8 @@ public class MainActivity extends ActionBarActivity {
         //double click back button to exit
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
+            clearFragmentBackStack();
+            finish();
         }
         doubleBackToExitPressedOnce = true;
         Toast.makeText(getApplicationContext(), "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
@@ -583,6 +579,12 @@ public class MainActivity extends ActionBarActivity {
             else if(gameMessage.getEvent_type().equals("gameDetail")){
 
             }
+            else if(gameMessage.getEvent_type().equals("game_ended")){
+                if(gameMessage.isEnded()==true){
+                    clearFragmentBackStack();
+                    startFragment(new MainPageFragment());
+                }
+            }
 
         }
     }
@@ -594,5 +596,9 @@ public class MainActivity extends ActionBarActivity {
                 .replace(R.id.main_page_container, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    public void clearFragmentBackStack(){
+        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 }

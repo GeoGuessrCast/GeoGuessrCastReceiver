@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,11 +44,11 @@ public class GameMode1Fragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mActivity = (MainActivity)getActivity();
 
-        Button sendCityNameBtn = (Button) mActivity.findViewById(R.id.sendCityName);
+        final EditText cityNameEditText = (EditText) mActivity.findViewById(R.id.cityNameEditText);
+        final Button sendCityNameBtn = (Button) mActivity.findViewById(R.id.sendCityName);
 
         sendCityNameBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                final EditText cityNameEditText = (EditText) mActivity.findViewById(R.id.cityNameEditText);
                 String cityNameJSON = "{\"event_type\":\"gameRound_answerChosen\" , \"answer\":" + "\"" + cityNameEditText.getText().toString() +  "\""+ ", \"userMac\":\"" + mActivity.user.getUserMac() + "\"}";
                 mActivity.sendMessage(mActivity.mUserChannel, cityNameJSON);
                 isAnswerSendet = true;
@@ -56,17 +57,30 @@ public class GameMode1Fragment extends Fragment {
             }
         });
 
-        final TextView timerTextView = (TextView) mActivity.findViewById(R.id.gameTimer);
+        cityNameEditText.setOnKeyListener(new View.OnKeyListener(){
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    switch (i)
+                    {
+                        case KeyEvent.KEYCODE_ENTER:
+                            sendCityNameBtn.performClick();
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
 
-        timer = new CountDownTimer(60000, 1000) {
+        final TextView timerTextView = (TextView) mActivity.findViewById(R.id.gameTimer);
+        timer = new CountDownTimer(30000, 1000) {
             public void onTick(long millisUntilFinished) {
                 timerTextView.setText(String.valueOf(millisUntilFinished / 1000));
             }
             public void onFinish() {
-                if(mActivity.user.isAdmin() == true){
-                    String roundEndedJSON = getRoundEndedJSONString();
-                    mActivity.sendMessage(mActivity.mAdminChannel, roundEndedJSON);
-                }
                 if(!isAnswerSendet){
                     timerTextView.setText("Round Ended!");
                     String cityNameJSON = "{\"event_type\":\"gameRound_answerChosen\" , \"answer\":" + "\"\""+ ", \"userMac\":\"" + mActivity.user.getUserMac() + "\"}";
@@ -78,14 +92,30 @@ public class GameMode1Fragment extends Fragment {
         timer.start();
     }
 
-    private String getRoundEndedJSONString(){
-        GameMessage roundEndedMsg = new GameMessage();
-        roundEndedMsg.setEvent_type("setGameRoundEnded");
-        roundEndedMsg.setGameMode("1");
-        final Gson gson = new Gson();
-        String jsonString = gson.toJson(roundEndedMsg);
-        return jsonString;
+    @Override
+    public void onPause(){
+        resetTimer();
+        super.onPause();
     }
-
-
+    @Override
+    public void onStop(){
+        resetTimer();
+        super.onStop();
+    }
+    @Override
+    public void onDetach(){
+        resetTimer();
+        super.onDetach();
+    }
+    @Override
+    public void onDestroy(){
+        resetTimer();
+        super.onDestroy();
+    }
+    private void resetTimer(){
+        if(this.timer!=null){
+            this.timer.cancel();
+            this.timer = null;
+        }
+    }
 }

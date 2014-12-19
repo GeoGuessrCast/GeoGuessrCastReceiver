@@ -44,6 +44,7 @@ public class ChooseModeFragment extends Fragment {
         gameMode1Btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mActivity.sendMessage(mActivity.mAdminChannel, "{\"event_type\": \"setGameMode\", \"gameMode\": \"1\"}");
+                mActivity.startFragment(new WaitingFragment());
             }
         });
     }

@@ -45,14 +45,33 @@ public class MainPageFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mActivity = (MainActivity)getActivity();
 
-        final EditText playernameEditText = (EditText) mActivity.findViewById(R.id.playername);
-        playernameEditText.setText(getDeviceUsername(getActivity()));
+        final EditText usernameEditText = (EditText) mActivity.findViewById(R.id.playername);
+        final Button startBtn = (Button) mActivity.findViewById(R.id.startbtn);
 
-        Button startBtn = (Button) mActivity.findViewById(R.id.startbtn);
+        usernameEditText.setText(getDeviceUsername(getActivity()));
+        usernameEditText.setOnKeyListener(new View.OnKeyListener(){
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN)
+                {
+                    switch (i)
+                    {
+                        case KeyEvent.KEYCODE_ENTER:
+                            startBtn.performClick();
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
+
+
         startBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(mActivity.mApiClient!=null){
-                    String userName = playernameEditText.getText().toString();
+                    String userName = usernameEditText.getText().toString();
                     String userMac = getDeviceMacAddr(mActivity);
                     mActivity.user = new User(userName, userMac);
                     mActivity.sendMessage(mActivity.mUserChannel, mActivity.user.toJSONString());
@@ -102,9 +121,12 @@ public class MainPageFragment extends Fragment {
     private String getDeviceUsername(Context context){
         AccountManager accountManager = AccountManager.get(context);
         Account[] accounts = accountManager.getAccountsByType("com.google");
-        String email= accounts[0].name;
-        String name = email.split("@")[0];
-        return name;
+        if(accounts.length>0){
+            String email= accounts[0].name;
+            String name = email.split("@")[0];
+            return name;
+        }
+        return "";
     }
     /**
      * get Mac Address of this android device

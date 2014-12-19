@@ -11,6 +11,7 @@
     var guesses = {}; // Map UserID:Distanz zum Ziel
     var positions = {}; //Map UserID:LatLong Position
     var results = {}; // Map UserId:Points
+    var markers = {}; //Google Map Marker
     var gameState;
     var min = 1;
     var max = 98; //TODO use COUNT query in dataManager
@@ -238,7 +239,16 @@
             animation: google.maps.Animation.DROP
         });
         marker.setMap(map);
+        markers.push(marker);
     }
+
+    function _clearMarkersOnMap(){
+        markers.map(function (marker) {
+            marker.setAllMap(null);
+        });
+        markers = {};
+    }
+
     function _loadGameUi(){
         $('#gameOverlay').load('templates/GameMode_1.html', function (data) {
             $(this).html(data);
