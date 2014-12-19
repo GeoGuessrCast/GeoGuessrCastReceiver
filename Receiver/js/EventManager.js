@@ -46,12 +46,12 @@
                 }
                 var user = new userManager.User(event.senderId, event.data.userName, event.data.userMac, isAdmin);
                 userManager.addUser(user);
-                //inform the Sender if the user is game leader
-                window.userMessageBus.send(event.senderId, isAdmin);
             } else {
                 // update name and senderId
                 userManager.updateUser(event.data.userMac, event.data.userName, event.senderId);
             }
+            //inform the Sender if the user is game leader
+            window.userMessageBus.send(event.senderId, userManager.isUserAdmin(event.senderId));
         }
 
 

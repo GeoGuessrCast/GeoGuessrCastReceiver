@@ -35,8 +35,6 @@
         var currentRound = parseInt( dataManager.getValue('gameMode_currentRound') || 1),
             maxRounds = parseInt( dataManager.getValue('gameMode_maxRounds') || 10);
 
-        currentRound = currentRound + 1;
-        dataManager.setValue('gameMode_currentRound', currentRound);
 
         // check if max rounds reached
         if(currentRound === maxRounds) {
@@ -44,9 +42,13 @@
             var data = {"ended": true, "event_type":"game_ended"};
             window.gameMessageBus.broadcast(data);
 
+            mainMenu.init();
             // todo fm show final scoreboard
         } else {
             // next round...
+            currentRound = currentRound + 1;
+            dataManager.setValue('gameMode_currentRound', currentRound);
+
             setTimeout(function(){
                 gameMode_1.startRound(currentRound);
             }, 10000);

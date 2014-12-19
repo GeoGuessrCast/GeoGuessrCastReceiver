@@ -146,6 +146,22 @@
     };
 
     /**
+     * checks if an {User} with a given senderId is Admin
+     * @param {string} senderId
+     * @returns {boolean}
+     */
+    castReceiver.isUserAdmin = function(senderId){
+        var userList = _getUserList();
+        var userLength = userList.length;
+        for(var i = 0; i < userLength; i++){
+            if(userList[i].senderId === senderId){
+                return userList[i].admin;
+            }
+        }
+        return false;
+    };
+
+    /**
      * checks if an {User} with a given mac address exists in local storage
      * @returns {boolean}
      * @param {string} mac
