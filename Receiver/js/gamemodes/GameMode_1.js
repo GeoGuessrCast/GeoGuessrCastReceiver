@@ -71,6 +71,14 @@
         console.log('gameMode_1 initialized');
 
 
+        //console.log("Done"); //TODO use meaningfull messages!  eg:  'RoundManager.js: done loading map.'
+
+        gameMode_1.startRound( 1 );
+    };
+
+    castReceiver.startRound = function(roundNumber) {
+        displayText('RoundManager: round ' + roundNumber + ' started.' );
+
         layer = new google.maps.FusionTablesLayer({
             query: {
                 select: locationColumn,
@@ -87,13 +95,9 @@
         });
 
         layer.setMap(map);
-        //console.log("Done"); //TODO use meaningfull messages!  eg:  'RoundManager.js: done loading map.'
 
-        gameMode_1.startRound( 1 );
-    };
 
-    castReceiver.startRound = function(roundNumber) {
-        displayText('RoundManager: round ' + roundNumber + ' startet.' );
+
         // Builds a Fusion Tables SQL query and hands the result to  dataHandler
         // write your SQL as normal, then encode it
         var query = "SELECT * FROM " + ftTableId + " WHERE "+where+" OFFSET "+ x +" LIMIT 1"; //TODO put all queries into dataManager... getGeoObjects()... etc
@@ -108,6 +112,7 @@
         //reset user map
         guesses = {};
         results = {};
+        positions = {};
         // GMB: send prepare()
         // describes game mode properties
         var data = {"event_type":"gameDetail" , "gameMode" : "1", "timerRound" : "30000", "choices" : "null"};
@@ -132,7 +137,7 @@
      *  Is called from GMM to end current round, all results are calculated
      */
     castReceiver.roundEnded = function(){
-        gameState = "ended";
+        gameState = "ended"; //TODO no magic values ! ...use enum
         // calculate results, set markers visible
         console.log("GameMode_1.js.roundEnded: Calculating Results...");
         displayText('RoundManager: round ' + dataManager.getValue('gameMode_currentRound') +  ' ended.<br>' );

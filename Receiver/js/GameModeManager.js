@@ -8,15 +8,15 @@
 
     // constants
     castReceiver.gm1 = {
-        iconUrl: 'string',
+        iconUrl: 'string',  //TODO
         header: 'string'
 
     };
 
     castReceiver.p1 = {
-        profileName: 'Profile #1',
+        profileName: 'borders + no choices',
         mapOption: {
-            mapType : 'huhu'
+            mapType : 'huhu'  //TODO
         }
     };
 
@@ -47,7 +47,7 @@
             // todo fm show final scoreboard
         } else {
             // next round...
-            //gameMode_1.startRound(currentRound);
+            gameMode_1.startRound(currentRound);
         }
     };
 
