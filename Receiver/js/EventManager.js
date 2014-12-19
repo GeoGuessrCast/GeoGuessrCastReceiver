@@ -51,7 +51,7 @@
                 userManager.updateUser(event.data.userMac, event.data.userName, event.senderId);
             }
             //inform the Sender if the user is game leader
-            window.userMessageBus.send(event.senderId, isAdmin);
+            window.userMessageBus.send(event.senderId, userManager.isUserAdmin(event.senderId));
         }
 
 
