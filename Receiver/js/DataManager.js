@@ -1,4 +1,17 @@
 (function(castReceiver){
+    // constants
+    castReceiver.gameMode = {
+        currentId : 'gameMode_currentId',
+        currentRound : 'gameMode_currentRound',
+        maxRounds : 'gameMode_maxRounds'
+    };
+
+    castReceiver.geoObjType = {
+        city : 'city',
+        river: 'river',
+        country : 'country'
+    };
+
     // init
     // checks
     if(!_checkStorageSupport()) {

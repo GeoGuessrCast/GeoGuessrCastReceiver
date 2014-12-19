@@ -2,9 +2,9 @@
 
     // init
     // set empty gameMode
-    dataManager.setValue('gameMode_currentId', 0);
-    dataManager.setValue('gameMode_currentRound', 1);
-    dataManager.setValue('gameMode_maxRounds', 5);
+    dataManager.setValue(dataManager.gameMode.currentId, 0);
+    dataManager.setValue(dataManager.gameMode.currentRound, 1);
+    dataManager.setValue(dataManager.gameMode.maxRounds, 5);
 
     // constants
     castReceiver.gm1 = {

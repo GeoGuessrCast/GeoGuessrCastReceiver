@@ -78,7 +78,7 @@
             //gameModeManager.setGameRoundEnded(eventData.gameMode);
         }
     };
-
+    
     /**
      * on message on game message bus
      * @param event
