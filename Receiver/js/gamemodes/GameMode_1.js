@@ -246,7 +246,7 @@
 
     function _clearMarkersOnMap(){
         markers.map(function (marker) {
-            marker.setAllMap(null);
+            marker.setMap(null);
         });
         markers = [];
     }
