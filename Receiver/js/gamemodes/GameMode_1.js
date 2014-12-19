@@ -11,7 +11,7 @@
     var guesses = {}; // Map UserID:Distanz zum Ziel
     var positions = {}; //Map UserID:LatLong Position
     var results = {}; // Map UserId:Points
-    var markers = {}; //Google Map Marker
+    var markers = []; //Google Map Marker
     var gameState;
     var min = 1;
     var max = 98; //TODO use COUNT query in dataManager
@@ -79,6 +79,8 @@
 
     castReceiver.startRound = function(roundNumber) {
         displayText('RoundManager: round ' + roundNumber + ' started.' );
+
+        _clearMarkersOnMap();
 
         layer = new google.maps.FusionTablesLayer({
             query: {
@@ -246,7 +248,7 @@
         markers.map(function (marker) {
             marker.setAllMap(null);
         });
-        markers = {};
+        markers = [];
     }
 
     function _loadGameUi(){

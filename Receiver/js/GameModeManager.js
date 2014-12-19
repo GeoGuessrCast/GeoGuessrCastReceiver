@@ -3,7 +3,7 @@
     // init
     // set empty gameMode
     dataManager.setValue('gameMode_currentId', 0);
-    dataManager.setValue('gameMode_currentRound', 0);
+    dataManager.setValue('gameMode_currentRound', 1);
     dataManager.setValue('gameMode_maxRounds', 5);
 
     // constants
@@ -24,7 +24,7 @@
      * sets the current round to 0
      */
     castReceiver.clearRounds = function(){
-        dataManager.setValue('gameMode_currentRound', 0);  //TODO dont use key-value store for global variables ('magic values') and maybe dont use global vars
+        dataManager.setValue('gameMode_currentRound', 1);  //TODO dont use key-value store for global variables ('magic values') and maybe dont use global vars
     };
 
     /**
@@ -32,8 +32,8 @@
      */
     castReceiver.incCurrentRound = function(){
         // get current round
-        var currentRound = parseInt( dataManager.getValue('gameMode_currentRound') || 0),
-            maxRounds = parseInt( dataManager.getValue('gameMode_maxRounds') || 0);
+        var currentRound = parseInt( dataManager.getValue('gameMode_currentRound') || 1),
+            maxRounds = parseInt( dataManager.getValue('gameMode_maxRounds') || 10);
 
         currentRound = currentRound + 1;
         dataManager.setValue('gameMode_currentRound', currentRound);
@@ -47,7 +47,12 @@
             // todo fm show final scoreboard
         } else {
             // next round...
-            gameMode_1.startRound(currentRound);
+            setTimeout(function(){
+                gameMode_1.startRound(currentRound);
+            }, 10000);
+
+
+
         }
     };
 
