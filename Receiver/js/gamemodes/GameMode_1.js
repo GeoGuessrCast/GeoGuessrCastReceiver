@@ -16,7 +16,6 @@
     var min = 1;
     var max = 98; //TODO use COUNT query in dataManager
     // Creates Random X
-    var x = Math.floor(Math.random() * (max - min)) + min;
     /**
      * Intializes Game Mode 1
      * TODO {sh} : Parameters: Choices = true/false
@@ -74,11 +73,13 @@
 
         //console.log("Done"); //TODO use meaningfull messages!  eg:  'RoundManager.js: done loading map.'
 
-        gameMode_1.startRound( 1 );
+        gameMode_1.startRound( dataManager.getValue('gameMode_currentRound') ); //TODO use members
     };
 
     castReceiver.startRound = function(roundNumber) {
         displayText('RoundManager: round ' + roundNumber + ' started.' );
+
+        var x = Math.floor(Math.random() * (max - min)) + min;
 
         _clearMarkersOnMap();
 
