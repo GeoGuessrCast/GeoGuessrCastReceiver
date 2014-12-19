@@ -35,7 +35,6 @@
         var currentRound = parseInt( dataManager.getValue('gameMode_currentRound') || 1),
             maxRounds = parseInt( dataManager.getValue('gameMode_maxRounds') || 10);
 
-        dataManager.setValue('gameMode_currentRound', currentRound);
 
         // check if max rounds reached
         if(currentRound === maxRounds) {
@@ -48,6 +47,7 @@
         } else {
             // next round...
             currentRound = currentRound + 1;
+            dataManager.setValue('gameMode_currentRound', currentRound);
 
             setTimeout(function(){
                 gameMode_1.startRound(currentRound);
