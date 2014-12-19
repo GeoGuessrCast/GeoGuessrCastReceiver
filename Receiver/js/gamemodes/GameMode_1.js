@@ -83,6 +83,7 @@
 
         _clearMarkersOnMap();
 
+        layer.setMap(null);
         layer = new google.maps.FusionTablesLayer({
             query: {
                 select: locationColumn,
