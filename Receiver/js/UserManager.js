@@ -2,7 +2,7 @@
 
     // init
     // set empty user list
-    dataManager.setValue('userList', JSON.stringify([]));
+    //dataManager.setValue('userList', JSON.stringify([]));
 
     /**
      * Type User
