@@ -83,6 +83,7 @@
 
         _clearMarkersOnMap();
 
+
         layer = new google.maps.FusionTablesLayer({
             query: {
                 select: locationColumn,
@@ -246,6 +247,10 @@
     }
 
     function _clearMarkersOnMap(){
+        if (layer) {
+            layer.setMap(null);
+        }
+
         markers.map(function (marker) {
             marker.setMap(null);
         });
