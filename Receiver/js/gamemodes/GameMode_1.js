@@ -22,11 +22,8 @@
      * @param mapOptions
      * @param gameModeOptions
      */
-    castReceiver.init = function(gameModeOptions, mapOptions){ //TODO USE GAMEMODE OPTION PARAMETERS !
-        console.log('running gameMode_1.init');
-        dataManager.setValue('gameMode_currentId', 1); //TODO GET gameMode_currentId FROM GAMEMODE OPTIONS !
+    castReceiver.init = function(){
         _loadGameUi();
-        //map = window.map;
         geocoder = new google.maps.Geocoder();
 
         map = new google.maps.Map(document.getElementById('map-canvas'), {
@@ -66,7 +63,7 @@
 
         });
         map.mapTypes.set('map-style', styledMapType);
-        map.setMapTypeId('map-style');
+        map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
         gameState = "initialized"; //TODO use external ENUM
         console.log('gameMode_1 initialized');
 
