@@ -120,7 +120,8 @@
         var data = {"event_type":"gameDetail" , "gameMode" : "1", "timerRound" : "30000", "choices" : "null"};
         console.log("Prepare");
         try {
-            window.gameMessageBus.broadcast(data);
+            //window.gameMessageBus.broadcast(data);
+            eventManager.broadcast(data.channelName.game, data);
         } catch (Exeption) {}
 
         gameState = "started";
@@ -133,7 +134,7 @@
             gameModeManager.setGameRoundEnded();
         };
 
-    }
+    };
 
     /**
      *  Is called from GMM to end current round, all results are calculated

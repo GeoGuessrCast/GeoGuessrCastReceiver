@@ -35,7 +35,7 @@
         if(global.currentRound === global.maxRounds) {
             // end game mode
             var data = {"ended": true, "event_type":"game_ended"};
-            window.gameMessageBus.broadcast(data);
+            eventManager.broadcast(data.channelName.game, data);
 
             mainMenu.init();
             // todo fm show final scoreboard
@@ -83,7 +83,8 @@
     global.setGameModeStarted = function(gameModeId){
         var data = {"event_type":"startGame", "gameMode": gameModeId, "started": true};
         try {
-            window.gameMessageBus.broadcast(data);
+            //window.gameMessageBus.broadcast(data);
+            eventManager.broadcast(data.channelName.game, data);
         } catch (Exception) {}
         displayText('[GMB] setGameModeStarted broadcasted');
     };
@@ -95,7 +96,8 @@
     global.setGameRoundEnded = function() {
         gameMode_1.roundEnded();
         var data = {"event_type":"round_ended", "ended": true};
-        window.gameMessageBus.broadcast(data);
+        //window.gameMessageBus.broadcast(data);
+        eventManager.broadcast(data.channelName.game, data);
         displayText('[GMB] setGameRoundEnded broadcasted');
     };
 
