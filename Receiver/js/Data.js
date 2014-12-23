@@ -5,7 +5,7 @@ data = {
 
     // ======== global constants ========
     constants : {
-        maxRounds: 5,
+
         maxDistanceErrorKm: 1000
     },
 
@@ -30,13 +30,6 @@ data = {
     eventType : {
         createOrUpdateUser: 0,
         submitAwnser: 1
-    },
-
-
-    // ======== global vars ========
-    currentGameState : {
-        currentGameId : 1,
-        currentRound : 1
     }
 
 

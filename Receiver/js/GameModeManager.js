@@ -1,19 +1,18 @@
-(function(castReceiver){
+(function(global){
 
-    // init
-    // set empty gameMode
-    dataManager.setValue(dataManager.gameMode.currentId, 0);
-    dataManager.setValue(dataManager.gameMode.currentRound, 1);
-    dataManager.setValue(dataManager.gameMode.maxRounds, 5);
+    global.maxRounds = 5;
+    global.currentRound = 1;
+    global.currentGameId = 1;
+
 
     // constants
-    castReceiver.gm1 = {
-        iconUrl: 'string',  //TODO
-        header: 'string'
-
+    global.gm1 = {
+        gameModeName: 'City Guessing',
+        id: 1,
+        iconUrl: '../images/city.png'
     };
 
-    castReceiver.p1 = {
+    global.p1 = {
         profileName: 'borders + no choices',
         mapOption: {
             mapType : 'huhu'  //TODO
@@ -21,23 +20,19 @@
     };
 
     /**
-     * sets the current round to 0
+     * sets the current round to 1
      */
-    castReceiver.clearRounds = function(){
-        dataManager.setValue('gameMode_currentRound', 1);  //TODO dont use key-value store for global variables ('magic values') and maybe dont use global vars
+    global.clearRounds = function(){
+        global.currentRound = 1;
     };
 
     /**
      * increases the current round
      */
-    castReceiver.incCurrentRound = function(){
-        // get current round
-        var currentRound = parseInt( dataManager.getValue('gameMode_currentRound') || 1),
-            maxRounds = parseInt( dataManager.getValue('gameMode_maxRounds') || 10);
-
+    global.incCurrentRound = function(){
 
         // check if max rounds reached
-        if(currentRound === maxRounds) {
+        if(global.currentRound === global.maxRounds) {
             // end game mode
             var data = {"ended": true, "event_type":"game_ended"};
             window.gameMessageBus.broadcast(data);
@@ -62,7 +57,7 @@
      * sets the Id of the current GameMode
      * @param {number} gameModeId
      */
-    castReceiver.setGameMode = function(gameModeId){
+    global.setGameMode = function(gameModeId){
         dataManager.setValue('gameMode_currentId', gameModeId);
         // call mode function
         // init game mode statically
@@ -85,7 +80,7 @@
      * send gameModeStarted Event to all connected senders
      * @param {number} gameModeId
      */
-    castReceiver.setGameModeStarted = function(gameModeId){
+    global.setGameModeStarted = function(gameModeId){
         var data = {"event_type":"startGame", "gameMode": gameModeId, "started": true};
         try {
             window.gameMessageBus.broadcast(data);
@@ -97,7 +92,7 @@
      * send gameModeEnded Event to all connected senders
      * @param {number} gameModeId
      */
-    castReceiver.setGameRoundEnded = function() {
+    global.setGameRoundEnded = function() {
         gameMode_1.roundEnded();
         var data = {"event_type":"round_ended", "ended": true};
         window.gameMessageBus.broadcast(data);
@@ -109,7 +104,7 @@
      * @param {string} userMac
      * @param {string} answer
      */
-    castReceiver.setGameRoundAnswer = function(userMac, answer) {
+    global.setGameRoundAnswer = function(userMac, answer) {
         displayText('setGameRoundAnswer -> ' + userMac + ', ' + answer);
         gameMode_1.onChosenMessage(userMac, answer);
     };
@@ -118,7 +113,7 @@
      * sets the points of current round to the {User}s
      * @param {Array}results
      */
-    castReceiver.setGameRoundResults = function (results) {
+    global.setGameRoundResults = function (results) {
         // results = array[userMac]
         // get user list
         var resultLength = results.length,

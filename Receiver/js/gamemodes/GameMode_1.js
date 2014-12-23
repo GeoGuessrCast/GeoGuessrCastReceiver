@@ -71,7 +71,7 @@
         console.log('gameMode_1 initialized');
 
 
-        //console.log("Done"); //TODO use meaningfull messages!  eg:  'RoundManager.js: done loading map.'
+        //console.log("Done"); //TODO use meaningfull messages!  eg:  'GameRoundManager.js: done loading map.'
 
         gameMode_1.startRound( dataManager.getValue('gameMode_currentRound') ); //TODO use members
     };
