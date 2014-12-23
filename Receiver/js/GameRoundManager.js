@@ -164,6 +164,55 @@
      */
     grm.init = function(gameModeObject, profileObject){
 
+        _loadGameUi();
+        geocoder = new google.maps.Geocoder();
+
+        map = new google.maps.Map(document.getElementById('map-canvas'), {
+            center: new google.maps.LatLng(45.74167213456433, 38.26884827734375),
+            zoom: 3,
+            mapTypeControl: false,
+            disableDefaultUI: true,
+            mapTypeId: google.maps.MapTypeId.SATELLITE
+
+        });
+        var style = [
+            {
+                "featureType": "administrative",
+                "elementType": "labels.text",
+                "stylers": [
+                    {"visibility": "off"}
+                ]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'all',
+                stylers: [
+                    {visibility: 'off'}
+                ]
+            },
+            {
+                "featureType": "administrative.country",
+                "elementType": "labels",
+                "stylers": [
+                    {"visibility": "off"}
+                ]
+            }
+        ];
+        var styledMapType = new google.maps.StyledMapType(style, {
+            map: map,
+            name: 'Styled Map'
+
+        });
+        map.mapTypes.set('map-style', styledMapType);
+        map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+        gameState = "initialized"; //TODO use external ENUM
+        console.log('gameMode_1 initialized');
+
+
+        //console.log("Done"); //TODO use meaningfull messages!  eg:  'GameRoundManager.js: done loading map.'
+
+
+
         _loadMap(gameModeObject, profileObject);
 
         this.startRound(1);
