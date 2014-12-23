@@ -28,8 +28,9 @@ data = {
     },
 
     eventType : {
-        createOrUpdateUser: 0,
-        submitAwnser: 1
+        createOrUpdateUser: 'createUser',
+        submitAwnser: 'gameRound_answerChosen',
+        gameEnded: 'game_ended'
     }
 
 
