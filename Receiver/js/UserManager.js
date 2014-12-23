@@ -1,8 +1,8 @@
 (function(castReceiver){
 
     // init
-    // set empty user list
-    //dataManager.setValue('userList', JSON.stringify([]));
+    /** @type Array.<User> */
+    var userList = [];
 
     /**
      * Type User
@@ -24,7 +24,7 @@
         /** @type {boolean} */
         this.admin = admin;
         /** @type {string} **/
-        this.color = '#' + Math.floor(Math.random()*16777215).toString(16);
+        //this.color = '#' + Math.floor(Math.random()*16777215).toString(16);
         this.color = '#'
         + Math.floor(Math.random()*89+10).toString()
         + Math.floor(Math.random()*89+10).toString()
@@ -37,20 +37,18 @@
      * @private
      */
     function _getUserList(){
-        //dataManager.get
-        var userList = dataManager.getValue('userList') || "[]";
-        return JSON.parse(userList);
+        return userList;
     }
 
     /**
      * sets the {User} list
-     * @param {Array.<User>} userList
+     * @param {Array.<User>} updatedUserList
+     * @returns {Array.<User>}
      * @private
      */
-    function _setUserList(userList) {
-        var userListLocal = userList || [];
-        dataManager.setValue('userList', JSON.stringify(userListLocal));
-        return userListLocal;
+    function _setUserList(updatedUserList) {
+        userList = updatedUserList;
+        return userList;
     }
 
     /**
@@ -69,7 +67,7 @@
     };
 
     /**
-     *
+     * rebuilds/updates #mainMenuUserList
      */
     castReceiver.rebuildUserList = function() {
         var userCssClass;
@@ -87,7 +85,7 @@
     };
 
     /**
-     *
+     * refreshes scoreboard on bottom
      */
     castReceiver.refreshBottomScoreboard = function() {
         var userCssClass;
@@ -106,7 +104,7 @@
     };
 
     /**
-     * returns a {User} with a given max address, false otherwise
+     * returns a {User} with a given mac address, false otherwise
      * @param {string} mac
      * @returns {User|boolean}
      */
@@ -162,6 +160,22 @@
     };
 
     /**
+     * checks if an {User} with a given mac address is Admin
+     * @param {string} mac
+     * @returns {boolean}
+     */
+    castReceiver.isUserAdmin = function(mac){
+        var userList = _getUserList();
+        var userLength = userList.length;
+        for(var i = 0; i < userLength; i++){
+            if(userList[i].mac === mac){
+                return userList[i].admin;
+            }
+        }
+        return false;
+    };
+
+    /**
      * checks if an {User} with a given mac address exists in local storage
      * @returns {boolean}
      * @param {string} mac
@@ -179,7 +193,7 @@
 
     /**
      * removes a {User} with the given id
-     * @param {number} userId
+     * @param {string} senderId
      */
     castReceiver.removeUser = function(senderId){
         // update user list
@@ -193,7 +207,24 @@
             }
         }
         _setUserList(userList);
+    };
 
+    /**
+     * removes a {User} with the given id
+     * @param {string} mac
+     */
+    castReceiver.removeUser = function(mac){
+        // update user list
+        var userList = _getUserList();
+        var userLength = userList.length;
+        for(var i = 0; i < userLength; i++){
+            if(userList[i].mac === mac){
+                userList.splice(i, 1);
+                $('#'+userList[i].mac).remove();
+                break;
+            }
+        }
+        _setUserList(userList);
     };
 
     /**
