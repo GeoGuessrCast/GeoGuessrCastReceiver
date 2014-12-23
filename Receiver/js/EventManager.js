@@ -64,7 +64,7 @@
     /**
      * broadcasts to all connected sender
      * @param {number} channel
-     * @param {JSON} data
+     * @param {Object} data
      * @returns {boolean}
      */
     castReceiver.broadcast = function(channel, data) {
@@ -92,7 +92,7 @@
      * sends a message to a given sender
      * @param {string} senderId
      * @param {number} channel
-     * @param {JSON} data
+     * @param {Object} data
      * @returns {boolean}
      */
     castReceiver.send = function(senderId, channel, data) {
