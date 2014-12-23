@@ -63,9 +63,6 @@
                 //gameMode_1.startRound(gmm.currentRound);
                 gameRoundManager.startRound();
             }, 10000);
-
-
-
         }
     };
 
