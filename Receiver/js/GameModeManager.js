@@ -1,38 +1,54 @@
-(function(global){
+(function(gmm){
 
-    global.maxRounds = 5;
-    global.currentRound = 1;
-    global.currentGameId = 1;
+    /** @type number */
+    gmm.maxRounds = 5;
+    /** @type number */
+    gmm.currentRound = 1;
+    /** @type number */
+    gmm.currentGameId = 1;
 
 
     // constants
-    global.gm1 = {
+    gmm.gm1 = {
         gameModeName: 'City Guessing',
         id: 1,
         iconUrl: '../images/city.png'
     };
 
-    global.p1 = {
+    gmm.p1 = {
         profileName: 'borders + no choices',
         mapOption: {
-            mapType : 'huhu'  //TODO
+            mapType : google.maps.MapTypeId.SATELLITE  //TODO
         }
     };
 
     /**
      * sets the current round to 1
      */
-    global.clearRounds = function(){
-        global.currentRound = 1;
+    gmm.resetGame = function(){
+        gmm.currentRound = 1;
+    };
+
+    /**
+     * starts a new game with config objects
+     * @param {Object} gameModeObject
+     * @param {Object} profileObject
+     */
+    gmm.startGame = function(gameModeObject, profileObject){
+        gmm.resetGame();
+        gameRoundManager.init();
+        // init grm.init
+
     };
 
     /**
      * increases the current round
      */
-    global.incCurrentRound = function(){
+    //gmm.incCurrentRound = function(){
+    gmm.prepareNextRound = function(){
 
         // check if max rounds reached
-        if(global.currentRound === global.maxRounds) {
+        if(gmm.currentRound === gmm.maxRounds) {
             // end game mode
             var data = {"ended": true, "event_type":"game_ended"};
             eventManager.broadcast(data.channelName.game, data);
@@ -41,11 +57,11 @@
             // todo fm show final scoreboard
         } else {
             // next round...
-            currentRound = currentRound + 1;
-            dataManager.setValue('gameMode_currentRound', currentRound);
+            gmm.currentRound = gmm.currentRound + 1;
 
             setTimeout(function(){
-                gameMode_1.startRound(currentRound);
+                //gameMode_1.startRound(gmm.currentRound);
+                gameRoundManager.startRound();
             }, 10000);
 
 
@@ -57,7 +73,7 @@
      * sets the Id of the current GameMode
      * @param {number} gameModeId
      */
-    global.setGameMode = function(gameModeId){
+    gmm.setGameMode = function(gameModeId){
         dataManager.setValue('gameMode_currentId', gameModeId);
         // call mode function
         // init game mode statically
@@ -80,12 +96,9 @@
      * send gameModeStarted Event to all connected senders
      * @param {number} gameModeId
      */
-    global.setGameModeStarted = function(gameModeId){
+    gmm.setGameModeStarted = function(gameModeId){
         var data = {"event_type":"startGame", "gameMode": gameModeId, "started": true};
-        try {
-            //window.gameMessageBus.broadcast(data);
             eventManager.broadcast(data.channelName.game, data);
-        } catch (Exception) {}
         displayText('[GMB] setGameModeStarted broadcasted');
     };
 
@@ -93,10 +106,10 @@
      * send gameModeEnded Event to all connected senders
      * @param {number} gameModeId
      */
-    global.setGameRoundEnded = function() {
+    gmm.setGameRoundEnded = function() {
         gameMode_1.roundEnded();
+        // call prepareNextRound
         var data = {"event_type":"round_ended", "ended": true};
-        //window.gameMessageBus.broadcast(data);
         eventManager.broadcast(data.channelName.game, data);
         displayText('[GMB] setGameRoundEnded broadcasted');
     };
@@ -106,7 +119,7 @@
      * @param {string} userMac
      * @param {string} answer
      */
-    global.setGameRoundAnswer = function(userMac, answer) {
+    gmm.setGameRoundAnswer = function(userMac, answer) {
         displayText('setGameRoundAnswer -> ' + userMac + ', ' + answer);
         gameMode_1.onChosenMessage(userMac, answer);
     };
@@ -115,7 +128,7 @@
      * sets the points of current round to the {User}s
      * @param {Array}results
      */
-    global.setGameRoundResults = function (results) {
+    gmm.setGameRoundResults = function (results) {
         // results = array[userMac]
         // get user list
         var resultLength = results.length,
@@ -134,4 +147,6 @@
         }
         userManager.setUserList(userList);
     };
+
+
 }(this.gameModeManager = this.gameModeManager || {}));
