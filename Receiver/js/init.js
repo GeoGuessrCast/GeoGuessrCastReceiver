@@ -33,27 +33,26 @@ function initialize() {
         eventManager.event_onSenderDisconnected(event);
     };
 
-
-    window.userMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.userChannel', cast.receiver.CastMessageBus.MessageType.JSON);
-    window.adminMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.adminChannel', cast.receiver.CastMessageBus.MessageType.JSON);
-    window.gameMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.gameChannel', cast.receiver.CastMessageBus.MessageType.JSON);
+    //window.userMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.userChannel', cast.receiver.CastMessageBus.MessageType.JSON);
+    //window.adminMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.adminChannel', cast.receiver.CastMessageBus.MessageType.JSON);
+    //window.gameMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.gameChannel', cast.receiver.CastMessageBus.MessageType.JSON);
 
     // create user
-    window.userMessageBus.onMessage = function(event) {
-        console.log('userMessageBus [' + event.senderId + ']: ' + event.data);
-        eventManager.event_onUserMessage(event);
-    };
-
+    //window.userMessageBus.onMessage = function(event) {
+    //    console.log('userMessageBus [' + event.senderId + ']: ' + event.data);
+    //    eventManager.event_onUserMessage(event);
+    //};
     //
-    window.adminMessageBus.onMessage = function(event) {
-        console.log('adminMessageBus [' + event.senderId + ']: ' + event.data);
-        eventManager.event_onAdminMessage(event);
-    };
-
-    window.gameMessageBus.onMessage = function(event) {
-        console.log('gameMessageBus [' + event.senderId + ']: ' + event.data);
-        eventManager.event_onGameMessage(event);
-    };
+    ////
+    //window.adminMessageBus.onMessage = function(event) {
+    //    console.log('adminMessageBus [' + event.senderId + ']: ' + event.data);
+    //    eventManager.event_onAdminMessage(event);
+    //};
+    //
+    //window.gameMessageBus.onMessage = function(event) {
+    //    console.log('gameMessageBus [' + event.senderId + ']: ' + event.data);
+    //    eventManager.event_onGameMessage(event);
+    //};
 
 
     loadDefaultMap();
