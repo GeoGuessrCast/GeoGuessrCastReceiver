@@ -152,7 +152,7 @@
 
         }*/
 
-        if(eventData.event_type === 'createUser') {
+        if(eventData.event_type === data.eventType.createOrUpdateUser) {
             var hasUser = userManager.hasUserMac(event.data.userMac);
             if (!hasUser) {
                 //add new User
@@ -172,7 +172,7 @@
         }
 
         // update View or sth...
-        if(eventData.event_type === 'gameRound_answerChosen') {
+        if(eventData.event_type === data.eventType.submitAnswer) {
             gameRoundManager.choseAnswer(event.data.userMac, event.data.answer);
         }
     };
@@ -184,15 +184,15 @@
         displayEvent('onAdminMessage', event);
         var eventData = event.data;
 
-        if(eventData.event_type === 'setGameMode'){
+        if(eventData.event_type === 'startGame'){
             //gameModeManager.setGameMode(eventData.gameMode);
             gameModeManager.startGame(eventData.gameMode, eventData.profile);
         }
 
-        if(eventData.event_type === 'setGameRoundEnded'){
-            displayText('got setGameRoundEnded, ignoring it.');
-            //gameModeManager.setGameRoundEnded(eventData.gameMode);
+        if(eventData.event_type === data.eventType.hideConsole){
+            eventManager.hideConsole();
         }
+
     };
     
     /**
@@ -213,5 +213,10 @@
 
     castReceiver.event_onSystemVolumeChanged = function(event){
     };
+
+    castReceiver.hideConsole = function() {
+        $('#testConsole').hide();
+    }
+
 
 }(this.eventManager = this.eventManager || {}));

@@ -143,7 +143,7 @@
      * @constructor
      */
     castReceiver.QueryResults = function (ftLayer, geoObjects) {
-        this ftLayer = ftLayer;
+        this.ftLayer = ftLayer;
         /** @type Array.<GeoObject> */
         this.geoObjects = geoObjects;
     };

@@ -30,7 +30,9 @@ data = {
     eventType : {
         createOrUpdateUser: 'createUser',
         submitAnswer: 'gameRound_answerChosen',
-        gameEnded: 'game_ended'
+        gameEnded: 'game_ended',
+        hideConsole: 'hideConsole',
+        startGame: 'startGame'
     }
 
 
