@@ -156,7 +156,7 @@
 
         }*/
 
-        if(eventData.event_type === 'createUser') { //TODO USE ENUM !!!!!!!
+        if(eventData.event_type === 'createUser') {
             var hasUser = userManager.hasUserMac(event.data.userMac);
             if (!hasUser) {
                 //add new User
@@ -189,7 +189,8 @@
         var eventData = event.data;
 
         if(eventData.event_type === 'setGameMode'){
-            gameModeManager.setGameMode(eventData.gameMode);
+            //gameModeManager.setGameMode(eventData.gameMode);
+            gameModeManager.startGame(eventData.gameMode, eventData.profile);
         }
 
         if(eventData.event_type === 'setGameRoundEnded'){

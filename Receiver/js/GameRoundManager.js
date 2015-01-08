@@ -141,7 +141,7 @@
      * @private
      */
     function _loadGameUi(){
-        $('#gameOverlay').load('templates/GameMode_1.html', function (data) {
+        $('#gameOverlay').load('templates/GameModeOverlay.html', function (data) {
             $(this).html(data);
             userManager.refreshBottomScoreboard();
         });
