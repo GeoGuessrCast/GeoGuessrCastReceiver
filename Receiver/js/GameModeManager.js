@@ -29,7 +29,8 @@
     /**
      *
      */
-    gmm.applyMapOptions = function(gameMode, profile){
+    gmm.applyMapOptions = function(gameModeObject, profileObject){
+        this.loadMap(gameModeObject, profileObject);
 
     };
 
@@ -104,32 +105,7 @@
     };
 
 
-    /**
-     * increases the current round
-     */
-    //gmm.incCurrentRound = function(){
-    gmm.prepareNextRound = function(){
-
-        // check if max rounds reached
-        if(gmm.currentRound === gmm.maxRounds) {
-            // end game mode
-            var data = {"ended": true, "event_type":"game_ended"};
-            eventManager.broadcast(data.channelName.game, data);
-
-            mainMenu.init();
-            // todo fm show final scoreboard
-        } else {
-            // next round...
-            gmm.currentRound = gmm.currentRound + 1;
-
-            setTimeout(function(){
-                //gameMode_1.startRound(gmm.currentRound);
-                gameRoundManager.startRound();
-            }, 10000);
-        }
-    };
-
-    gmm.loadMap = function(gameMode, profile){
+    gmm.loadMap = function(gameModeObject, profileObject){
         _loadGameUi();
         geocoder = new google.maps.Geocoder();
 
@@ -176,29 +152,7 @@
         gameModeManager.startRound( gameModeManager.currentRound ); //TODO use members
     };
 
-    /**
-     * sets the Id of the current GameMode
-     * @param {number} gameModeId
-     */
-    gmm.setGameMode = function(gameModeId){
-        dataManager.setValue('gameMode_currentId', gameModeId);
-        // call mode function
-        // init game mode statically
 
-        switch(gameModeId){
-            case 1:
-                gameMode_1.init();
-                //gameRoundManager.init(gmm.gm1, gmm.p1);
-                break;
-            case 2:
-                //gameMode_2.init();
-                break;
-            case 3:
-                //gameMode_3.init();
-                break;
-            default : gameMode_1.init();
-        }
-    };
 
     /**
      * loads game mode ui

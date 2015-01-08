@@ -16,8 +16,6 @@
     var max = 98; //TODO use COUNT query in dataManager
 
 
-    // HALLO !?
-
 
 
     grm.startRound = function(){
@@ -109,7 +107,7 @@
         }
         console.log("Results calculated, Round ended");
         // notify game mode manager that round has ended
-        gameModeManager.prepareNextRound();
+        this.nextRound();
         // send results array to gmm
         // results = array[userMac]
         // get user list
@@ -142,6 +140,26 @@
 
 
 
+
+    grm.nextRound = function(){
+        // check if max rounds reached
+        if(gmm.currentRound === gmm.maxRounds) {
+            // end game mode
+            var data = {"ended": true, "event_type":"game_ended"};
+            eventManager.broadcast(data.channelName.game, data);
+
+            mainMenu.init();
+            // todo fm show final scoreboard
+        } else {
+            // next round...
+            gmm.currentRound = gmm.currentRound + 1;
+
+            setTimeout(function(){
+                //gameMode_1.startRound(gmm.currentRound);
+                gameRoundManager.startRound();
+            }, 10000);
+        }
+    };
 
 
 
