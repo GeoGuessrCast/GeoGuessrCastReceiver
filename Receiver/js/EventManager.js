@@ -1,27 +1,30 @@
 (function(castReceiver){
 
+
     // init
     /** @type cast.receiver.CastMessageBus */
-    var userMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.userChannel', cast.receiver.CastMessageBus.MessageType.JSON);
+    castReceiver.userMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.userChannel', cast.receiver.CastMessageBus.MessageType.JSON);
     /** @type cast.receiver.CastMessageBus */
-    var adminMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.adminChannel', cast.receiver.CastMessageBus.MessageType.JSON);
+    castReceiver.adminMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.adminChannel', cast.receiver.CastMessageBus.MessageType.JSON);
     /** @type cast.receiver.CastMessageBus */
-    var gameMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.gameChannel', cast.receiver.CastMessageBus.MessageType.JSON);
+    castReceiver.gameMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.gameChannel', cast.receiver.CastMessageBus.MessageType.JSON);
 
     _getUserMessageBus().onMessage = function(event) {
         console.log('userMessageBus [' + event.senderId + ']: ' + event.data);
-        eventManager.event_onUserMessage(event);
+        this.event_onUserMessage(event);
     };
 
     _getAdminMessageBus().onMessage = function(event) {
         console.log('adminMessageBus [' + event.senderId + ']: ' + event.data);
-        eventManager.event_onAdminMessage(event);
+        this.event_onAdminMessage(event);
     };
 
     _getGameMessageBus().onMessage = function(event) {
         console.log('gameMessageBus [' + event.senderId + ']: ' + event.data);
-        eventManager.event_onGameMessage(event);
+        this.event_onGameMessage(event);
     };
+
+
 
     /**
      * returns user message bus
@@ -29,7 +32,7 @@
      * @private
      */
     function _getUserMessageBus(){
-        return userMessageBus;
+        return castReceiver.userMessageBus;
     }
 
     /**
@@ -38,7 +41,7 @@
      * @private
      */
     function _getAdminMessageBus(){
-        return adminMessageBus;
+        return castReceiver.adminMessageBus;
     }
 
     /**
@@ -47,7 +50,7 @@
      * @private
      */
     function _getGameMessageBus(){
-        return gameMessageBus;
+        return castReceiver.gameMessageBus;
     }
 
     /**
