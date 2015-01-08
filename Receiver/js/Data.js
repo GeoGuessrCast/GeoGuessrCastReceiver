@@ -32,7 +32,8 @@ data = {
         submitAnswer: 'gameRound_answerChosen',
         gameEnded: 'game_ended',
         hideConsole: 'hideConsole',
-        startGame: 'startGame'
+        setGameMode: 'setGameMode',
+        setGameProfile: 'setGameProfile'
     }
 
 

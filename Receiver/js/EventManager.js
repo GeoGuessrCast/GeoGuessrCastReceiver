@@ -1,5 +1,6 @@
 (function(castReceiver){
 
+    var selectedGameMode;
     // init
     /** @type cast.receiver.CastMessageBus */
     var userMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.userChannel', cast.receiver.CastMessageBus.MessageType.JSON);
@@ -184,13 +185,18 @@
         displayEvent('onAdminMessage', event);
         var eventData = event.data;
 
-        if(eventData.event_type === 'startGame'){
-            //gameModeManager.setGameMode(eventData.gameMode);
-            gameModeManager.startGame(eventData.gameMode, eventData.profile);
+        if(eventData.event_type === data.eventType.setGameMode){
+            selectedGameMode = eventData.gameModeNumber;
+            gameProfileMenu.init();
+            //  gameModeManager.startGame(eventData.gameMode, null);
+        }
+
+        if(eventData.event_type === data.eventType.setGameProfile){
+            gameModeManager.startGame(selectedGameMode, eventData.gameProfileNumber);
         }
 
         if(eventData.event_type === data.eventType.hideConsole){
-            eventManager.hideConsole();
+            eventManager.hideConsole(eventData.hide);
         }
 
     };
@@ -214,8 +220,12 @@
     castReceiver.event_onSystemVolumeChanged = function(event){
     };
 
-    castReceiver.hideConsole = function() {
-        $('#testConsole').hide();
+    castReceiver.hideConsole = function(hide) {
+        if (hide) {
+            $('#testConsole').hide();
+        } else {
+            $('#testConsole').show();
+        }
     }
 
 
