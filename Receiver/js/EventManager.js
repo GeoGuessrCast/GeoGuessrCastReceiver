@@ -1,13 +1,12 @@
 (function(castReceiver){
 
-
     // init
     /** @type cast.receiver.CastMessageBus */
-    castReceiver.userMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.userChannel', cast.receiver.CastMessageBus.MessageType.JSON);
+    var userMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.userChannel', cast.receiver.CastMessageBus.MessageType.JSON);
     /** @type cast.receiver.CastMessageBus */
-    castReceiver.adminMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.adminChannel', cast.receiver.CastMessageBus.MessageType.JSON);
+    var adminMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.adminChannel', cast.receiver.CastMessageBus.MessageType.JSON);
     /** @type cast.receiver.CastMessageBus */
-    castReceiver.gameMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.gameChannel', cast.receiver.CastMessageBus.MessageType.JSON);
+    var gameMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.gameChannel', cast.receiver.CastMessageBus.MessageType.JSON);
 
     _getUserMessageBus().onMessage = function(event) {
         console.log('userMessageBus [' + event.senderId + ']: ' + event.data);
@@ -25,14 +24,13 @@
     };
 
 
-
     /**
      * returns user message bus
      * @returns {cast.receiver.CastMessageBus}
      * @private
      */
     function _getUserMessageBus(){
-        return castReceiver.userMessageBus;
+        return userMessageBus;
     }
 
     /**
@@ -41,7 +39,7 @@
      * @private
      */
     function _getAdminMessageBus(){
-        return castReceiver.adminMessageBus;
+        return adminMessageBus;
     }
 
     /**
@@ -50,7 +48,7 @@
      * @private
      */
     function _getGameMessageBus(){
-        return castReceiver.gameMessageBus;
+        return gameMessageBus;
     }
 
     /**

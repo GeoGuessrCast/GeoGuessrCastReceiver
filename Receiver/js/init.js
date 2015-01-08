@@ -3,6 +3,9 @@
 
 function initialize() {
 
+    cast.receiver.logger.setLevelValue(0);
+    window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+
     $.ajaxSetup({async:false, cache:true});
     $.getScript( "js/EventManager.js" );
     $.getScript( "js/DataManager.js" );
@@ -13,8 +16,6 @@ function initialize() {
     $.getScript( "js/MainMenu.js" );
     $.getScript( "js/GameProfileMenu.js" );
 
-    cast.receiver.logger.setLevelValue(0);
-    window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
     console.log('Starting Receiver Manager');
 
     castReceiverManager.onReady = function(event) {
