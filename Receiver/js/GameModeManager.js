@@ -1,6 +1,6 @@
 (function(gmm){
 
-    var map, layer, geocoder;
+    var layer, geocoder;
     var markers = []; //Google Map Marker
 
     /** @type number */

@@ -76,7 +76,7 @@
     grm.endRound = function(){
         // send event
         // calculate results, set markers visible
-        console.log("GameMode_1.js.roundEnded: Calculating Results...");
+        console.log("GRM.roundEnded: Calculating Results...");
         displayText('RoundManager: round ' + gameModeManager.currentRound +  ' ended.<br>' );
         for (player in guesses) {
 
@@ -107,7 +107,6 @@
         }
         console.log("Results calculated, Round ended");
         // notify game mode manager that round has ended
-        this.nextRound();
         // send results array to gmm
         // results = array[userMac]
         // get user list
@@ -130,11 +129,12 @@
         // call prepareNextRound
         var jsonData = {"event_type":"round_ended", "ended": true};
         eventManager.broadcast(data.channelName.game, jsonData);
-        displayText('[GMB] setGameRoundEnded broadcasted');
+        displayText('[GRM] setGameRoundEnded broadcasted');
         // calc points
         // set scorebaord
         // update user points
         // call gmm.setGameRoundEnded
+        gameRoundManager.nextRound();
 
     };
 
@@ -145,8 +145,9 @@
         // check if max rounds reached
         if(gameModeManager.currentRound === gameModeManager.maxRounds) {
             // end game mode
-            var data = {"ended": true, "event_type":"game_ended"};
-            eventManager.broadcast(data.channelName.game, data);
+            displayText('[GRM] maxRounds reached: ' + gameModeManager.maxRounds);
+            var jsonData = {"ended": true, "event_type":"game_ended"};
+            eventManager.broadcast(data.channelName.game, jsonData);
 
             mainMenu.init();
             // todo fm show final scoreboard
