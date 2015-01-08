@@ -17,7 +17,7 @@
     var max = 98; //TODO use COUNT query in dataManager
 
 
-
+    // HALLO !?
 
 
 
