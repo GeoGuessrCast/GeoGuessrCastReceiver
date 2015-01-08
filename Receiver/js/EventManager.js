@@ -177,7 +177,7 @@
 
         // update View or sth...
         if(eventData.event_type === 'gameRound_answerChosen') {
-            gameRoundManager.choseAwnser(event.data.userMac, event.data.answer);
+            gameRoundManager.choseAnswer(event.data.userMac, event.data.answer);
         }
     };
     /**

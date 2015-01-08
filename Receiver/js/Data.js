@@ -29,7 +29,7 @@ data = {
 
     eventType : {
         createOrUpdateUser: 'createUser',
-        submitAwnser: 'gameRound_answerChosen',
+        submitAnswer: 'gameRound_answerChosen',
         gameEnded: 'game_ended'
     }
 
