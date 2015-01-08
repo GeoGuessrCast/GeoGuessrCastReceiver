@@ -70,7 +70,7 @@
 
         //console.log("Done"); //TODO use meaningfull messages!  eg:  'GameRoundManager.js: done loading map.'
 
-        gameMode_1.startRound( dataManager.getValue('gameMode_currentRound') ); //TODO use members
+        gameMode_1.startRound( gameModeManager.currentRound ); //TODO use members
     };
 
     castReceiver.startRound = function(roundNumber) {
@@ -117,11 +117,11 @@
         positions = {};
         // GMB: send prepare()
         // describes game mode properties
-        var data = {"event_type":"gameDetail" , "gameMode" : "1", "timerRound" : "30000", "choices" : "null"};
+        var jsonData = {"event_type":"gameDetail" , "gameMode" : "1", "timerRound" : "30000", "choices" : "null"};
         console.log("Prepare");
         try {
             //window.gameMessageBus.broadcast(data);
-            eventManager.broadcast(data.channelName.game, data);
+            eventManager.broadcast(data.channelName.game, jsonData);
         } catch (Exeption) {}
 
         gameState = "started";
@@ -143,7 +143,7 @@
         gameState = "ended"; //TODO no magic values ! ...use enum
         // calculate results, set markers visible
         console.log("GameMode_1.js.roundEnded: Calculating Results...");
-        displayText('RoundManager: round ' + dataManager.getValue('gameMode_currentRound') +  ' ended.<br>' );
+        displayText('RoundManager: round ' + gameModeManager.currentRound +  ' ended.<br>' );
         for (player in guesses) {
 
             var points = 0;
@@ -173,7 +173,7 @@
         }
         console.log("Results calculated, Round ended");
         // notify game mode manager that round has ended
-        gameModeManager.incCurrentRound();
+        gameModeManager.prepareNextRound();
         // send results array to gmm
         gameModeManager.setGameRoundResults(results);
         userManager.refreshBottomScoreboard(); //TODO test !

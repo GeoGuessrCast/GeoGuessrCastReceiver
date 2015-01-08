@@ -1,28 +1,32 @@
 (function(castReceiver){
 
-    // init
-    /** @type cast.receiver.CastMessageBus */
-    var userMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.userChannel', cast.receiver.CastMessageBus.MessageType.JSON);
-    /** @type cast.receiver.CastMessageBus */
-    var adminMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.adminChannel', cast.receiver.CastMessageBus.MessageType.JSON);
-    /** @type cast.receiver.CastMessageBus */
-    var gameMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.gameChannel', cast.receiver.CastMessageBus.MessageType.JSON);
 
-    _getUserMessageBus().onMessage = function(event) {
-        console.log('userMessageBus [' + event.senderId + ']: ' + event.data);
-        this.event_onUserMessage(event);
-    };
+    try {
+        // init
+        /** @type cast.receiver.CastMessageBus */
+        var userMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.userChannel', cast.receiver.CastMessageBus.MessageType.JSON);
+        /** @type cast.receiver.CastMessageBus */
+        var adminMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.adminChannel', cast.receiver.CastMessageBus.MessageType.JSON);
+        /** @type cast.receiver.CastMessageBus */
+        var gameMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.gameChannel', cast.receiver.CastMessageBus.MessageType.JSON);
 
-    //
-    _getAdminMessageBus().onMessage = function(event) {
-        console.log('adminMessageBus [' + event.senderId + ']: ' + event.data);
-        this.event_onAdminMessage(event);
-    };
+        _getUserMessageBus().onMessage = function(event) {
+            console.log('userMessageBus [' + event.senderId + ']: ' + event.data);
+            this.event_onUserMessage(event);
+        };
 
-    _getGameMessageBus().onMessage = function(event) {
-        console.log('gameMessageBus [' + event.senderId + ']: ' + event.data);
-        this.event_onGameMessage(event);
-    };
+        _getAdminMessageBus().onMessage = function(event) {
+            console.log('adminMessageBus [' + event.senderId + ']: ' + event.data);
+            this.event_onAdminMessage(event);
+        };
+
+        _getGameMessageBus().onMessage = function(event) {
+            console.log('gameMessageBus [' + event.senderId + ']: ' + event.data);
+            this.event_onGameMessage(event);
+        };
+
+    } catch (Exeption) {}
+
 
     /**
      * returns user message bus

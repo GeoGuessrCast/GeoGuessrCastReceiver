@@ -36,7 +36,7 @@
      */
     gmm.startGame = function(gameModeObject, profileObject){
         gmm.resetGame();
-        gameRoundManager.init();
+        gameRoundManager.loadMap(gameModeObject, profileObject);
         // init grm.init
 
     };
@@ -78,6 +78,7 @@
         switch(gameModeId){
             case 1:
                 gameMode_1.init();
+                //gameRoundManager.init(gmm.gm1, gmm.p1);
                 break;
             case 2:
                 //gameMode_2.init();
@@ -94,8 +95,8 @@
      * @param {number} gameModeId
      */
     gmm.setGameModeStarted = function(gameModeId){
-        var data = {"event_type":"startGame", "gameMode": gameModeId, "started": true};
-            eventManager.broadcast(data.channelName.game, data);
+        var jsonData = {"event_type":"startGame", "gameMode": gameModeId, "started": true};
+            eventManager.broadcast(data.channelName.game, jsonData);
         displayText('[GMB] setGameModeStarted broadcasted');
     };
 
@@ -106,8 +107,8 @@
     gmm.setGameRoundEnded = function() {
         gameMode_1.roundEnded();
         // call prepareNextRound
-        var data = {"event_type":"round_ended", "ended": true};
-        eventManager.broadcast(data.channelName.game, data);
+        var jsonData = {"event_type":"round_ended", "ended": true};
+        eventManager.broadcast(data.channelName.game, jsonData);
         displayText('[GMB] setGameRoundEnded broadcasted');
     };
 

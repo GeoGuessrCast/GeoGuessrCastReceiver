@@ -8,7 +8,8 @@ function initialize() {
     $.getScript( "js/DataManager.js" );
     $.getScript( "js/UserManager.js" );
     $.getScript( "js/GameModeManager.js" );
-    $.getScript( "js/gamemodes/GameMode_1.js" );
+    $.getScript( "js/GameRoundManager.js" );
+    //$.getScript( "js/gamemodes/GameMode_1.js" ); //TODO del this
     $.getScript( "js/MainMenu.js" );
     $.getScript( "js/GameProfileMenu.js" );
 

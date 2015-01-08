@@ -214,7 +214,6 @@
 
 
         _loadMap(gameModeObject, profileObject);
-
         this.startRound(1);
         // load map ()
     };
