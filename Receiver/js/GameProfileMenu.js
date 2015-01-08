@@ -6,7 +6,7 @@
             $(this).html(data);
 
             $('#profile_1').text(gameModeManager.p1.profileName);
-            $('#profile_1').attr('onclick', "gameMode_1.init(gameModeManager.gm1, gameModeManager.p1)");
+            $('#profile_1').attr('onclick', "gameModeManager.startGame(gameModeManager.gm1, gameModeManager.p1)");
 
             $('#profile_2').html('test');
             $('#profile_3').html('test');
