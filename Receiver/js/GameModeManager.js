@@ -1,21 +1,7 @@
 (function(gmm){
 
     var map, layer, geocoder;
-    //Fusion Table ID:
-    var ftTableId = "13Ajs8twEaALtd19pa6LxRpYHLRxFwzdDGKQ2iu-2";
-    var locationColumn = "col1";
-    var where = "col4 \x3e\x3d 100000 and col3 contains ignoring case \x27DE\x27";
-    var goal;
-    var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
-    //Google API Key
-    var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
-    var guesses = {}; // Map UserID:Distanz zum Ziel
-    var positions = {}; //Map UserID:LatLong Position
-    var results = {}; // Map UserId:Points
     var markers = []; //Google Map Marker
-    var gameState;
-    var min = 1;
-    var max = 98; //TODO use COUNT query in dataManager
 
     /** @type number */
     gmm.maxRounds = 5;
@@ -61,6 +47,23 @@
         markers = [];
     };
 
+    gmm.getMap = function(){
+        return map;
+    };
+
+    gmm.getLayer = function(){
+        return layer;
+    };
+
+    gmm.getGeocoder = function(){
+        return geocoder;
+    };
+
+    gmm.getMarkers = function(){
+        return markers;
+    };
+
+
     /**
      * sets the current round to 1
      */
@@ -79,6 +82,27 @@
         // init grm.init
 
     };
+
+    gmm.setMap = function(setter){
+        map = setter;
+        return map;
+    };
+
+    gmm.setLayer = function(setter){
+        layer = setter;
+        return layer;
+    };
+
+    gmm.setGeocoder = function(setter){
+        geocoder = setter;
+        return geocoder;
+    };
+
+    gmm.setMarkers = function(setter){
+        markers = setter;
+        return markers;
+    };
+
 
     /**
      * increases the current round
@@ -147,7 +171,6 @@
         });
         map.mapTypes.set('map-style', styledMapType);
         map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
-        gameState = "initialized"; //TODO use external ENUM
         console.log('gameMode_1 initialized');
 
         gameModeManager.startRound( gameModeManager.currentRound ); //TODO use members
