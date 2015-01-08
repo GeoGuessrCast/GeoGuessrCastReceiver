@@ -10,17 +10,17 @@
 
     _getUserMessageBus().onMessage = function(event) {
         console.log('userMessageBus [' + event.senderId + ']: ' + event.data);
-        this.event_onUserMessage(event);
+        eventManager.event_onUserMessage(event);
     };
 
     _getAdminMessageBus().onMessage = function(event) {
         console.log('adminMessageBus [' + event.senderId + ']: ' + event.data);
-        this.event_onAdminMessage(event);
+        eventManager.event_onAdminMessage(event);
     };
 
     _getGameMessageBus().onMessage = function(event) {
         console.log('gameMessageBus [' + event.senderId + ']: ' + event.data);
-        this.event_onGameMessage(event);
+        eventManager.event_onGameMessage(event);
     };
 
 
