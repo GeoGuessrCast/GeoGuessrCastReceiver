@@ -55,18 +55,31 @@
             android:layout_height="wrap_content"
             android:text="Game Mode 3"
             android:id="@+id/gameMode3" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Game Mode 4"
-            android:id="@+id/gameMode4" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Game Mode 5"
-            android:id="@+id/gameMode5" />
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/gameProfiles">
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Game Mode 1"
+            android:id="@+id/gameProfile1" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Game Mode 2"
+            android:id="@+id/gameProfile2" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Game Mode 3"
+            android:id="@+id/gameProfile3" />
+
+    </LinearLayout>
 </LinearLayout>

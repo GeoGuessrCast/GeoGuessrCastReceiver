@@ -112,6 +112,7 @@ public class GameMode1Fragment extends Fragment {
         resetTimer();
         super.onDestroy();
     }
+
     private void resetTimer(){
         if(this.timer!=null){
             this.timer.cancel();

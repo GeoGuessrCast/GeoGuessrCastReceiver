@@ -84,7 +84,6 @@ public class MainActivity extends ActionBarActivity {
     private Cast.Listener mCastListener;
     private ConnectionCallbacks mConnectionCallbacks;
     private ConnectionFailedListener mConnectionFailedListener;
-    public HelloWorldChannel mHelloWorldChannel;
     public UserChannel mUserChannel;
     public AdminChannel mAdminChannel;
     public GameChannel mGameChannel;
@@ -119,7 +118,9 @@ public class MainActivity extends ActionBarActivity {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             clearFragmentBackStack();
-            finish();
+            //close the app completely! so that the connection is disabled.
+            int pid = android.os.Process.myPid();
+            android.os.Process.killProcess(pid);
         }
         doubleBackToExitPressedOnce = true;
         Toast.makeText(getApplicationContext(), "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
@@ -150,7 +151,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onDestroy() {
-        teardown();
+        //teardown();
         super.onDestroy();
     }
 
@@ -227,7 +228,6 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onConnected(Bundle connectionHint) {
             Log.d(TAG, "onConnected");
-
             if (mApiClient == null) {
                 // We got disconnected while this runnable was pending
                 // execution.
@@ -300,7 +300,6 @@ public class MainActivity extends ActionBarActivity {
 
                                                 // Create the custom message
                                                 // channel
-                                                mHelloWorldChannel = new HelloWorldChannel();
                                                 mUserChannel = new UserChannel();
                                                 mAdminChannel = new AdminChannel();
                                                 mGameChannel = new GameChannel();
@@ -482,27 +481,6 @@ public class MainActivity extends ActionBarActivity {
                     .show();
         }
     }
-    /**
-     * Custom message channel
-     */
-    class HelloWorldChannel implements MessageReceivedCallback {
-
-        /**
-         * @return custom namespace
-         */
-        public String getNamespace() {
-            return getString(R.string.namespace);
-        }
-
-        /*
-         * Receive message from the receiver app
-         */
-        @Override
-        public void onMessageReceived(CastDevice castDevice, String namespace,
-                                      String message) {
-            Log.d(TAG, "onMessageReceived: " + message);
-        }
-    }
 
     class UserChannel implements MessageReceivedCallback {
 
@@ -569,6 +547,7 @@ public class MainActivity extends ActionBarActivity {
             Log.d(TAG, "onMessageReceived from GameChannel: " + message);
 
             GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
+
             if(gameMessage.getEvent_type().equals("startGame")){
                 if(gameMessage.getStarted().equals("true")){
                     //switch gameMode to start GameMode
@@ -594,7 +573,7 @@ public class MainActivity extends ActionBarActivity {
                 .beginTransaction()
                 .setCustomAnimations(R.animator.fragment_fade_enter , R.animator.fragment_fade_exit)
                 .replace(R.id.main_page_container, fragment)
-                .addToBackStack(null)
+//                .addToBackStack(null)
                 .commit();
     }
 

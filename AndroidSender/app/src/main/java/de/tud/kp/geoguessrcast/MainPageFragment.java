@@ -29,10 +29,10 @@ import de.tud.kp.geoguessrcast.beans.User;
 public class MainPageFragment extends Fragment {
 
     private MainActivity mActivity;
-    private boolean doubleBackToExitPressedOnce;
+//    private boolean doubleBackToExitPressedOnce;
 
     public MainPageFragment() {
-        doubleBackToExitPressedOnce = false;
+//        doubleBackToExitPressedOnce = false;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class MainPageFragment extends Fragment {
             public void onClick(View v) {
                 if(mActivity.mApiClient!=null){
                     String userName = usernameEditText.getText().toString();
-                    String userMac = getDeviceMacAddr(mActivity);
+                    String userMac = getDeviceMacAddr();
                     mActivity.user = new User(userName, userMac);
                     mActivity.sendMessage(mActivity.mUserChannel, mActivity.user.toJSONString());
                     Log.d(mActivity.TAG, mActivity.user.toJSONString());
@@ -131,7 +131,7 @@ public class MainPageFragment extends Fragment {
     /**
      * get Mac Address of this android device
      */
-    private String getDeviceMacAddr(Context context){
+    private String getDeviceMacAddr(){
         WifiManager manager = (WifiManager) mActivity.getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = manager.getConnectionInfo();
         String macAddr = info.getMacAddress();

@@ -43,7 +43,17 @@ public class ChooseModeFragment extends Fragment {
         Button gameMode1Btn = (Button) mActivity.findViewById(R.id.gameMode1);
         gameMode1Btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mActivity.sendMessage(mActivity.mAdminChannel, "{\"event_type\": \"setGameMode\", \"gameMode\": \"1\"}");
+//                mActivity.sendMessage(mActivity.mAdminChannel, "{\"event_type\": \"setGameMode\", \"gameMode\": \"1\"}");
+//                mActivity.startFragment(new WaitingFragment());
+                mActivity.findViewById(R.id.gameModes).setVisibility(View.GONE);
+                mActivity.findViewById(R.id.gameProfiles).setVisibility(View.GONE);
+            }
+        });
+
+        Button gameProfile1Btn = (Button) mActivity.findViewById(R.id.gameProfile1);
+        gameProfile1Btn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mActivity.sendMessage(mActivity.mAdminChannel, "{\"event_type\": \"setGameMode\", \"gameMode\": \"1\", \"gameProfile\": \"1\"}");
                 mActivity.startFragment(new WaitingFragment());
             }
         });
