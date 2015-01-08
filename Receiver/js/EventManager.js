@@ -168,7 +168,7 @@
             }
             //inform the Sender if the user is game leader
             //window.userMessageBus.send(event.senderId, userManager.isUserAdmin(event.senderId));
-            eventManager.send(event.senderId, data.channelName.user, userManager.isUserAdmin(event.senderId));
+            eventManager.send(event.senderId, data.channelName.user, userManager.isUserAdmin(event.userMac));
         }
 
         // update View or sth...
