@@ -37,7 +37,7 @@
     /**
      * clears all markers on the map
      */
-    gmm.clearMarkersOnMap = function(){
+    gmm.clearMarkers = function(){
         if (layer) {
             layer.setMap(null);
         }
@@ -149,7 +149,7 @@
         map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
         console.log('[GMM] - map loaded');
 
-        gameModeManager.startRound( gameModeManager.currentRound ); //TODO use members
+        gameRoundManager.startRound( gameModeManager.currentRound ); //TODO use members
     };
 
 

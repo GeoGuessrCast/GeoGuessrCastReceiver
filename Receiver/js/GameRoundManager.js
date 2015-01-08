@@ -63,7 +63,7 @@
         var worker = new Worker('js/timer.js'); //External script
         worker.onmessage = function(event) {    //Method called by external script
             console.log("GRM: onMessage !");
-            gameModeManager.setGameRoundEnded();
+            gameRoundManager.endRound();
         };
     };
 
@@ -143,7 +143,7 @@
 
     grm.nextRound = function(){
         // check if max rounds reached
-        if(gmm.currentRound === gmm.maxRounds) {
+        if(gameModeManager.currentRound === gameModeManager.maxRounds) {
             // end game mode
             var data = {"ended": true, "event_type":"game_ended"};
             eventManager.broadcast(data.channelName.game, data);
@@ -152,7 +152,7 @@
             // todo fm show final scoreboard
         } else {
             // next round...
-            gmm.currentRound = gmm.currentRound + 1;
+            gameModeManager.currentRound = gameModeManager.currentRound + 1;
 
             setTimeout(function(){
                 //gameMode_1.startRound(gmm.currentRound);
