@@ -34,6 +34,7 @@
 
     gmm.p1 = {
         profileName: 'borders + no choices',
+        id: 1,
         mapOption: {
             mapType : google.maps.MapTypeId.SATELLITE  //TODO
         }
