@@ -1,5 +1,6 @@
 (function(grm){
-    var map, layer, geocoder;
+
+
     //Fusion Table ID:
     var ftTableId = "13Ajs8twEaALtd19pa6LxRpYHLRxFwzdDGKQ2iu-2";
     var locationColumn = "col1";
@@ -11,8 +12,6 @@
     var guesses = {}; // Map UserID:Distanz zum Ziel
     var positions = {}; //Map UserID:LatLong Position
     var results = {}; // Map UserId:Points
-    var markers = []; //Google Map Marker
-    var gameState;
     var min = 1;
     var max = 98; //TODO use COUNT query in dataManager
 
@@ -25,7 +24,7 @@
         displayText('RoundManager: round ' + gameModeManager.currentRound + ' started.' );
         var x = Math.floor(Math.random() * (max - min)) + min;
         gameModeManager.clearMarkers();
-        layer = new google.maps.FusionTablesLayer({
+        gameModeManager.setLayer(new google.maps.FusionTablesLayer({
             query: {
                 select: locationColumn,
                 from: ftTableId,
@@ -38,8 +37,8 @@
                 templateId: 1
             }
 
-        });
-        layer.setMap(map);
+        }));
+        gameModeManager.getLayer().setMap(gameModeManager.getMap());
         // Builds a Fusion Tables SQL query and hands the result to  dataHandler
         // write your SQL as normal, then encode it
         var query = "SELECT * FROM " + ftTableId + " WHERE "+where+" OFFSET "+ x +" LIMIT 1"; //TODO put all queries into dataManager... getGeoObjects()... etc
@@ -167,7 +166,7 @@
         // get Geolocation
         // set Marker
         console.debug("get Address: "+address+" for player:" +player);
-        geocoder.geocode({
+        gameModeManager.getGeocoder().geocode({
             address: address
         }, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
@@ -218,14 +217,14 @@
         console.log("New Round");
         var address = response.rows[0][0];
         console.log("Address: "+address);
-        geocoder.geocode({
+        gameModeManager.getGeocoder().geocode({
             address: address
         }, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var pos = results[0].geometry.location;
                 console.log("Position: "+pos);
-                map.setCenter(pos);
-                map.setZoom(6);
+                gameModeManager.getMap().setCenter(pos);
+                gameModeManager.getMap().setZoom(6);
                 //Set global goal var
                 goal = pos;
             } else {
@@ -262,8 +261,8 @@
             title: "Player: "+player,
             animation: google.maps.Animation.DROP
         });
-        marker.setMap(map);
-        markers.push(marker);
+        marker.setMap(gameModeManager.getMap());
+        gameModeManager.getMarkers().push(marker);
     }
 
 
