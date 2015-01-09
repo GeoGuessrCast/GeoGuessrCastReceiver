@@ -133,9 +133,9 @@
 
         userManager.removeUser(event.data.userMac);
 
-        if (window.castReceiverManager.getSenders().length == 0) {
-            window.close();
-        }
+        //if (window.castReceiverManager.getSenders().length == 0) {
+        //    window.close();
+        //}
 
     };
 
@@ -226,7 +226,11 @@
         } else {
             $('#testConsole').show();
         }
-    }
+    };
+
+    castReceiver.restart = function() {
+        window.location.reload(true);
+    };
 
 
 }(this.eventManager = this.eventManager || {}));
