@@ -238,8 +238,16 @@
         //do something with the data using response.rows
         console.log("New Round");
         var address = response.rows[0][0];
-        console.log("Address: "+address);
-        gameModeManager.getGeocoder().geocode({
+        var lat = response.rows[0][1];
+        var long = response.rows[0][2];
+        var pos = new google.maps.LatLng(lat, long);
+        console.log("Address: "+address+ ": "+lat+" , "+long);
+        gameModeManager.getMap().setCenter(pos);
+        gameModeManager.getMap().setZoom(6);
+        //Set global goal vars
+        goal = pos;
+/*       Deprecated:
+         gameModeManager.getGeocoder().geocode({
             address: address,
             region: "de"
         }, function (results, status) {
@@ -255,7 +263,7 @@
                 displayText('Address could not be geocoded: '+address+" : " + status);
 
             }
-        });
+        });*/
     }
 
 
