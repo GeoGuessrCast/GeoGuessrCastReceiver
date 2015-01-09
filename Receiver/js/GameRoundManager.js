@@ -183,7 +183,6 @@
      */
     function _calculateGuess(address, player){
         // get Geolocation
-        // set Marker
         console.debug("get Address: "+address+" for player:" +player);
         gameModeManager.getGeocoder().geocode({
             address: address
@@ -203,7 +202,9 @@
 
 
             } else {
-                console.log('Address could not be geocoded: ' + status);
+                console.log(player+ ' Address could not be geocoded: ' + status);
+                displayText(player+ ' Address could not be geocoded: '+address+" : " + status);
+
             }
         });
 
@@ -248,6 +249,8 @@
                 goal = pos;
             } else {
                 console.log('Address could not be geocoded: ' + status);
+                displayText('Address could not be geocoded: '+address+" : " + status);
+
             }
         });
     }
