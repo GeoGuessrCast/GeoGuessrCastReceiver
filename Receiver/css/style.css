@@ -221,6 +221,12 @@ h3 {
     padding-left: 5vh;
 }
 
+
+.gmnoprint, .gm-style>div>a {
+    display: none;
+}
+
+
 /* timer */
 #timerTest {
     position: absolute;
