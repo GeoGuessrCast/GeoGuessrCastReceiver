@@ -54,10 +54,7 @@
         positions = {};
         // GMB: send prepare()
         // describes game mode properties
-        var jsonData = {"event_type":"gameDetail" , "gameMode" : "1", "timerRound" : "30000", "choices" : "null"};
-        //window.gameMessageBus.broadcast(data);
-        eventManager.broadcast(data.channelName.game, jsonData);
-        jsonData = {"event_type":"startGame", "gameMode": 1, "started": true};
+        var jsonData = {"event_type":"startGame", "gameMode": 1, "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : "30000", "choices" : "null"};
         eventManager.broadcast(data.channelName.game, jsonData);
         //Set Timer
         console.log("starting RoundTimer....");
