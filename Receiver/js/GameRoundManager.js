@@ -19,6 +19,7 @@
 
 
     grm.startRound = function(){
+        renderManager.showMidScreenMessage('round ' + gameModeManager.currentRound + ' started...' )
         displayText('RoundManager: round ' + gameModeManager.currentRound + ' started.' );
         var x = Math.floor(Math.random() * (max - min)) + min;
         gameModeManager.clearMarkers();

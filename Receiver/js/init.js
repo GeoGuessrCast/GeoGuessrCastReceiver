@@ -7,6 +7,7 @@ function initialize() {
     window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
 
     $.ajaxSetup({async:false, cache:true});
+    $.getScript( "js/RenderManager.js" );
     $.getScript( "js/EventManager.js" );
     $.getScript( "js/DataManager.js" );
     $.getScript( "js/UserManager.js" );
