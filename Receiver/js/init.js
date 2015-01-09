@@ -7,15 +7,13 @@ function initialize() {
     window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
 
     $.ajaxSetup({async:false, cache:true});
+    $.getScript( "js/ExecutionManager.js" );
     $.getScript( "js/RenderManager.js" );
     $.getScript( "js/EventManager.js" );
     $.getScript( "js/DataManager.js" );
     $.getScript( "js/UserManager.js" );
     $.getScript( "js/GameModeManager.js" );
     $.getScript( "js/GameRoundManager.js" );
-    //$.getScript( "js/gamemodes/GameMode_1.js" ); //TODO del this
-    $.getScript( "js/MainMenu.js" );
-    $.getScript( "js/GameProfileMenu.js" );
 
     console.log('Starting Receiver Manager');
 
@@ -58,7 +56,7 @@ function initialize() {
     //};
 
 
-    loadDefaultMap();
+    renderManager.loadDefaultMap();
 
     window.castReceiverManager.start({statusText: "Application is starting"});
     console.log('Receiver Manager started');
@@ -73,12 +71,3 @@ function initialize() {
     */
 }
 
-function loadDefaultMap() {
-    window.map = new google.maps.Map(document.getElementById('map-canvas'), {
-        center: new google.maps.LatLng(45.74167213456433, 38.26884827734375),
-        zoom: 3,
-        mapTypeControl: true,
-        disableDefaultUI: true,
-        mapTypeId: google.maps.MapTypeId.SATELLITE
-    });
-}

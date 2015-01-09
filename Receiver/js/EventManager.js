@@ -119,7 +119,7 @@
 
     castReceiver.event_onReady = function(event) {
         displayEvent('onReady', event);
-        mainMenu.init();
+        renderManager.loadMainMenu();
 
     };
 
@@ -187,7 +187,7 @@
 
         if(eventData.event_type === data.eventType.setGameMode){
             selectedGameMode = eventData.gameModeNumber;
-            gameProfileMenu.init();
+            renderManager.loadGameProfileMenu();
             //  gameModeManager.startGame(eventData.gameMode, null);
         }
 
