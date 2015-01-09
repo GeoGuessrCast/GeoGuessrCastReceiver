@@ -185,7 +185,9 @@
         // get Geolocation
         console.debug("get Address: "+address+" for player:" +player);
         gameModeManager.getGeocoder().geocode({
-            address: address
+            address: address,
+            region: "de"
+
         }, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var pos = results[0].geometry.location;
@@ -238,7 +240,8 @@
         var address = response.rows[0][0];
         console.log("Address: "+address);
         gameModeManager.getGeocoder().geocode({
-            address: address
+            address: address,
+            region: "de"
         }, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var pos = results[0].geometry.location;
