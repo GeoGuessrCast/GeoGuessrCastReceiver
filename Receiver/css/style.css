@@ -220,3 +220,43 @@ h3 {
     text-indent: -5vh;
     padding-left: 5vh;
 }
+
+
+.gmnoprint, .gm-style>div>a {
+    display: none;
+}
+
+
+/* timer */
+#timerTest {
+    position: absolute;
+    right: 1vw;
+    top: 2vh;
+    /*background-color: #375789;*/
+    display: block;
+    overflow: hidden;
+    width: 30vw;
+    height: 7vh;
+}
+
+#timerTest > span {
+    position: absolute;
+    display: block;
+    z-index: 100;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 6vh;
+    width: 100%;
+    top: 1vh;
+}
+
+
+#innerTimer {
+    /*background-color: green;*/
+    background: linear-gradient(to left, rgb(21, 29, 240) 0%,rgba(125,185,232,0) 100%);
+    position: relative;
+    display: block;
+    width: 30vh;
+    height: 7vh;
+    right:100%;
+}

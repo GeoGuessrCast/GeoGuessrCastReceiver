@@ -16,6 +16,7 @@
     var max = 98; //TODO use COUNT query in dataManager
 
 
+    grm.roundTimer = null;
 
 
     grm.startRound = function(){
@@ -58,8 +59,8 @@
         eventManager.broadcast(data.channelName.game, jsonData);
         //Set Timer
         console.log("starting RoundTimer....");
-        var worker = new Worker('js/timer.js'); //External script
-        worker.onmessage = function(event) {    //Method called by external script
+        gameRoundManager.roundTimer = new Worker('js/timer.js'); //External script
+        gameRoundManager.roundTimer.onmessage = function(event) {    //Method called by external script
             console.log("GRM: onMessage !");
             gameRoundManager.endRound();
         };
@@ -137,6 +138,12 @@
     };
 
 
+    grm.cancelRoundTimer = function() {
+        if (gameRoundManager.roundTimer != null) {
+            gameRoundManager.roundTimer.terminate();
+        }
+    };
+
 
 
     grm.nextRound = function(){
@@ -147,7 +154,7 @@
             var jsonData = {"ended": true, "event_type":"game_ended"};
             eventManager.broadcast(data.channelName.game, jsonData);
 
-            mainMenu.init();
+            renderManager.loadMainMenu();
             // todo fm show final scoreboard
         } else {
             // next round...
@@ -156,7 +163,7 @@
             setTimeout(function(){
                 //gameMode_1.startRound(gmm.currentRound);
                 gameRoundManager.startRound();
-            }, 10000);
+            }, 10000); //TODO use async timer to not block thread ?
         }
     };
 
