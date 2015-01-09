@@ -3,6 +3,11 @@
     <h1>City Guessing</h1>
 </div>
 
+<div id="timerTest">
+    <div id="innerTimer"></div>
+    <span>Round 1/5</span>
+</div>
+
 <div id="midScreenMessage"></div>
 
 <div class="roundedMenu" id="bottomScoreboard">
@@ -18,3 +23,21 @@
     </ul>
 
 </div>
+
+<script type="text/javascript">
+    var w;
+    if(typeof(Worker) !== 'undefined'){
+        if(typeof(w) === 'undefined'){
+            w = new Worker('js/timer2.js');
+
+            w.onmessage = function(event){
+
+//                            console.log(parseInt(event.data));
+                $('#innerTimer').animate({
+                    'right': parseInt(event.data)+'%'
+                }, 300);
+            };
+
+        }
+    }
+</script>
