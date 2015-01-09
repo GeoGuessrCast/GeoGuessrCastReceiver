@@ -6,12 +6,10 @@ package de.tud.kp.geoguessrcast;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
 public class ChooseModeFragment extends Fragment {
 
@@ -43,18 +41,19 @@ public class ChooseModeFragment extends Fragment {
         Button gameMode1Btn = (Button) mActivity.findViewById(R.id.gameMode1);
         gameMode1Btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-//                mActivity.sendMessage(mActivity.mAdminChannel, "{\"event_type\": \"setGameMode\", \"gameMode\": \"1\"}");
+//                mActivity.sendMessage(mActivity.mAdminChannel, "{\"event_type\": \"startGame\", \"gameMode\": \"1\" , \"profile\": \"1\"}");
 //                mActivity.startFragment(new WaitingFragment());
+                mActivity.sendMessage(mActivity.mAdminChannel, "{\"event_type\": \"setGameMode\", \"gameModeNumber\": \"1\" }");
                 mActivity.findViewById(R.id.gameModes).setVisibility(View.GONE);
-                mActivity.findViewById(R.id.gameProfiles).setVisibility(View.GONE);
+                mActivity.findViewById(R.id.gameProfiles).setVisibility(View.VISIBLE);
             }
         });
 
         Button gameProfile1Btn = (Button) mActivity.findViewById(R.id.gameProfile1);
         gameProfile1Btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mActivity.sendMessage(mActivity.mAdminChannel, "{\"event_type\": \"setGameMode\", \"gameMode\": \"1\", \"gameProfile\": \"1\"}");
-                mActivity.startFragment(new WaitingFragment());
+                mActivity.sendMessage(mActivity.mAdminChannel, "{\"event_type\": \"setGameProfile\", \"gameProfileNumber\": \"1\"}");
+                mActivity.startFragment(new WaitGameFragment());
             }
         });
     }

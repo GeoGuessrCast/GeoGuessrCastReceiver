@@ -68,17 +68,17 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Game Mode 1"
+            android:text="Game Profile 1"
             android:id="@+id/gameProfile1" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Game Mode 2"
+            android:text="Game Profile 2"
             android:id="@+id/gameProfile2" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Game Mode 3"
+            android:text="Game Profile 3"
             android:id="@+id/gameProfile3" />
 
     </LinearLayout>

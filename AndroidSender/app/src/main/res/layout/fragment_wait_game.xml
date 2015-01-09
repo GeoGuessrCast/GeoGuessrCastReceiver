@@ -14,5 +14,5 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/abc_text_size_medium_material"
         android:paddingTop="32sp"
-        android:text="@string/wait_message" />
+        android:text="@string/wait_game_message" />
 </LinearLayout>

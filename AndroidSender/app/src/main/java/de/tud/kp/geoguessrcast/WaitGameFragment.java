@@ -9,14 +9,14 @@ import android.view.ViewGroup;
 /**
  * Created by Kaijun on 02/12/14.
  */
-public class WaitingFragment extends Fragment{
+public class WaitGameFragment extends Fragment{
 
-    public WaitingFragment() {
+    public WaitGameFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_waiting, container, false);
+        return inflater.inflate(R.layout.fragment_wait_game, container, false);
     }
 }

@@ -8,22 +8,51 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50sp"
-        android:gravity="center">
+        android:gravity="center"
+        android:id="@+id/roundInfo">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time Left:"
-            android:layout_gravity="center_horizontal"
-            android:textSize="@dimen/abc_text_size_large_material" />
+            android:layout_gravity="center_vertical"
+            android:text="Round: "
+            android:textSize="@dimen/abc_text_size_display_1_material"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:id="@+id/gameTimer"
-            android:layout_gravity="center_horizontal"
-            android:textSize="@dimen/abc_text_size_large_material"/>
+            android:layout_gravity="center_vertical"
+            android:id="@+id/roundNumber"
+            android:textSize="@dimen/abc_text_size_display_1_material"/>
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutProgressBar"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:indeterminate="false"
+            android:progressDrawable="@drawable/circular_progress_bar"
+            android:max="100"
+            android:id="@+id/countDownProgressBar"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/countDownTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text=""
+            android:textColor="@color/mainText"
+            android:textSize="50sp" />
+    </RelativeLayout>﻿
+
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -37,12 +66,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:text="City Name : "
+            android:text="City Name: "
             android:textSize="@dimen/abc_text_size_large_material"/>
         <EditText
             android:id="@+id/cityNameEditText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/mainText"
             android:textSize="@dimen/abc_text_size_large_material" />
 
 

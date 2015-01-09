@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -78,9 +79,13 @@ public class MainPageFragment extends Fragment {
                     Log.d(mActivity.TAG, mActivity.user.toJSONString());
                 }
                 else{
-                    Log.d(mActivity.TAG, "Please connect the Chrome Cast at first");
+                    Log.d(mActivity.TAG, "Please connect to Chrome Cast at first");
+                    Toast.makeText(mActivity, "Please connect to Chrome Cast at first", Toast.LENGTH_SHORT)
+                            .show();
 
                 }
+
+                hideSoftKeyboard(mActivity);
             }
         });
 
@@ -115,6 +120,7 @@ public class MainPageFragment extends Fragment {
 //        });
     }
 
+    //TODO create a singleton : Utility!!!
     /**
      * get username of this android device
      */
@@ -138,5 +144,14 @@ public class MainPageFragment extends Fragment {
         return macAddr;
     }
 
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        try{
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        }
+        catch (Exception e){
+            Log.e(activity.getClass().getSimpleName(), "Exception while hiding soft keyboard", e);
+        }
+    }
 
 }

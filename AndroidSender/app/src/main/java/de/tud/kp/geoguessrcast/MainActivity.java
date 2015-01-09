@@ -17,36 +17,20 @@
 package de.tud.kp.geoguessrcast;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.speech.RecognizerIntent;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.MediaRouteActionProvider;
 import android.support.v7.media.MediaRouteSelector;
 import android.support.v7.media.MediaRouter;
 import android.support.v7.media.MediaRouter.RouteInfo;
-import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.cast.ApplicationMetadata;
@@ -61,21 +45,25 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import de.tud.kp.geoguessrcast.beans.User;
 import de.tud.kp.geoguessrcast.beans.eventJsonBeans.GameMessage;
 
 /**
  * Main activity to send messages to the receiver.
  */
+
+/*
+TODO separate all Control flow, e.g. GameManager: start game, start waiting, show optionMenu...
+TODO all Fragments reference!!! not always new!!!
+ */
+
 public class MainActivity extends ActionBarActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int REQUEST_CODE = 1;
 
+    private Menu mOptionMenu;
     private MediaRouter mMediaRouter;
     private MediaRouteSelector mMediaRouteSelector;
     private MediaRouter.Callback mMediaRouterCallback;
@@ -159,12 +147,38 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        mOptionMenu = menu;
+
         MenuItem mediaRouteMenuItem = menu.findItem(R.id.media_route_menu_item);
         MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider) MenuItemCompat
                 .getActionProvider(mediaRouteMenuItem);
         // Set the MediaRouteActionProvider selector for device discovery.
         mediaRouteActionProvider.setRouteSelector(mMediaRouteSelector);
+
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.toggleConsole:
+                if(user.isAdmin()){
+                    if (!item.isChecked()) {
+                        item.setChecked(true);
+                        //TODO use the Class/Object to send the json string!!!
+                        //TODO use the Class/Object to send the json string!!!
+                        sendMessage(mAdminChannel, "{\"event_type\": \"hideConsole\", \"hide\": false }");
+                    }
+                    else{
+                        item.setChecked(false);
+                        sendMessage(mAdminChannel, "{\"event_type\": \"hideConsole\", \"hide\": true }");
+                    }
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -185,6 +199,12 @@ public class MainActivity extends ActionBarActivity {
         public void onRouteUnselected(MediaRouter router, RouteInfo info) {
             Log.d(TAG, "onRouteUnselected: info=" + info);
             teardown();
+            //TODO: GameManager-initStartPage...
+            startFragment(new MainPageFragment());
+            //TODO make a method called showOptionMenu
+            MenuItem toggleConsoleMenuItem = mOptionMenu.findItem(R.id.toggleConsole);
+            toggleConsoleMenuItem.setVisible(false);
+
             mSelectedDevice = null;
         }
     }
@@ -376,7 +396,8 @@ public class MainActivity extends ActionBarActivity {
             if (mApplicationStarted) {
                 if (mApiClient.isConnected()  || mApiClient.isConnecting()) {
                     try {
-                        Cast.CastApi.stopApplication(mApiClient, mSessionId);
+                        //We don't need Stop the Application when one of the user leaves!
+                        //Cast.CastApi.stopApplication(mApiClient, mSessionId);
                         if (mUserChannel != null) {
                             Cast.CastApi.removeMessageReceivedCallbacks(
                                     mApiClient,
@@ -502,9 +523,13 @@ public class MainActivity extends ActionBarActivity {
             if(message.equals("true")){
                 user.setAdmin(true);
                 startFragment(new ChooseModeFragment());
+
+                //TODO make a method called showOptionMenu
+                MenuItem toggleConsoleMenuItem = mOptionMenu.findItem(R.id.toggleConsole);
+                toggleConsoleMenuItem.setVisible(true);
             }
             else{
-                startFragment(new WaitingFragment());
+                startFragment(new WaitGameFragment());
             }
             Log.d(TAG, "onMessageReceived from UserChannel: " + message);
         }
@@ -549,18 +574,18 @@ public class MainActivity extends ActionBarActivity {
             GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
 
             if(gameMessage.getEvent_type().equals("startGame")){
-                if(gameMessage.getStarted().equals("true")){
+                if(gameMessage.isStarted()){
                     //switch gameMode to start GameMode
-                    if(gameMessage.getGameMode().equals("1"))
-                        startFragment(new GameMode1Fragment());
+                    if(gameMessage.getGameMode()==1) {
+                        int roundNumber = gameMessage.getRoundNumber();
+                        int timeRound = gameMessage.getTimerRound();
+                        startFragment(GameMode1Fragment.newInstance(roundNumber,timeRound));
+                    }
                 }
-            }
-            else if(gameMessage.getEvent_type().equals("gameDetail")){
-
             }
             else if(gameMessage.getEvent_type().equals("game_ended")){
                 if(gameMessage.isEnded()==true){
-                    clearFragmentBackStack();
+                    //clearFragmentBackStack();
                     startFragment(new MainPageFragment());
                 }
             }
@@ -574,7 +599,9 @@ public class MainActivity extends ActionBarActivity {
                 .setCustomAnimations(R.animator.fragment_fade_enter , R.animator.fragment_fade_exit)
                 .replace(R.id.main_page_container, fragment)
 //                .addToBackStack(null)
-                .commit();
+//                .commit();
+                //instead of commit for avoiding the "after onSaveInstanceState" problem
+                .commitAllowingStateLoss();
     }
 
     public void clearFragmentBackStack(){

@@ -7,4 +7,11 @@
         app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
         app:showAsAction="always"/>
 
+
+    <group android:checkableBehavior="all">
+        <item android:id="@+id/toggleConsole"
+            android:title="Console Mode"
+            android:visible="false"/>
+    </group>
+
 </menu>

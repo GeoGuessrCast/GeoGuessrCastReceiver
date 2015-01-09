@@ -13,7 +13,8 @@
     <string name="media_route_menu_title">Play on&#8230;</string>
     <string name="welcome_message">Welcome to GeoGuessr</string>
     <string name="start_game">Los!</string>
-    <string name="wait_message">Please wait till the game starts!</string>
+    <string name="wait_game_message">Please wait till the game starts!</string>
+    <string name="wait_game_round">Wait for next Round!</string>
     <string name="tip">Tip:</string>
     <string name="player_confirm_tip">Make sure that all players have already connected to the game.</string>
     <string name="choose_mode">Start Choosing Mode!</string>
