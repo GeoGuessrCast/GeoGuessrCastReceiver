@@ -146,7 +146,7 @@
 
         });
         map.mapTypes.set('map-style', styledMapType);
-        map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+        map.setMapTypeId('map-style');
         console.log('[GMM] - map loaded');
 
         gameRoundManager.startRound( gameModeManager.currentRound ); //TODO use members

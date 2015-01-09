@@ -226,7 +226,11 @@
         } else {
             $('#testConsole').show();
         }
-    }
+    };
+
+    castReceiver.restart = function() {
+        window.location.reload(true);
+    };
 
 
 }(this.eventManager = this.eventManager || {}));

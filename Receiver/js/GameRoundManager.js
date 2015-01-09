@@ -19,6 +19,7 @@
 
 
     grm.startRound = function(){
+        renderManager.showMidScreenMessage('round ' + gameModeManager.currentRound + ' started...' )
         displayText('RoundManager: round ' + gameModeManager.currentRound + ' started.' );
         var x = Math.floor(Math.random() * (max - min)) + min;
         gameModeManager.clearMarkers();
@@ -183,10 +184,11 @@
      */
     function _calculateGuess(address, player){
         // get Geolocation
-        // set Marker
         console.debug("get Address: "+address+" for player:" +player);
         gameModeManager.getGeocoder().geocode({
-            address: address
+            address: address,
+            region: "de"
+
         }, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var pos = results[0].geometry.location;
@@ -203,7 +205,9 @@
 
 
             } else {
-                console.log('Address could not be geocoded: ' + status);
+                console.log(player+ ' Address could not be geocoded: ' + status);
+                displayText(player+ ' Address could not be geocoded: '+address+" : " + status);
+
             }
         });
 
@@ -235,9 +239,18 @@
         //do something with the data using response.rows
         console.log("New Round");
         var address = response.rows[0][0];
-        console.log("Address: "+address);
-        gameModeManager.getGeocoder().geocode({
-            address: address
+        var lat = response.rows[0][1];
+        var long = response.rows[0][2];
+        var pos = new google.maps.LatLng(lat, long);
+        console.log("Address: "+address+ ": "+lat+" , "+long);
+        gameModeManager.getMap().setCenter(pos);
+        gameModeManager.getMap().setZoom(6);
+        //Set global goal vars
+        goal = pos;
+/*       Deprecated:
+         gameModeManager.getGeocoder().geocode({
+            address: address,
+            region: "de"
         }, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var pos = results[0].geometry.location;
@@ -248,8 +261,10 @@
                 goal = pos;
             } else {
                 console.log('Address could not be geocoded: ' + status);
+                displayText('Address could not be geocoded: '+address+" : " + status);
+
             }
-        });
+        });*/
     }
 
 
