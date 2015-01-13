@@ -2,9 +2,10 @@
 
 
     //Fusion Table ID:
-    var ftTableId = "13Ajs8twEaALtd19pa6LxRpYHLRxFwzdDGKQ2iu-2";
-    var locationColumn = "col1";
-    var where = "col4 \x3e\x3d 100000 and col3 contains ignoring case \x27DE\x27";
+    var ftTableId = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
+    var locationColumn = "col4";
+    var where = "col12 \x3e\x3d 100000 and col8 contains ignoring case \x27DE\x27";
+
     var goal;
     var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
     //Google API Key
@@ -242,9 +243,9 @@
     function _getRandomPositionOfRound(response) {
         //do something with the data using response.rows
         console.log("New Round");
-        var address = response.rows[0][0];
-        var lat = response.rows[0][1];
-        var long = response.rows[0][2];
+        var address = response.rows[0][1];
+        var lat = response.rows[0][2];
+        var long = response.rows[0][3];
         var pos = new google.maps.LatLng(lat, long);
         console.log("Address: "+address+ ": "+lat+" , "+long);
         gameModeManager.getMap().setCenter(pos);

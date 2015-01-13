@@ -11,9 +11,10 @@
     castReceiver.getGeoObjects = function(geoObjType, countryCode, count) {
         //TODO make a query and return 'count' geoObjects, if countryCode get a random countryCode
         //Fusion Table ID:
-        var ftTableId = "13Ajs8twEaALtd19pa6LxRpYHLRxFwzdDGKQ2iu-2";
-        var locationColumn = "col1";
-        var where = "col4 \x3e\x3d 100000 and col3 contains ignoring case \x27DE\x27";
+        //"13Ajs8twEaALtd19pa6LxRpYHLRxFwzdDGKQ2iu-2";
+        var ftTableId = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
+        var locationColumn = "col4";
+        var where = "col12 \x3e\x3d 100000 and col8 contains ignoring case \x27DE\x27";
         var min = 1;
         var max = 98; //TODO: Get maximum Table Rows from Table dynamic
         var x = Math.floor(Math.random() * (max - min)) + min;
@@ -100,14 +101,13 @@
         var resultLength = response.length;
         console.log("Address: "+address);
         for(var i = 0; i < resultLength; i++){
-            var geoObject = new GeoObject(response.rows[i][0],response.rows[i][1],response.rows[i][2],response.rows[i][3],response.rows[i][4],response.rows[i][5],null);
+            var geoObject = new GeoObject(response.rows[i][1],response.rows[i][2],response.rows[i][3],response.rows[i][4],response.rows[i][5],response.rows[i][6],null);
             geoObjects[i] = geoObject;
         }
     }
 
     /**
      *
-     * @param rowId
      * @param name
      * @param lat
      * @param long
