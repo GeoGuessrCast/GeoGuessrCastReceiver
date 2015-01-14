@@ -17,7 +17,7 @@
             //TODO: Handle if false data
         }
         gameModeManager.clearMarkers();
-        gameModeManager.setLayer(queryResult.ftLayer);
+        //gameModeManager.setLayer(queryResult.ftLayer);
         gameModeManager.getLayer().setMap(gameModeManager.getMap());
 
 
@@ -232,6 +232,11 @@
 
         var pinColor = color.split("#")[1];
         var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor);
+        var contentString = '';
+
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
 
         var marker = new google.maps.Marker({
             position: pos,

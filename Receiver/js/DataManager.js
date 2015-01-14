@@ -59,11 +59,11 @@
         var x = Math.floor(Math.random() * (max - min)) + min;
 
         //TODO use COUNT query in dataManager
-        var ftLayer = _createFusionTableLayer(ftTableId,locationColumn, where, x, 1);
+        //var ftLayer = _createFusionTableLayer(ftTableId,locationColumn, where, x, 1);
 
         var geoObjects = _createFusionTableQuery(ftTableId, where, x, 1);
         //TODO: check asynchron call, maybe do it synchonous?
-        var queryResults = new dataManager.QueryResults(ftLayer,geoObjects);
+        var queryResults = new dataManager.QueryResults(null,geoObjects);
 
         //return query results object
         return queryResults;
