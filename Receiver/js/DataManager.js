@@ -122,10 +122,7 @@
         var query = "SELECT * FROM " + ftTableId + " WHERE " + where + " OFFSET " + offset + " LIMIT "+ limit;
         //console.log(query);
         var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
-        //asynchronous call to handle query data
-        //var jqxhr = $.get(queryurl, function (data) {
-        //    //_createGeoObjects(data);
-        //}, "jsonp");
+
         var geoObjects = null;
         jQuery.ajax({
             url: queryurl,
@@ -143,13 +140,19 @@
      */
     function _createGeoObjects(response) {
         //do something with the data using response.rows
-        console.log("New Round");
         var geo = [];
-        var address = response.rows[0][1];
         var resultLength = response.rows.length;
-        console.log("Address: "+address);
         for(var i = 0; i < resultLength; i++){
-            var geoObject = new dataManager.GeoObject(response.rows[i][1],response.rows[i][2],response.rows[i][3],response.rows[i][4],response.rows[i][5],response.rows[i][6],null);
+            var name = response.rows[i][1];
+            var lat = response.rows[i][2];
+            var long = response.rows[i][3];
+            var countryCode = response.rows[i][4];
+            var population = response.rows[i][5];
+            var elevation = response.rows[i][6];
+            var geoObject = null;
+            if (typeof name == "string" && typeof lat == "number" && typeof long == "number" && typeof countryCode == "string" && typeof population == "string" && typeof elevation == "string"){ //&&
+                geoObject = new dataManager.GeoObject(name,lat,long,countryCode,population,elevation,null);
+            }
             console.log("DataManager: new geoObject: "+ geoObject.name);
             geo[i] = geoObject;
         }

@@ -13,7 +13,9 @@
         renderManager.showMidScreenMessage('round ' + gameModeManager.currentRound + ' started...' )
         displayText('RoundManager: round ' + gameModeManager.currentRound + ' started.' );
         var queryResult = dataManager.getGeoObjects("country","DE",1);
-
+        if (typeof queryResult == "null") {
+            //TODO: Handle if false data
+        }
         gameModeManager.clearMarkers();
         gameModeManager.setLayer(queryResult.ftLayer);
         gameModeManager.getLayer().setMap(gameModeManager.getMap());
