@@ -5,11 +5,11 @@ function initialize() {
 
 
     if (typeof(cast) !== 'undefined') {
-        displayText("[init] ChromeCast mode started");
-        cast.receiver.logger.setLevelValue(0);
+        console.log("[init] ChromeCast mode started");
+        cast.receiver.logger.setLevelValue(1000); //= ERROR
         window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
     } else {
-        displayText("[init] Local mode started");
+        console.log("[init] Local mode started");
     }
 
 
@@ -24,25 +24,23 @@ function initialize() {
 
 
     if (typeof(cast) !== 'undefined') {
-        console.log('Starting Receiver Manager');
         castReceiverManager.onReady = function(event) {
-            console.log('Received Ready event: ' + JSON.stringify(event.data));
+            console.debug('onReady -> ' + JSON.stringify(event.data));
             //window.castReceiverManager.setApplicationState("Application status is ready...");
             eventManager.event_onReady(event);
         };
 
         castReceiverManager.onSenderConnected = function(event) {
-            console.log('Received Sender Connected event: ' + event.data);
+            console.debug('onSenderConnected -> ' + event.data);
             console.log(window.castReceiverManager.getSender(event.data).userAgent);
             eventManager.event_onSenderConnected(event);
         };
 
         castReceiverManager.onSenderDisconnected = function(event) {
-            console.log('Received Sender Disconnected event: ' + event.data);
+            console.debug('onSenderDisconnected -> ' + event.data);
             eventManager.event_onSenderDisconnected(event);
         };
         window.castReceiverManager.start({statusText: "Application is starting"});
-        console.log('Receiver Manager started');
     }
 
 
