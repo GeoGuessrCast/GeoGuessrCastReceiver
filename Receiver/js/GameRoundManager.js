@@ -87,7 +87,9 @@
             var color = user.color;
 
             var mark = _placeMarkerOnMap(pos, player,color);
-            var info = _createInfoWindow(player,addresses[player]);
+            var user = userManager.getUserByMac(player);
+
+            var info = _createInfoWindow(user.name,addresses[player]);
             info.open(gameModeManager.getMap(),mark);
 
         }
