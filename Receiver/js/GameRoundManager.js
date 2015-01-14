@@ -1,21 +1,10 @@
 (function(grm){
 
-
-    //Fusion Table ID:
-    var ftTableId = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
-    var locationColumn = "col4";
-    var where = "col12 \x3e\x3d 100000 and col8 contains ignoring case \x27DE\x27";
-
     var goal;
-    var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
-    //Google API Key
-    var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
+
     var guesses = {}; // Map UserID:Distanz zum Ziel
     var positions = {}; //Map UserID:LatLong Position
     var results = {}; // Map UserId:Points
-    var min = 1;
-    var max = 98; //TODO use COUNT query in dataManager
-
 
     grm.roundTimer = null;
 
@@ -23,32 +12,25 @@
     grm.startRound = function(){
         renderManager.showMidScreenMessage('round ' + gameModeManager.currentRound + ' started...' )
         displayText('RoundManager: round ' + gameModeManager.currentRound + ' started.' );
-        var x = Math.floor(Math.random() * (max - min)) + min;
-        gameModeManager.clearMarkers();
-        gameModeManager.setLayer(new google.maps.FusionTablesLayer({
-            query: {
-                select: locationColumn,
-                from: ftTableId,
-                where: where,
-                offset: x,
-                limit: "1"
-            },
-            options: {
-                styleId: 1,
-                templateId: 1
-            }
+        var queryResult = dataManager.getGeoObjects("country","DE",1);
 
-        }));
+        gameModeManager.clearMarkers();
+        gameModeManager.setLayer(queryResult.ftLayer);
         gameModeManager.getLayer().setMap(gameModeManager.getMap());
-        // Builds a Fusion Tables SQL query and hands the result to  dataHandler
-        // write your SQL as normal, then encode it
-        var query = "SELECT * FROM " + ftTableId + " WHERE "+where+" OFFSET "+ x +" LIMIT 1"; //TODO put all queries into dataManager... getGeoObjects()... etc
-        //console.log(query);
-        var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
-        //asynchronous call to handle query data
-        var jqxhr = $.get(queryurl, function(data){
-            _getRandomPositionOfRound(data);
-        } , "jsonp");
+
+
+        console.log("New Round");
+        var geoObject = queryResult.geoObjects[0]; //TODO dynamic
+        var address = geoObject.name;
+        var lat = geoObject.lat;
+        var long = geoObject.long;
+        var pos = new google.maps.LatLng(lat, long);
+        console.log("Address: "+address+ ": "+lat+" , "+long);
+        _placeMarkerOnMap(pos,"goal","#ff0000");
+        gameModeManager.getMap().setCenter(pos);
+        gameModeManager.getMap().setZoom(6);
+        //Set global goal var
+        goal = pos;
         //console.log("Game Mode 1 started: "+jqxhr);
         //reset user map
         guesses = {};
@@ -85,13 +67,7 @@
             var distInKm = dist / 1000;
             console.log("Player:"+ player+ " Dist:"+ dist + " ("+distInKm+")");
             points = Math.floor(Math.max(0,Math.min(10,(1100-distInKm)/100)));
-            /* Alte Version (noch drin falls neue Formel nicht funktioniert):
-             if (dist == 0){
-             console.log("richtig");
-             points = 1;
-             } else {
-             points = 1 - (1 / (dist*1000));
-             }*/
+
             results[player] = points;
             console.log("Points: "+points);
             // get the saved guessed position for this player
@@ -233,44 +209,6 @@
         return google.maps.geometry.spherical.computeDistanceBetween (p1, p2); // returns the distance in meter
     }
 
-
-
-    /**
-     * gets the data from the sql query with the address and zooms into the address
-     * @param response
-     * @private
-     */
-    function _getRandomPositionOfRound(response) {
-        //do something with the data using response.rows
-        console.log("New Round");
-        var address = response.rows[0][1];
-        var lat = response.rows[0][2];
-        var long = response.rows[0][3];
-        var pos = new google.maps.LatLng(lat, long);
-        console.log("Address: "+address+ ": "+lat+" , "+long);
-        gameModeManager.getMap().setCenter(pos);
-        gameModeManager.getMap().setZoom(6);
-        //Set global goal vars
-        goal = pos;
-/*       Deprecated:
-         gameModeManager.getGeocoder().geocode({
-            address: address,
-            region: "de"
-        }, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                var pos = results[0].geometry.location;
-                console.log("Position: "+pos);
-                gameModeManager.getMap().setCenter(pos);
-                gameModeManager.getMap().setZoom(6);
-                //Set global goal var
-                goal = pos;
-            } else {
-                console.log('Address could not be geocoded: ' + status);
-                displayText('Address could not be geocoded: '+address+" : " + status);
-
-            }
-        });*/
-    }
 
 
 

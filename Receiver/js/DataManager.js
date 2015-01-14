@@ -1,12 +1,51 @@
 (function(castReceiver){
+    /**
+     *
+     * @param name
+     * @param lat
+     * @param long
+     * @param countryCode
+     * @param population
+     * @param elevation
+     * @param marker
+     * @constructor
+     */
+    castReceiver.GeoObject = function(name, lat, long, countryCode, population, elevation, marker){
+
+        /** @type {string} */
+        this.name = name;
+        /** @type {string} */
+        this.countryCode = countryCode;
+        /** @type {number} */
+        this.lat = lat;
+        /** @type {number} */
+        this.long = long;
+        /** @type {number} */
+        this.population = population;
+        /** @type {number} */
+        this.elevation  = elevation;
+        /** @type {marker} */
+        this.marker = marker; //TODO: Geocoding
+    };
+    /**
+     *
+     * @param ftLayer
+     * @param geoObjects
+     * @constructor
+     */
+    castReceiver.QueryResults = function (ftLayer, geoObjects) {
+        this.ftLayer = ftLayer;
+        /** @type Array.<GeoObject> */
+        this.geoObjects = geoObjects;
+    };
 
     var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
     //Google API Key
     var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
     var randomCountryCode = ["DE","EN","US","ES"]; // and many more.... TODO: get dynamically
 
-    /** @type Array.<GeoObject> */
-    geoObjects = [];
+/*    *//** @type Array.<GeoObject> *//*
+    geoObjects = [];*/
 
     castReceiver.getGeoObjects = function(geoObjType, countryCode, count) {
         //TODO make a query and return 'count' geoObjects, if countryCode get a random countryCode
@@ -22,15 +61,14 @@
         //TODO use COUNT query in dataManager
         var ftLayer = _createFusionTableLayer(ftTableId,locationColumn, where, x, 1);
 
-        _createFusionTableQuery(ftTableId, where, x, 1);
+        var geoObjects = _createFusionTableQuery(ftTableId, where, x, 1);
         //TODO: check asynchron call, maybe do it synchonous?
-        var queryResults = new this.QueryResults(ftLayer,geoObjects);
+        var queryResults = new dataManager.QueryResults(ftLayer,geoObjects);
 
         //return query results object
         return queryResults;
     };
 
-    //Struct für GeoObjects
 
     castReceiver.persistHighScoreList = function(highScoreMap) {
         //TODO persist the map (user->maxScore%)
@@ -50,6 +88,7 @@
      * @private
      */
     function _createFusionTableLayer(locationColumn,ftTableId,where,offset,limit) {
+
         var layer = new google.maps.FusionTablesLayer({
             query: {
                 select: locationColumn,
@@ -80,15 +119,23 @@
     function _createFusionTableQuery(ftTableId, where, offset, limit) {
         // Builds a Fusion Tables SQL query and hands the result to  dataHandler
         // write your SQL as normal, then encode it
-        var query = "SELECT * FROM " + ftTableId + " WHERE " + where + " OFFSET " + offset + " LIMIT "+ limit; //TODO put all queries into dataManager... getGeoObjects()... etc
+        var query = "SELECT * FROM " + ftTableId + " WHERE " + where + " OFFSET " + offset + " LIMIT "+ limit;
         //console.log(query);
         var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
         //asynchronous call to handle query data
-        var jqxhr = $.get(queryurl, function (data) {
-            _createGeoObjects(data);
-        }, "jsonp");
+        //var jqxhr = $.get(queryurl, function (data) {
+        //    //_createGeoObjects(data);
+        //}, "jsonp");
+        var geoObjects = null;
+        jQuery.ajax({
+            url: queryurl,
+            success: function(data) {
+               geoObjects = _createGeoObjects(data);
+            },
+            async:false
+        });
 
-        return true;
+        return geoObjects;
     }
     /**
      * gets the data from the sql query with the address
@@ -97,55 +144,18 @@
     function _createGeoObjects(response) {
         //do something with the data using response.rows
         console.log("New Round");
-        var address = response.rows[0][0];
-        var resultLength = response.length;
+        var geo = [];
+        var address = response.rows[0][1];
+        var resultLength = response.rows.length;
         console.log("Address: "+address);
         for(var i = 0; i < resultLength; i++){
-            var geoObject = new GeoObject(response.rows[i][1],response.rows[i][2],response.rows[i][3],response.rows[i][4],response.rows[i][5],response.rows[i][6],null);
-            geoObjects[i] = geoObject;
+            var geoObject = new dataManager.GeoObject(response.rows[i][1],response.rows[i][2],response.rows[i][3],response.rows[i][4],response.rows[i][5],response.rows[i][6],null);
+            console.log("DataManager: new geoObject: "+ geoObject.name);
+            geo[i] = geoObject;
         }
+        return geo;
     }
 
-    /**
-     *
-     * @param name
-     * @param lat
-     * @param long
-     * @param countryCode
-     * @param population
-     * @param elevation
-     * @param marker
-     * @constructor
-     */
-    castReceiver.GeoObject = function(name, lat, long, countryCode, population, elevation, marker){
 
-        /** @type {string} */
-        this.name = name;
-        /** @type {string} */
-        this.countryCode = countryCode;
-        /** @type {number} */
-        this.lat = lat;
-        /** @type {number} */
-        this.long = long;
-        /** @type {number} */
-        this.population = population;
-        /** @type {number} */
-        this.elevation  = elevation;
-        /** @type {marker} */
-        this.marker = marker; //TODO: Geocoding
-      };
-    /**
-     *
-     * @param tableId
-     * @param name
-     * @param ftLayer
-     * @param geoObjects
-     * @constructor
-     */
-    castReceiver.QueryResults = function (ftLayer, geoObjects) {
-        this.ftLayer = ftLayer;
-        /** @type Array.<GeoObject> */
-        this.geoObjects = geoObjects;
-    };
 
 }(this.dataManager = this.dataManager || {}));
