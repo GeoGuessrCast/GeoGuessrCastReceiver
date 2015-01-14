@@ -5,8 +5,8 @@ function initialize() {
 
 
     if (typeof(cast) !== 'undefined') {
-        console.log("[init] ChromeCast mode started");
         cast.receiver.logger.setLevelValue(1000); //= ERROR
+        console.log("[init] ChromeCast mode started");
         window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
     } else {
         console.log("[init] Local mode started");
