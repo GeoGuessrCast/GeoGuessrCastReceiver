@@ -32,7 +32,7 @@ function initialize() {
 
         castReceiverManager.onSenderConnected = function(event) {
             console.debug('onSenderConnected -> ' + event.data);
-            console.log(window.castReceiverManager.getSender(event.data).userAgent);
+            //console.log(window.castReceiverManager.getSender(event.data).userAgent);
             eventManager.event_onSenderConnected(event);
         };
 
