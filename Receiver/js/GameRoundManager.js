@@ -5,7 +5,9 @@
     var guesses = {}; // Map UserID:Distanz zum Ziel
     var positions = {}; //Map UserID:LatLong Position
     var results = {}; // Map UserId:Points
-
+    var addresses = {}; // Map UserId:Address (Name of Guess)
+    var goalMarker; // Marker of goal
+    var goalAddress = "";
     grm.roundTimer = null;
 
 
@@ -18,17 +20,18 @@
         }
         gameModeManager.clearMarkers();
         //gameModeManager.setLayer(queryResult.ftLayer);
-        gameModeManager.getLayer().setMap(gameModeManager.getMap());
+        //gameModeManager.getLayer().setMap(gameModeManager.getMap());
 
 
         console.log("New Round");
         var geoObject = queryResult.geoObjects[0]; //TODO dynamic
         var address = geoObject.name;
+        goalAddress = address;
         var lat = geoObject.lat;
         var long = geoObject.long;
         var pos = new google.maps.LatLng(lat, long);
         console.log("Address: "+address+ ": "+lat+" , "+long);
-        _placeMarkerOnMap(pos,"goal","#ff0000");
+        goalMarker = _placeMarkerOnMap(pos,"goal","#ff0000"); //TODO use different marker icon for goal marker
         gameModeManager.getMap().setCenter(pos);
         gameModeManager.getMap().setZoom(6);
         //Set global goal var
@@ -38,6 +41,7 @@
         guesses = {};
         results = {};
         positions = {};
+        addresses = {};
         // GMB: send prepare()
         // describes game mode properties
         var jsonData = {"event_type":"startGame", "gameMode": 1, "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : "30000", "choices" : "null"};
@@ -62,6 +66,9 @@
         // calculate results, set markers visible
         console.log("GRM.roundEnded: Calculating Results...");
         displayText('RoundManager: round ' + gameModeManager.currentRound +  ' ended.<br>' );
+        var goalInfo = _createInfoWindow("Goal",goalAddress);
+        goalInfo.open(gameModeManager.getMap(), goalMarker);
+
         for (player in guesses) {
 
             var points = 0;
@@ -79,8 +86,9 @@
             var user = userManager.getUserByMac(player);
             var color = user.color;
 
-            _placeMarkerOnMap(pos, player,color);
-
+            var mark = _placeMarkerOnMap(pos, player,color);
+            var info = _createInfoWindow(player,addresses[player]);
+            info.open(gameModeManager.getMap(),mark);
 
         }
         console.log("Results calculated, Round ended");
@@ -168,6 +176,7 @@
     function _calculateGuess(address, player){
         // get Geolocation
         console.debug("get Address: "+address+" for player:" +player);
+        addresses[player] = address;
         gameModeManager.getGeocoder().geocode({
             address: address,
             region: "de"
@@ -211,8 +220,25 @@
         return google.maps.geometry.spherical.computeDistanceBetween (p1, p2); // returns the distance in meter
     }
 
+    /**
+     *
+     * @param player
+     * @param guess
+     * @returns {google.maps.InfoWindow}
+     * @private
+     */
+    function _createInfoWindow(player, guess){
+        if (player != " "){
+            player = player + ': ';
+        }
 
+        var contentString = '<div id="content">'+player+''+guess+'</div>';
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
 
+        return infowindow;
+    }
 
     /**
      * Sets an Marker with the Player as Title
@@ -232,11 +258,7 @@
 
         var pinColor = color.split("#")[1];
         var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor);
-        var contentString = '';
 
-        var infowindow = new google.maps.InfoWindow({
-            content: contentString
-        });
 
         var marker = new google.maps.Marker({
             position: pos,
@@ -247,6 +269,8 @@
         });
         marker.setMap(gameModeManager.getMap());
         gameModeManager.getMarkers().push(marker);
+
+        return marker;
     }
 
 
