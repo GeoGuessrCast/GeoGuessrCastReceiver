@@ -2,6 +2,11 @@
 
     var selectedGameMode;
 
+    if(!_isExecutedOnChromeCast()){     //TODO falk: make _isExecutedOnChromeCast public and move this check to init.js
+        renderManager.hideConsole(false);
+    }
+
+
     try {
         // init
         /** @type cast.receiver.CastMessageBus */
@@ -202,7 +207,7 @@
         }
 
         if(eventData.event_type === data.eventType.hideConsole){
-            eventManager.hideConsole(eventData.hide);
+            renderManager.hideConsole(eventData.hide);
         }
 
         if(eventData.event_type === data.eventType.restart){
@@ -228,14 +233,6 @@
     };
 
     castReceiver.event_onSystemVolumeChanged = function(event){
-    };
-
-    castReceiver.hideConsole = function(hide) {
-        if (hide) {
-            $('#testConsole').hide();
-        } else {
-            $('#testConsole').show();
-        }
     };
 
     castReceiver.restart = function() {

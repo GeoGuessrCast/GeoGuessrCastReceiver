@@ -200,7 +200,7 @@ h3 {
     background-color: rgba(30, 30, 30, 0.0);
     font-size: 2vh;
 
-    display: table-cell;
+    display: none;
     vertical-align: bottom;
 }
 #testConsole > input {
