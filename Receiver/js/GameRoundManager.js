@@ -9,6 +9,7 @@
     var goalMarker; // Marker of goal
     var goalAddress = "";
     grm.roundTimer = null;
+    grm.timePerRoundSec = 30;
 
 
     grm.startRound = function(){
@@ -23,14 +24,12 @@
         //gameModeManager.getLayer().setMap(gameModeManager.getMap());
 
 
-        console.log("New Round");
         var geoObject = queryResult.geoObjects[0]; //TODO dynamic
         var address = geoObject.name;
         goalAddress = address;
         var lat = geoObject.lat;
         var long = geoObject.long;
         var pos = new google.maps.LatLng(lat, long);
-        console.log("Address: "+address+ ": "+lat+" , "+long);
         goalMarker = _placeMarkerOnMap(pos,"goal","#ff0000"); //TODO use different marker icon for goal marker
         goalMarker.icon = {
             path: google.maps.SymbolPath.CIRCLE,
@@ -47,16 +46,17 @@
         positions = {};
         addresses = {};
         // GMB: send prepare()
-        // describes game mode properties
-        var jsonData = {"event_type":"startGame", "gameMode": 1, "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : "30000", "choices" : "null"};
+        // describes game mode properties //TODO use parameters below !
+        var jsonData = {"event_type": data.eventType.startGame, "gameMode": 1, "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : "30000", "choices" : "null"};
         eventManager.broadcast(data.channelName.game, jsonData);
         //Set Timer
-        console.log("starting RoundTimer....");
-        gameRoundManager.roundTimer = new Worker('js/timer.js'); //External script
-        gameRoundManager.roundTimer.onmessage = function(event) {    //Method called by external script
-            console.log("GRM: onMessage !");
-            gameRoundManager.endRound();
-        };
+        //console.log("starting RoundTimer....");
+        //gameRoundManager.roundTimer = new Worker('js/timer.js'); //External script
+        //gameRoundManager.roundTimer.onmessage = function(event) {    //Method called by external script
+        //    console.log("GRM: onMessage !");
+        //    gameRoundManager.endRound();
+        //};
+        executionManager.execDelayed(gameRoundManager.timePerRoundSec*1000, gameRoundManager.endRound);
     };
 
     grm.choseAnswer = function(userMac, answer){
@@ -180,7 +180,7 @@
      */
     function _calculateGuess(address, player){
         // get Geolocation
-        console.debug("get Address: "+address+" for player:" +player);
+        console.log("[GRM] " + player + " picked " + address);
         addresses[player] = address;
         gameModeManager.getGeocoder().geocode({
             address: address,

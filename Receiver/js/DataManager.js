@@ -25,7 +25,11 @@
         /** @type {number} */
         this.elevation  = elevation;
         /** @type {marker} */
-        this.marker = marker; //TODO: Geocoding
+        this.marker = marker; //TODO: create new marker here already ?
+
+        this.toString = function() {
+            return name + '(' + countryCode + '|' + long + '|' + lat + '|pop:' + population + ')';
+        }
     };
     /**
      *
@@ -153,7 +157,7 @@
             if (typeof name == "string" && typeof lat == "number" && typeof long == "number" && typeof countryCode == "string" && typeof population == "string" && typeof elevation == "string"){ //&&
                 geoObject = new dataManager.GeoObject(name,lat,long,countryCode,population,elevation,null);
             }
-            console.log("DataManager: new geoObject: "+ geoObject.name);
+            console.log("[DM] geoObject: " + geoObject.toString());
             geo[i] = geoObject;
         }
         return geo;

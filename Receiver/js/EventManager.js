@@ -236,7 +236,8 @@
     };
 
     castReceiver.restart = function() {
-        eventManager.broadcast(data.channelName.admin, data.eventType.restart);
+        var jsonData = {"event_type":data.eventType.restart}
+        eventManager.broadcast(data.channelName.admin,jsonData );
         window.location.reload(true);
     };
 

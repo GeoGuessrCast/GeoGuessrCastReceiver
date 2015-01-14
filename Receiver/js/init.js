@@ -5,11 +5,11 @@ function initialize() {
 
 
     if (typeof(cast) !== 'undefined') {
-        displayText("[ChromeCast mode]");
+        displayText("[init] ChromeCast mode started");
         cast.receiver.logger.setLevelValue(0);
         window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
     } else {
-        displayText("[Local mode]");
+        displayText("[init] Local mode started");
     }
 
 

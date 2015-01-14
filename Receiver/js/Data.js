@@ -35,7 +35,8 @@ data = {
         hideConsole: 'hideConsole',
         setGameMode: 'setGameMode',
         setGameProfile: 'setGameProfile',
-        restart: 'restart'
+        restart: 'restart',
+        startGame: 'startGame'
 
     }
 
