@@ -91,7 +91,6 @@
             var color = user.color;
 
             var mark = _placeMarkerOnMap(pos, player,color);
-            var user = userManager.getUserByMac(player);
 
             var info = _createInfoWindow(user.name,addresses[player]);
             info.open(gameModeManager.getMap(),mark);
@@ -254,13 +253,6 @@
      * @private
      */
     function _placeMarkerOnMap(pos,player,color){
-        //var styleIconClass = new StyledIcon(StyledIconTypes.CLASS,{color:"#ff0000"});
-        //var styleMaker1 = new StyledMarker({
-        //    styleIcon: new StyledIcon(StyledIconTypes.MARKER, {text: ""}, styleIconClass),
-        //    position: pos,
-        //    map: map
-        //});
-        //styleIconClass.set("color",color);
 
         var pinColor = color.split("#")[1];
         var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor);
