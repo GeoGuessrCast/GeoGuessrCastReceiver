@@ -32,6 +32,10 @@
         var pos = new google.maps.LatLng(lat, long);
         console.log("Address: "+address+ ": "+lat+" , "+long);
         goalMarker = _placeMarkerOnMap(pos,"goal","#ff0000"); //TODO use different marker icon for goal marker
+        goalMarker.icon = {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 3
+        }
         gameModeManager.getMap().setCenter(pos);
         gameModeManager.getMap().setZoom(6);
         //Set global goal var
@@ -269,6 +273,7 @@
             title: "Player: "+player,
             animation: google.maps.Animation.DROP
         });
+
         marker.setMap(gameModeManager.getMap());
         gameModeManager.getMarkers().push(marker);
 
