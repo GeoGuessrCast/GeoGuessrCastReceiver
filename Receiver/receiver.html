@@ -8,12 +8,12 @@
 
     <script type="text/javascript">
         var userAgent = navigator.userAgent;
-
         if (userAgent.indexOf('CrKey') > -1) {
             var src = "https://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js";
             var script = document.createElement("script");
             script.setAttribute("src", src);
             document.getElementsByTagName("head")[0].appendChild(script);
+            cast.receiver.logger.setLevelValue(1000); //= ERROR
         }
     </script>
 
