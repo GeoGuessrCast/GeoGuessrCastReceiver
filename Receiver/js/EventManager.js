@@ -25,7 +25,9 @@
             console.log('gameMessageBus [' + event.senderId + ']: ' + event.data);
             eventManager.event_onGameMessage(event);
         };
-    } catch(ex){}
+    } catch(ex){
+        console.log(ex);
+    }
 
     /**
      * returns user message bus
