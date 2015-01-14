@@ -34,7 +34,9 @@ data = {
         gameEnded: 'game_ended',
         hideConsole: 'hideConsole',
         setGameMode: 'setGameMode',
-        setGameProfile: 'setGameProfile'
+        setGameProfile: 'setGameProfile',
+        restart: 'restart'
+
     }
 
 

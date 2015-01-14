@@ -201,6 +201,10 @@
             eventManager.hideConsole(eventData.hide);
         }
 
+        if(eventData.event_type === data.eventType.restart){
+            eventManager.restart();
+        }
+
     };
     
     /**
@@ -231,6 +235,7 @@
     };
 
     castReceiver.restart = function() {
+        eventManager.broadcast(data.channelName.admin, data.eventType.restart);
         window.location.reload(true);
     };
 
