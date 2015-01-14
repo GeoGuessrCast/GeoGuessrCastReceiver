@@ -26,7 +26,9 @@
             eventManager.event_onGameMessage(event);
         };
     } catch(ex){
-        console.log(ex);
+        if(_isExecutedOnChromeCast()){
+            console.error(ex);
+        }
     }
 
     /**

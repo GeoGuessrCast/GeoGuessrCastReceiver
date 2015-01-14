@@ -4,6 +4,14 @@
 function initialize() {
 
 
+    if (typeof(cast) !== 'undefined') {
+        displayText("[ChromeCast mode]");
+        cast.receiver.logger.setLevelValue(0);
+        window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+    } else {
+        displayText("[Local mode]");
+    }
+
 
     $.ajaxSetup({async:false, cache:true});
     $.getScript( "js/ExecutionManager.js" );
@@ -14,15 +22,9 @@ function initialize() {
     $.getScript( "js/GameModeManager.js" );
     $.getScript( "js/GameRoundManager.js" );
 
-    var ev = eventManager;
-
-    renderManager.loadDefaultMap();
 
     if (typeof(cast) !== 'undefined') {
-        displayText("[ChromeCast mode]");
         console.log('Starting Receiver Manager');
-        cast.receiver.logger.setLevelValue(0);
-        window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
         castReceiverManager.onReady = function(event) {
             console.log('Received Ready event: ' + JSON.stringify(event.data));
             //window.castReceiverManager.setApplicationState("Application status is ready...");
@@ -41,9 +43,10 @@ function initialize() {
         };
         window.castReceiverManager.start({statusText: "Application is starting"});
         console.log('Receiver Manager started');
-    } else {
-        displayText("[Local mode]");
     }
+
+
+    renderManager.loadDefaultMap();
 
     //window.userMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.userChannel', cast.receiver.CastMessageBus.MessageType.JSON);
     //window.adminMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.adminChannel', cast.receiver.CastMessageBus.MessageType.JSON);
