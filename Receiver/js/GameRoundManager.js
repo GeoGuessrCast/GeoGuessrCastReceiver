@@ -13,8 +13,9 @@
 
 
     grm.startRound = function(){
+        console.log("\n======= Round " + gameModeManager.currentRound + " =======");
         renderManager.showMidScreenMessage('round ' + gameModeManager.currentRound + ' started...' )
-        displayText('RoundManager: round ' + gameModeManager.currentRound + ' started.' );
+        displayText('Round ' + gameModeManager.currentRound + ' started.' );
         var queryResult = dataManager.getGeoObjects("country","DE",1);
         if (typeof queryResult == "null") {
             //TODO: Handle if false data
@@ -68,35 +69,31 @@
     grm.endRound = function(){
         // send event
         // calculate results, set markers visible
-        console.log("GRM.roundEnded: Calculating Results...");
-        displayText('RoundManager: round ' + gameModeManager.currentRound +  ' ended.<br>' );
+        displayText('Round ' + gameModeManager.currentRound +  ' ended.<br>' );
         var goalInfo = _createInfoWindow("Goal",goalAddress);
         goalInfo.open(gameModeManager.getMap(), goalMarker);
 
-        for (player in guesses) {
+        for (var userMac in guesses) {
 
             var points = 0;
-            var dist =  guesses[player];
+            var dist =  guesses[userMac];
             var distInKm = dist / 1000;
-            console.log("Player:"+ player+ " Dist:"+ dist + " ("+distInKm+")");
             points = Math.floor(Math.max(0,Math.min(10,(1100-distInKm)/100)));
 
-            results[player] = points;
-            console.log("Points: "+points);
+            results[userMac] = points;
+            console.log("[GRM] " + userManager.getUserByMac(userMac).name + " got " + points + " points (for "+distInKm+" km)");
             // get the saved guessed position for this player
-            var pos = positions[player];
-            console.log("Position: "+ pos);
+            var pos = positions[userMac];
             // Now Place the marker on the map:
-            var user = userManager.getUserByMac(player);
+            var user = userManager.getUserByMac(userMac);
             var color = user.color;
 
-            var mark = _placeMarkerOnMap(pos, player,color);
+            var mark = _placeMarkerOnMap(pos, userMac,color);
 
-            var info = _createInfoWindow(user.name,addresses[player]);
+            var info = _createInfoWindow(user.name,addresses[userMac]);
             info.open(gameModeManager.getMap(),mark);
 
         }
-        console.log("Results calculated, Round ended");
         // notify game mode manager that round has ended
         // send results array to gmm
         // results = array[userMac]
@@ -175,35 +172,34 @@
     /**
      * Calculates the distance between the guess and the goal coordinates
      * @param address
-     * @param player
+     * @param userMac
      * @private
      */
-    function _calculateGuess(address, player){
+    function _calculateGuess(address, userMac){
         // get Geolocation
-        console.log("[GRM] " + player + " picked " + address);
-        addresses[player] = address;
+        console.log("[GRM] " + userManager.getUserByMac(userMac).name + " picked " + address);
+        addresses[userMac] = address;
         gameModeManager.getGeocoder().geocode({
             address: address,
-            region: "de"
+            region: "de" //TODO ... wtf?
 
         }, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var pos = results[0].geometry.location;
-                console.log("Pos: "+pos);
                 // Saves the Position the Player guessed
-                positions[player] = pos;
+                positions[userMac] = pos;
 
                 // get Distance to right answer (if not the same)
                 var dist = _getDistance(pos,goal);
 
-                console.log("Player: "+player+ "Dist: "+dist);
+                console.log("[GC] found " + address + " at " + pos + "(dist=" + dist + ")");
                 // dist save
-                guesses[player] = dist;
+                guesses[userMac] = dist;
 
 
             } else {
-                console.log(player+ ' Address could not be geocoded: ' + status);
-                displayText(player+ ' Address could not be geocoded: '+address+" : " + status);
+                console.log(userMac+ ' Address could not be geocoded: ' + status);
+                displayText(userMac+ ' Address could not be geocoded: '+address+" : " + status);
 
             }
         });
