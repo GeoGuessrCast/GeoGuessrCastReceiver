@@ -47,22 +47,21 @@
 /*    *//** @type Array.<GeoObject> *//*
     geoObjects = [];*/
 
-    castReceiver.getGeoObjects = function(geoObjType, countryCode, count) {
-        //TODO make a query and return 'count' geoObjects, if countryCode get a random countryCode
+    castReceiver.getGeoObjects = function(geoObjType, countryCode, count, population) {
+        //TODO make a query and return 'count' geoObjects, if countryCode null get a random countryCode
         //Fusion Table ID:
-        //"13Ajs8twEaALtd19pa6LxRpYHLRxFwzdDGKQ2iu-2";
         var ftTableId = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
         var locationColumn = "col4";
-        var where = "col12 \x3e\x3d 100000 and col8 contains ignoring case \x27DE\x27";
+        var where = "col12 \x3e\x3d "+population+" and col8 contains ignoring case \x27DE\x27";
         var min = 1;
         var max = 98; //TODO: Get maximum Table Rows from Table dynamic
         var x = Math.floor(Math.random() * (max - min)) + min;
-
+        //TODO random on whole query
         //TODO use COUNT query in dataManager
         //var ftLayer = _createFusionTableLayer(ftTableId,locationColumn, where, x, 1);
 
-        var geoObjects = _createFusionTableQuery(ftTableId, where, x, 1);
-        //TODO: check asynchron call, maybe do it synchonous?
+        var geoObjects = _createFusionTableQuery(ftTableId, where, "", "");
+
         var queryResults = new dataManager.QueryResults(null,geoObjects);
 
         //return query results object
