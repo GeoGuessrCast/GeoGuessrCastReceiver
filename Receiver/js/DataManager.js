@@ -1,6 +1,9 @@
 (function(castReceiver){
     /** @type Array.<GeoObject> */
-    var geoObjects = [];
+    //var geoObjects = [];
+    //Fusion Table ID:
+    var ftTableIdCity = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
+    var locationColumn = "col4";
     /**
      *
      * @param name
@@ -38,12 +41,16 @@
      *
      * @param ftLayer
      * @param geoObjects
+     * @param choiceGeoObjects
      * @constructor
      */
-    castReceiver.QueryResults = function (ftLayer, geoObjects) {
+    castReceiver.QueryResults = function (ftLayer, geoObjects, choiceGeoObjects) {
         this.ftLayer = ftLayer;
         /** @type Array.<GeoObject> */
         this.geoObjects = geoObjects;
+        /** @type Array.<GeoObject> */
+        this.choiceGeoObjects = choiceGeoObjects;
+
     };
 
     var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
@@ -52,16 +59,37 @@
     var randomCountryCode = ["DE","EN","US","ES"]; // and many more.... TODO: get dynamically
 
     castReceiver.getGeoObjects = function(geoObjType, countryCode, count, population) {
-        //TODO make a query and return 'count' geoObjects, if countryCode null get a random countryCode
-        //Fusion Table ID:
-        var ftTableId = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
-        var locationColumn = "col4";
-        population = 100000;
+
         var where = "col12 \x3e\x3d "+population+" and col8 contains ignoring case \x27"+countryCode+"\x27";
 
         //var ftLayer = _createFusionTableLayer(ftTableId,locationColumn, where, x, 1);
 
-        var queryGeoObjects = _createFusionTableQuery(ftTableId, where, 0, 0);
+        var queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, 0, false,null);
+        var geoObjects = [];
+        var min = 1;
+        var max = queryGeoObjects.length;
+
+        for(var i = 0; i < count; i++){
+            var x = Math.floor(Math.random() * (max - min)) + min;
+            geoObjects[i] = queryGeoObjects[x];
+
+        }
+
+        var choiceGeoObjects = this.getNearestGeoObjects(geoObjects[0],5,100000);
+        console.log("[DM] Goal: "+geoObjects[0]);
+        var queryResults = new dataManager.QueryResults(null,geoObjects,choiceGeoObjects);
+        console.log("[DM] Choices:"+choiceGeoObjects);
+        //return query results object
+        return queryResults;
+    };
+
+    castReceiver.getNearestGeoObjects = function(goalGeoObjct, count, population) {
+        //TODO make a query and return 'count' geoObjects, if countryCode null get a random countryCode
+
+        var where = "col12 \x3e\x3d "+population+" and col8 contains ignoring case \x27"+goalGeoObjct.countryCode+"\x27";
+
+        var geoObjects = [];
+        var queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, 0, true, goalGeoObjct);
 
         var min = 1;
         var max = queryGeoObjects.length;
@@ -71,11 +99,10 @@
             geoObjects[i] = queryGeoObjects[x];
 
         }
-        var queryResults = new dataManager.QueryResults(null,geoObjects);
 
-        //return query results object
-        return queryResults;
+        return geoObjects;
     };
+
 
 
     castReceiver.persistHighScoreList = function(highScoreMap) {
@@ -121,17 +148,24 @@
      * @param where
      * @param offset
      * @param limit
-     * @returns {boolean}
+     * @param spatial
+     * @param center
+     * @returns {*}
      * @private
      */
-    function _createFusionTableQuery(ftTableId, where, offset, limit) {
+    function _createFusionTableQuery(ftTableId, where, offset, limit, spatial, center) {
         // Builds a Fusion Tables SQL query and hands the result to  dataHandler
         // write your SQL as normal, then encode it
         var query = "SELECT * FROM " + ftTableId + " WHERE " + where;
         if (offset != 0 && limit != 0){
             query = query + " OFFSET " + offset + " LIMIT "+ limit
         }
-        //console.log(query);
+        if (spatial === true && center != 'null'){
+            var lat = center.lat;
+            var long = center.long;
+            query = query + " ORDER BY ST_DISTANCE(col4,  LATLNG("+ lat+","+long+")) LIMIT 10";
+        }
+        console.debug("[DM] SQL Query: "+query);
         var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
 
         var geoObjects = null;
@@ -164,9 +198,10 @@
                 var elevation = response.rows[i][6];
                 var geoObject = null;
                 var onlyDigitsPattern = new RegExp("^[0-9]*$");
+                //var latLongPatternCheck = new RegExp("^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$");
                 if (onlyDigitsPattern.test(id)
                     && typeof(name) === "string"
-                    && typeof(lat) === "number"
+                    && typeof(lat) === "number" //TODO sh use regexp to check for long/lat
                     && typeof(long) === "number"
                     && typeof(countryCode) === "string"
                     && onlyDigitsPattern.test(population)
@@ -175,7 +210,7 @@
                     console.debug("[DM] geoObject: " + geoObject.toString());
                 } else {
 
-                    console.error("[DM] error validating queryData: " + response)
+                    console.error("[DM] error validating queryData: " + response+ ": "+name);
                 }
                 geo[i] = geoObject;
             }
