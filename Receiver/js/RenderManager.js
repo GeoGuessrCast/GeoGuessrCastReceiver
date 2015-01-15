@@ -31,24 +31,43 @@
         gameRoundManager.cancelRoundTimer();
         renderManager.loadDefaultMap();
 
-        $('#gameOverlay').load('templates/MainMenu.html', function (data) {
-            $(this).html(data);
+        $('#gameOverlay').load('templates/MainMenu.html', function (content) {
+            $(this).html(content);
         });
+
+        $('#gm1').text(data.gameMode.gm1.gameModeName);
+        $('#gm1').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode.gm1);");
+
+        $('#gm2').text(data.gameMode.gm2.gameModeName);
+        $('#gm2').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode.gm2);");
+
+        $('#gm3').text(data.gameMode.gm3.gameModeName);
+        $('#gm3').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode.gm3);");
+
+        $('#gm4').text(data.gameMode.gm4.gameModeName);
+        $('#gm4').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode.gm4);");
 
         userManager.rebuildUserList();
     };
 
-    rm.loadGameProfileMenu = function(){
+    rm.loadGameProfileMenu = function(selectedGameModeObject){
+        gameModeManager.setGameMode(selectedGameModeObject);
         gameRoundManager.cancelRoundTimer();
+
         $('#gameOverlay').load('templates/GameProfileMenu.html', function (content) {
             $(this).html(content);
 
             $('#profile_1').text(data.gameModeProfile.p1.profileName);
-            $('#profile_1').attr('onclick', "gameModeManager.startGame(data.gameMode.gm1, data.gameModeProfile.p1)");
+            $('#profile_1').attr('onclick', "gameModeManager.startGame(data.gameModeProfile.p1);");
 
-            $('#profile_2').html('test');
-            $('#profile_3').html('test');
-            $('#profile_4').html('test');
+            $('#profile_2').text(data.gameModeProfile.p2.profileName);
+            $('#profile_2').attr('onclick', "gameModeManager.startGame(data.gameModeProfile.p2);");
+
+            $('#profile_3').text(data.gameModeProfile.p3.profileName);
+            $('#profile_3').attr('onclick', "gameModeManager.startGame(data.gameModeProfile.p3);");
+
+            $('#profile_4').text(data.gameModeProfile.p4.profileName);
+            $('#profile_4').attr('onclick', "gameModeManager.startGame(data.gameModeProfile.p4);");
 
             userManager.rebuildUserList();
         });

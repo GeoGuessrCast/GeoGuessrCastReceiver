@@ -83,13 +83,12 @@
         var eventData = event.data;
 
         if(eventData.event_type === data.eventType.setGameMode){
-            selectedGameMode = eventData.gameModeNumber;
-            renderManager.loadGameProfileMenu();
-            //  gameModeManager.startGame(eventData.gameMode, null);
+            //eventData.gameModeNumber; ...deprecated
+            renderManager.loadGameProfileMenu(data.gameMode.gm1);  //TODO get gameMode from event data
         }
 
         if(eventData.event_type === data.eventType.setGameProfile){
-            gameModeManager.startGame(selectedGameMode, eventData.gameProfileNumber);
+            gameModeManager.startGame(data.gameModeProfile.p1);   //TODO get gameModeProfile from event data
         }
 
         if(eventData.event_type === data.eventType.hideConsole){

@@ -7,11 +7,18 @@
     gmm.maxRounds = 5;
     /** @type number */
     gmm.currentRound = 1;
-    /** @type number */
-    gmm.currentGameMode = data.gameMode.gm1;
+
+    gmm.currentGameMode = null;
+    gmm.currentGameModeProfile = null;
 
 
+    gmm.setGameMode = function(gameModeObject){
+        gameModeManager.currentGameMode = gameModeObject;
+    };
 
+    gmm.setGameModeProfile = function(gameModeProfileObject){
+        gameModeManager.currentGameModeProfile = gameModeProfileObject;
+    };
 
 
     /**
@@ -62,12 +69,12 @@
 
     /**
      * starts a new game with config objects
-     * @param {Object} gameModeObject
      * @param {Object} profileObject
      */
-    gmm.startGame = function(gameModeObject, profileObject){
+    gmm.startGame = function(profileObject){
+        gameModeManager.setGameModeProfile(profileObject);
         gmm.resetGame();
-        this.loadMap(gameModeObject, profileObject);
+        this.loadMap();
         // init grm.init
 
     };
