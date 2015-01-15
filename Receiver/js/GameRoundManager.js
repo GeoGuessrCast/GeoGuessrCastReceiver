@@ -16,7 +16,7 @@
         console.log("\n======= Round " + gameModeManager.currentRound + " =======");
         renderManager.showMidScreenMessage('round ' + gameModeManager.currentRound + ' started...' )
         displayText('Round ' + gameModeManager.currentRound + ' started.' );
-        var queryResult = dataManager.getGeoObjects("country","DE",1);
+        var queryResult = dataManager.getGeoObjects("country","DE",1,100000);
         if (typeof queryResult == "null") {
             //TODO: Handle if false data
         }
