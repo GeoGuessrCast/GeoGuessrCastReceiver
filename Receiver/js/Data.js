@@ -69,41 +69,45 @@ data = {
         p1 : {
             profileName: 'Free Choice',
             id: 1,
+            limitedCountry: 'NONE',
+            multipleChoiceMode: false,
             mapOption: {
                 mapType : google.maps.MapTypeId.HYBRID,
                 borders: true,
-                showCountryNames: true,
-                limitedCountry: 'NONE'
+                showCountryNames: true
             }
         },
         p2 : {
             profileName: 'Multiple Choice',
             id: 2,
+            limitedCountry: 'NONE',
+            multipleChoiceMode: true,
             mapOption: {
                 mapType : google.maps.MapTypeId.HYBRID,
                 borders: true,
-                showCountryNames: true,
-                limitedCountry: 'NONE'
+                showCountryNames: true
             }
         },
         p3 : {
             profileName: 'Multiple Choice (GER)',
             id: 3,
+            limitedCountry: 'DE',
+            multipleChoiceMode: true,
             mapOption: {
                 mapType : google.maps.MapTypeId.HYBRID,
                 borders: true,
-                showCountryNames: false,
-                limitedCountry: 'DE'
+                showCountryNames: false
             }
         },
         p4 : {
             profileName: 'Hardcore',
             id: 4,
+            limitedCountry: 'NONE',
+            multipleChoiceMode: true,
             mapOption: {
                 mapType : google.maps.MapTypeId.SATELLITE,
                 borders: false,
-                showCountryNames: false,
-                limitedCountry: 'NONE'
+                showCountryNames: false
             }
         }
     }
