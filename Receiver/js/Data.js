@@ -46,25 +46,25 @@ data = {
         gm1 : {
             gameModeName: 'City Guessing',
             id: 1,
-            geoObjType: data.geoObjType.city,
+            geoObjType: 0,
             iconUrl: '../images/city.png'
         },
         gm2 : {
             gameModeName: 'River Guessing',
             id: 2,
-            geoObjType: data.geoObjType.river,
+            geoObjType: 1,
             iconUrl: '../images/user.png'   //TODO find img
         },
         gm3 : {
             gameModeName: 'Country Guessing',
             id: 3,
-            geoObjType: data.geoObjType.country,
+            geoObjType: 2,
             iconUrl: '../images/user.png'   //TODO find img
         },
         gm4 : {
             gameModeName: 'Stuff Guessing',
             id: 4,
-            geoObjType: data.geoObjType.city, //TODO ??
+            geoObjType: 0, //TODO ??
             iconUrl: '../images/user.png'   //TODO find img
         }
     },
