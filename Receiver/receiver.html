@@ -6,6 +6,18 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
 
+    <script type="text/javascript">
+        var userAgent = navigator.userAgent;
+        if (userAgent.indexOf('CrKey') > -1) {
+            var src = "https://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js";
+            var script = document.createElement("script");
+            script.setAttribute("src", src);
+            document.getElementsByTagName("head")[0].appendChild(script);
+        }
+    </script>
+
+
+
     <link rel="stylesheet" href="css/reset.css" type="text/css" media="all">
     <link rel="stylesheet" href="css/style.css" type="text/css" media="all">
     <script src="https://apis.google.com/js/client.js?onload=load"></script>
@@ -16,7 +28,7 @@
 
     <!--<script type="text/javascript" src="js/timer.jquery.js"></script>-->
     <!--<script type="text/javascript" src="js/StyledMarker.js"></script>-->
-    <script type="text/javascript" src="https://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+    <!--<script type="text/javascript" src="https://www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>-->
     <script src="js/Data.js"></script>
     <script src="js/init.js"></script>
 
@@ -59,8 +71,9 @@
     <!--testing output "console"-->
     <div id="testConsole">
 
-        <div id="testConsoleOutput">starting...<br/></div>
-        <input type="button" onclick="eventManager.hideConsole(true)" value="[x]"/>
+        <div id="testConsoleOutput"><br/></div>
+        <input type="button" onclick="renderManager.hideConsole(true)" value="[x]"/>
+        <input type="button" onclick="renderManager.toggleConsoleOutput()" value="[c]"/>
         <input type="button" onclick="eventManager.event_onReady(null)" value="onReady"/>
         <input type="button" onclick="eventManager.event_onUserMessage({senderID:123, data:{event_type: 'createUser', userName: 'fakeUser1', userMac: '123456'}})" value="fakeUser1"/>
         <input type="button" onclick="eventManager.event_onUserMessage({senderID:456, data:{event_type: 'createUser', userName: 'fakeUser2', userMac: '789000'}})" value="fakeUser2"/>

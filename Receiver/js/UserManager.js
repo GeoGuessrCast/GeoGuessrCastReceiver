@@ -1,4 +1,4 @@
-(function(castReceiver){
+(function(um){
 
     // init
     /** @type Array.<User> */
@@ -12,7 +12,7 @@
      * @param {boolean} admin
      * @constructor
      */
-    castReceiver.User = function(senderId, name, mac, admin){
+    um.User = function(senderId, name, mac, admin){
         /** @type {number} */
         this.senderId = senderId;
         /** @type {string} */
@@ -55,7 +55,7 @@
      * adds a {User}
      * @param {User} user
      */
-    castReceiver.addUser = function(user) {
+    um.addUser = function(user) {
         // update user list
         var userList = _getUserList();
         userList.push(user);
@@ -67,9 +67,32 @@
     };
 
     /**
+     * adds a {User}
+     * @param {User} user
+     */
+    um.createOrUpdateUser = function(event) {
+        var hasUser = userManager.hasUserMac(event.data.userMac);
+        if (!hasUser) {
+            //add new User
+            var isAdmin = false;
+            if (userManager.getUserList().length === 0) {
+                isAdmin = true;
+            }
+            var user = new userManager.User(event.senderId, event.data.userName, event.data.userMac, isAdmin);
+            userManager.addUser(user);
+        } else {
+            // update name and senderId
+            userManager.updateUser(event.data.userMac, event.data.userName, event.senderId);
+        }
+        //inform the Sender if the user is game leader
+        eventManager.send(event.senderId, data.channelName.user, userManager.isUserAdmin(event.data.userMac));
+
+    };
+
+    /**
      * rebuilds/updates #mainMenuUserList
      */
-    castReceiver.rebuildUserList = function() {
+    um.rebuildUserList = function() {
         var userCssClass;
         var userList = _getUserList();
         var userLength = userList.length;
@@ -87,7 +110,7 @@
     /**
      * refreshes scoreboard on bottom
      */
-    castReceiver.refreshBottomScoreboard = function() {
+    um.refreshBottomScoreboard = function() {
         var userCssClass;
         var userList = _getUserList();
         var userLength = userList.length;
@@ -108,7 +131,7 @@
      * @param {string} mac
      * @returns {User|boolean}
      */
-    castReceiver.getUserByMac = function(mac){
+    um.getUserByMac = function(mac){
         var userList = _getUserList();
         var userLength = userList.length;
         for(var i = 0; i < userLength; i++){
@@ -123,7 +146,7 @@
      * returns an array of current users
      * @returns {Array.<User>}
      */
-    castReceiver.getUserList = function(){
+    um.getUserList = function(){
         return _getUserList();
     };
 
@@ -132,7 +155,7 @@
      * @param {string} senderId
      * @returns {boolean}
      */
-    castReceiver.hasUser = function(senderId){
+    um.hasUser = function(senderId){
         var userList = _getUserList();
         var userLength = userList.length;
         for(var i = 0; i < userLength; i++){
@@ -164,7 +187,7 @@
      * @param {string} mac
      * @returns {boolean}
      */
-    castReceiver.isUserAdmin = function(mac){
+    um.isUserAdmin = function(mac){
         var userList = _getUserList();
         var userLength = userList.length;
         for(var i = 0; i < userLength; i++){
@@ -180,7 +203,7 @@
      * @returns {boolean}
      * @param {string} mac
      */
-    castReceiver.hasUserMac = function(mac){
+    um.hasUserMac = function(mac){
         var userList = _getUserList();
         var userLength = userList.length;
         for(var i = 0; i < userLength; i++){
@@ -195,7 +218,7 @@
      * removes a {User} with the given id
      * @param {string} senderId
      */
-    castReceiver.removeUser = function(senderId){
+    um.removeUser = function(senderId){
         // update user list
         var userList = _getUserList();
         var userLength = userList.length;
@@ -213,7 +236,7 @@
      * removes a {User} with the given id
      * @param {string} mac
      */
-    castReceiver.removeUser = function(mac){
+    um.removeUser = function(mac){
         // update user list
         var userList = _getUserList();
         var userLength = userList.length;
@@ -231,7 +254,7 @@
      * sets user list
      * @param {Array.<User>} userList
      */
-    castReceiver.setUserList = function(userList){
+    um.setUserList = function(userList){
         _setUserList(userList);
     };
 
@@ -241,7 +264,7 @@
      * @param {string} userName
      * @param {string} senderId
      */
-    castReceiver.updateUser = function(mac, userName, senderId){
+    um.updateUser = function(mac, userName, senderId){
         var userList = _getUserList();
         var userLength = userList.length;
         for(var i = 0; i < userLength; i++){

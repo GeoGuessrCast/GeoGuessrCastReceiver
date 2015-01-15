@@ -8,23 +8,11 @@
     /** @type number */
     gmm.currentRound = 1;
     /** @type number */
-    gmm.currentGameId = 1;
+    gmm.currentGameMode = data.gameMode.gm1;
 
 
-    // constants
-    gmm.gm1 = {
-        gameModeName: 'City Guessing',
-        id: 1,
-        iconUrl: '../images/city.png'
-    };
 
-    gmm.p1 = {
-        profileName: 'borders + no choices',
-        id: 1,
-        mapOption: {
-            mapType : google.maps.MapTypeId.SATELLITE  //TODO
-        }
-    };
+
 
     /**
      *
@@ -147,7 +135,6 @@
         });
         map.mapTypes.set('map-style', styledMapType);
         map.setMapTypeId('map-style');
-        console.log('[GMM] - map loaded');
 
         gameRoundManager.startRound( gameModeManager.currentRound ); //TODO use members
     };

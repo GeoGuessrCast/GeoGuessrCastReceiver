@@ -3,8 +3,15 @@
 
 function initialize() {
 
-    cast.receiver.logger.setLevelValue(0);
-    window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+
+    if (typeof(cast) !== 'undefined') {
+        cast.receiver.logger.setLevelValue(1000); //= ERROR
+        console.log("[init] ChromeCast mode started");
+        window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+    } else {
+        console.log("[init] Local mode started");
+    }
+
 
     $.ajaxSetup({async:false, cache:true});
     $.getScript( "js/ExecutionManager.js" );
@@ -15,24 +22,29 @@ function initialize() {
     $.getScript( "js/GameModeManager.js" );
     $.getScript( "js/GameRoundManager.js" );
 
-    console.log('Starting Receiver Manager');
 
-    castReceiverManager.onReady = function(event) {
-        console.log('Received Ready event: ' + JSON.stringify(event.data));
-        //window.castReceiverManager.setApplicationState("Application status is ready...");
-        eventManager.event_onReady(event);
-    };
+    if (typeof(cast) !== 'undefined') {
+        castReceiverManager.onReady = function(event) {
+            console.debug('onReady -> ' + JSON.stringify(event.data));
+            //window.castReceiverManager.setApplicationState("Application status is ready...");
+            eventManager.event_onReady(event);
+        };
 
-    castReceiverManager.onSenderConnected = function(event) {
-        console.log('Received Sender Connected event: ' + event.data);
-        console.log(window.castReceiverManager.getSender(event.data).userAgent);
-        eventManager.event_onSenderConnected(event);
-    };
+        castReceiverManager.onSenderConnected = function(event) {
+            console.debug('onSenderConnected -> ' + event.data);
+            //console.log(window.castReceiverManager.getSender(event.data).userAgent);
+            eventManager.event_onSenderConnected(event);
+        };
 
-    castReceiverManager.onSenderDisconnected = function(event) {
-        console.log('Received Sender Disconnected event: ' + event.data);
-        eventManager.event_onSenderDisconnected(event);
-    };
+        castReceiverManager.onSenderDisconnected = function(event) {
+            console.debug('onSenderDisconnected -> ' + event.data);
+            eventManager.event_onSenderDisconnected(event);
+        };
+        window.castReceiverManager.start({statusText: "Application is starting"});
+    }
+
+
+    renderManager.loadDefaultMap();
 
     //window.userMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.userChannel', cast.receiver.CastMessageBus.MessageType.JSON);
     //window.adminMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.adminChannel', cast.receiver.CastMessageBus.MessageType.JSON);
@@ -56,10 +68,7 @@ function initialize() {
     //};
 
 
-    renderManager.loadDefaultMap();
 
-    window.castReceiverManager.start({statusText: "Application is starting"});
-    console.log('Receiver Manager started');
 
     /*
     var worker = new Worker('js/timer.js'); //External script
