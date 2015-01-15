@@ -8,7 +8,7 @@
     /** @type number */
     gmm.currentRound = 1;
     /** @type number */
-    gmm.currentGameId = 1;
+    gmm.currentGameMode = data.gameMode.gm1;
 
 
 

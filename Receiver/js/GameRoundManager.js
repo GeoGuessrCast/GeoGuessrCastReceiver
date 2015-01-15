@@ -49,7 +49,7 @@
         addresses = {};
         // GMB: send prepare()
         // describes game mode properties //TODO use parameters below !
-        var jsonData = {"event_type": data.eventType.startGame, "gameMode": gameModeManager.currentGameId, "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : gameRoundManager.timePerRoundSec, "choices" : queryResult.choices};
+        var jsonData = {"event_type": data.eventType.startGame, "gameMode": gameModeManager.currentGameMode.id, "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : gameRoundManager.timePerRoundSec, "choices" : queryResult.choices};
         eventManager.broadcast(data.channelName.game, jsonData);
         //Set Timer
         //console.log("starting RoundTimer....");
