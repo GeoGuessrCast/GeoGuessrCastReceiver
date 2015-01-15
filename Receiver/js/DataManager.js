@@ -56,17 +56,22 @@
     var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
     //Google API Key
     var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
-    var randomCountryCode = ["DE","EN","US","ES"]; // and many more.... TODO: get dynamically
+    var randomCountryCode = ["DE","GB","FR","US","ES","RU","IT"]; // and many more....
 
     castReceiver.getGeoObjects = function(geoObjType, countryCode, count, population) {
+        if (countryCode == null){
 
+            countryCode = getRandomSubsetOfArray(randomCountryCode,1);
+
+            console.debug("[DM] - Country Code not set, random Country is selected: "+countryCode);
+        }
         var where = "col12 \x3e\x3d "+population+" and col8 contains ignoring case \x27"+countryCode+"\x27";
 
         //var ftLayer = _createFusionTableLayer(ftTableId,locationColumn, where, x, 1);
 
         var queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, 0, false,null);
 
-        var geoObjects = getRandomSubsetOfGeoObjects(queryGeoObjects, count);
+        var geoObjects = getRandomSubsetOfArray(queryGeoObjects, count);
 
 
         var choiceGeoObjects = this.getNearestGeoObjects(geoObjects[0],5,100000);
@@ -77,29 +82,30 @@
         return queryResults;
     };
     /**
-     * Returns a random subsample of the queryGeoObjects Array
-     * @param queryGeoObjects
+     * Returns a random subsample of the Array
+     * @param startArray
      * @param count
      * @returns {Array}
      */
-    function getRandomSubsetOfGeoObjects(queryGeoObjects, count) {
-        if (queryGeoObjects.length < count){
-            console.error("[DM] Random Subset was called with wrong parameters")
+    function getRandomSubsetOfArray(startArray, count) {
+        if (startArray.length < count){
+            console.error("[DM] Random Subset was called with wrong parameters, setting subset size to Array size.")
+            count = startArray.length;
         }
-        var geoObjects = [];
+        var randomObjects = [];
         var min = 1;
-        var max = queryGeoObjects.length;
+        var max = startArray.length;
         var i = 0;
         while (i < count) {
             var x = Math.floor(Math.random() * (max - min)) + min;
-            var randomObject = queryGeoObjects[x];
-            if (geoObjects.indexOf(randomObject) == -1) {
-                geoObjects[i] = queryGeoObjects[x];
+            var randomObject = startArray[x];
+            if (randomObjects.indexOf(randomObject) == -1) {
+                randomObjects[i] = startArray[x];
                 i++;
             }
 
         }
-        return geoObjects;
+        return randomObjects;
     }
 
     castReceiver.getNearestGeoObjects = function(goalGeoObjct, count, population) {
@@ -109,7 +115,7 @@
 
         var queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, 0, true, goalGeoObjct);
 
-        var geoObjects = getRandomSubsetOfGeoObjects(queryGeoObjects, count);
+        var geoObjects = getRandomSubsetOfArray(queryGeoObjects, count);
 
         return geoObjects;
     };
@@ -171,7 +177,7 @@
         if (offset != 0 && limit != 0){
             query = query + " OFFSET " + offset + " LIMIT "+ limit
         }
-        if (spatial === true && center != 'null'){
+        if (spatial === true && center != null){
             var lat = center.lat;
             var long = center.long;
             query = query + " ORDER BY ST_DISTANCE(col4,  LATLNG("+ lat+","+long+")) LIMIT 10";
