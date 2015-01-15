@@ -10,6 +10,7 @@
     var goalAddress = "";
     grm.roundTimer = null;
     grm.timePerRoundSec = 30;
+    grm.roundEvaluationTimeSec = 10;
 
 
     grm.startRound = function(){
@@ -58,6 +59,7 @@
         //    gameRoundManager.endRound();
         //};
         executionManager.execDelayed(gameRoundManager.timePerRoundSec*1000, gameRoundManager.endRound);
+        renderManager.playTimerAnimationWithRoundDisplay(gameRoundManager.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
     };
 
     grm.choseAnswer = function(userMac, answer){
@@ -148,11 +150,7 @@
         } else {
             // next round...
             gameModeManager.currentRound = gameModeManager.currentRound + 1;
-
-            setTimeout(function(){
-                //gameMode_1.startRound(gmm.currentRound);
-                gameRoundManager.startRound();
-            }, 10000); //TODO use async timer to not block thread ?
+            executionManager.execDelayed(gameRoundManager.roundEvaluationTimeSec*1000, gameRoundManager.startRound());
         }
     };
 

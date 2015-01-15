@@ -1,5 +1,22 @@
 (function(rm){
 
+    rm.consoleOutPutHidden = false;
+
+
+    rm.playTimerAnimationWithRoundDisplay = function(animationDurationSec, currentRound, maxRounds) {
+        //TODO implement this. (here some example css names)
+        $('#roundDisplayAndTimer').show(); // the DIV roundDisplayAndTimer contains roundDisplay and roundTimer (stacked)
+        $('#roundDisplay').html('Round ' + currentRound + '/' + maxRounds);
+        //TODO start some animation stuff on $('#roundTimer') using executionManager.execPeriodically(...) and animationDurationSec
+        //delete timer.js, timer2.js, cleanup JS code from GameModeOverlay.html
+    };
+
+    rm.hideTopRightRoundTimer = function() {
+        $('#roundDisplayAndTimer').hide();
+    };
+
+
+
     rm.loadDefaultMap = function() {
         window.map = new google.maps.Map(document.getElementById('map-canvas'), {
             center: new google.maps.LatLng(45.74167213456433, 38.26884827734375),
@@ -65,6 +82,20 @@
         } else {
             $('#testConsole').show();
         }
+        renderManager.hideConsoleOutput(hide);
+    };
+
+    rm.hideConsoleOutput = function(hide) {
+        if (hide) {
+            $('#testConsoleOutput').hide();
+        } else {
+            $('#testConsoleOutput').show();
+        }
+    };
+
+    rm.toggleConsoleOutput = function() {
+        renderManager.hideConsoleOutput(renderManager.consoleOutPutHidden);
+        renderManager.consoleOutPutHidden = !renderManager.consoleOutPutHidden;
     };
 
 
