@@ -65,15 +65,9 @@
         //var ftLayer = _createFusionTableLayer(ftTableId,locationColumn, where, x, 1);
 
         var queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, 0, false,null);
-        var geoObjects = [];
-        var min = 1;
-        var max = queryGeoObjects.length;
 
-        for(var i = 0; i < count; i++){
-            var x = Math.floor(Math.random() * (max - min)) + min;
-            geoObjects[i] = queryGeoObjects[x];
+        var geoObjects = getRandomSubsetOfGeoObjects(queryGeoObjects, count);
 
-        }
 
         var choiceGeoObjects = this.getNearestGeoObjects(geoObjects[0],5,100000);
         console.log("[DM] Goal: "+geoObjects[0]);
@@ -82,23 +76,40 @@
         //return query results object
         return queryResults;
     };
+    /**
+     * Returns a random subsample of the queryGeoObjects Array
+     * @param queryGeoObjects
+     * @param count
+     * @returns {Array}
+     */
+    function getRandomSubsetOfGeoObjects(queryGeoObjects, count) {
+        if (queryGeoObjects.length < count){
+            console.error("[DM] Random Subset was called with wrong parameters")
+        }
+        var geoObjects = [];
+        var min = 1;
+        var max = queryGeoObjects.length;
+        var i = 0;
+        while (i < count) {
+            var x = Math.floor(Math.random() * (max - min)) + min;
+            var randomObject = queryGeoObjects[x];
+            if (geoObjects.indexOf(randomObject) == -1) {
+                geoObjects[i] = queryGeoObjects[x];
+                i++;
+            }
+
+        }
+        return geoObjects;
+    }
 
     castReceiver.getNearestGeoObjects = function(goalGeoObjct, count, population) {
         //TODO make a query and return 'count' geoObjects, if countryCode null get a random countryCode
 
         var where = "col12 \x3e\x3d "+population+" and col8 contains ignoring case \x27"+goalGeoObjct.countryCode+"\x27";
 
-        var geoObjects = [];
         var queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, 0, true, goalGeoObjct);
 
-        var min = 1;
-        var max = queryGeoObjects.length;
-
-        for(var i = 0; i < count; i++){
-            var x = Math.floor(Math.random() * (max - min)) + min;
-            geoObjects[i] = queryGeoObjects[x];
-
-        }
+        var geoObjects = getRandomSubsetOfGeoObjects(queryGeoObjects, count);
 
         return geoObjects;
     };
