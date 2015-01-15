@@ -224,7 +224,7 @@
                     && onlyDigitsPattern.test(population)
                     && onlyDigitsPattern.test(elevation)) {
                     geoObject = new dataManager.GeoObject(id, name, lat, long, countryCode, population, elevation, null);
-                    console.debug("[DM] geoObject: " + geoObject.toString());
+                    //console.debug("[DM] geoObject: " + geoObject.toString());
                 } else {
 
                     console.error("[DM] error validating queryData: " + response+ ": "+name);
