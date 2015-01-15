@@ -44,12 +44,12 @@
      * @param choiceGeoObjects
      * @constructor
      */
-    castReceiver.QueryResults = function (ftLayer, geoObjects, choiceGeoObjects) {
+    castReceiver.QueryResults = function (ftLayer, choices, choicesNearby) {
         this.ftLayer = ftLayer;
         /** @type Array.<GeoObject> */
-        this.geoObjects = geoObjects;
+        this.choices = choices;
         /** @type Array.<GeoObject> */
-        this.choiceGeoObjects = choiceGeoObjects;
+        this.choicesNearby = choicesNearby;
 
     };
 
@@ -77,7 +77,7 @@
         var choiceGeoObjects = this.getNearestGeoObjects(geoObjects[0],5,100000);
         console.log("[DM] Goal: "+geoObjects[0]);
         var queryResults = new dataManager.QueryResults(null,geoObjects,choiceGeoObjects);
-        console.log("[DM] Choices:"+choiceGeoObjects);
+        console.debug("[DM] citiesNearby:"+choiceGeoObjects);
         //return query results object
         return queryResults;
     };

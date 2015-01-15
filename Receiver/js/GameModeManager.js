@@ -11,32 +11,8 @@
     gmm.currentGameId = 1;
 
 
-    // constants
-    gmm.gm1 = {
-        gameModeName: 'City Guessing',
-        id: 1,
-        iconUrl: '../images/city.png'
-    };
-    gmm.gm1 = {
-        gameModeName: 'River Guessing',
-        id: 2,
-        iconUrl: '../images/user.png'   //TODO find img
-    };
 
-    gmm.p1 = {
-        profileName: 'Default',
-        id: 1,
-        mapOption: {
-            mapType : google.maps.MapTypeId.SATELLITE  //TODO
-        }
-    };
-    gmm.p2 = {
-        profileName: 'Multiple Choice',
-        id: 2,
-        mapOption: {
-            mapType : google.maps.MapTypeId.SATELLITE  //TODO
-        }
-    };
+
 
     /**
      *

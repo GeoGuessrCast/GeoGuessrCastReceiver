@@ -40,11 +40,11 @@
 
     rm.loadGameProfileMenu = function(){
         gameRoundManager.cancelRoundTimer();
-        $('#gameOverlay').load('templates/GameProfileMenu.html', function (data) {
-            $(this).html(data);
+        $('#gameOverlay').load('templates/GameProfileMenu.html', function (content) {
+            $(this).html(content);
 
-            $('#profile_1').text(gameModeManager.p1.profileName);
-            $('#profile_1').attr('onclick', "gameModeManager.startGame(gameModeManager.gm1, gameModeManager.p1)");
+            $('#profile_1').text(data.gameModeProfile.p1.profileName);
+            $('#profile_1').attr('onclick', "gameModeManager.startGame(data.gameMode.gm1, data.gameModeProfile.p1)");
 
             $('#profile_2').html('test');
             $('#profile_3').html('test');

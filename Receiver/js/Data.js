@@ -38,9 +38,75 @@ data = {
         restart: 'restart',
         startGame: 'startGame'
 
+    },
+
+
+    gameMode : {
+        gm1 : {
+            gameModeName: 'City Guessing',
+            id: 1,
+            iconUrl: '../images/city.png'
+        },
+        gm2 : {
+            gameModeName: 'River Guessing',
+            id: 2,
+            iconUrl: '../images/user.png'   //TODO find img
+        },
+        gm3 : {
+            gameModeName: 'Country Guessing',
+            id: 3,
+            iconUrl: '../images/user.png'   //TODO find img
+        },
+        gm4 : {
+            gameModeName: 'Stuff Guessing',
+            id: 4,
+            iconUrl: '../images/user.png'   //TODO find img
+        }
+    },
+
+
+    gameModeProfile : {
+        p1 : {
+            profileName: 'Free Choice',
+            id: 1,
+            mapOption: {
+                mapType : google.maps.MapTypeId.HYBRID,
+                borders: true,
+                showCountryNames: true,
+                limitedCountry: 'NONE'
+            }
+        },
+        p2 : {
+            profileName: 'Multiple Choice',
+            id: 2,
+            mapOption: {
+                mapType : google.maps.MapTypeId.HYBRID,
+                borders: true,
+                showCountryNames: true,
+                limitedCountry: 'NONE'
+            }
+        },
+        p3 : {
+            profileName: 'Multiple Choice (GER)',
+            id: 3,
+            mapOption: {
+                mapType : google.maps.MapTypeId.HYBRID,
+                borders: true,
+                showCountryNames: false,
+                limitedCountry: 'DE'
+            }
+        },
+        p4 : {
+            profileName: 'Hardcore',
+            id: 4,
+            mapOption: {
+                mapType : google.maps.MapTypeId.SATELLITE,
+                borders: false,
+                showCountryNames: false,
+                limitedCountry: 'NONE'
+            }
+        }
     }
-
-
 
 
 };

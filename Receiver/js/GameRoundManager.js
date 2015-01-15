@@ -17,7 +17,7 @@
         console.log("\n======= Round " + gameModeManager.currentRound + " =======");
         renderManager.showMidScreenMessage('round ' + gameModeManager.currentRound + ' started...' )
         displayText('Round ' + gameModeManager.currentRound + ' started.' );
-        var queryResult = dataManager.getGeoObjects("country","DE",1,100000);
+        var queryResult = dataManager.getGeoObjects(data.geoObjType.city,"DE",1,100000);
         if (typeof queryResult == "null") {
             //TODO: Handle if false data
         }
@@ -26,7 +26,7 @@
         //gameModeManager.getLayer().setMap(gameModeManager.getMap());
 
 
-        var geoObject = queryResult.geoObjects[0]; //TODO dynamic
+        var geoObject = queryResult.choices[0]; //TODO dynamic
         var address = geoObject.name;
         goalAddress = address;
         var lat = geoObject.lat;
@@ -49,7 +49,7 @@
         addresses = {};
         // GMB: send prepare()
         // describes game mode properties //TODO use parameters below !
-        var jsonData = {"event_type": data.eventType.startGame, "gameMode": 1, "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : "30000", "choices" : "null"};
+        var jsonData = {"event_type": data.eventType.startGame, "gameMode": gameModeManager.currentGameId, "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : gameRoundManager.timePerRoundSec, "choices" : queryResult.choices};
         eventManager.broadcast(data.channelName.game, jsonData);
         //Set Timer
         //console.log("starting RoundTimer....");
@@ -150,7 +150,7 @@
         } else {
             // next round...
             gameModeManager.currentRound = gameModeManager.currentRound + 1;
-            executionManager.execDelayed(gameRoundManager.roundEvaluationTimeSec*1000, gameRoundManager.startRound());
+            executionManager.execDelayed(gameRoundManager.roundEvaluationTimeSec*1000, gameRoundManager.startRound);
         }
     };
 
