@@ -71,6 +71,7 @@ data = {
             id: 1,
             limitedCountry: 'NONE',
             multipleChoiceMode: false,
+            minPopulationDefault: 1000000,
             mapOption: {
                 mapType : google.maps.MapTypeId.HYBRID,
                 borders: true,
@@ -82,6 +83,7 @@ data = {
             id: 2,
             limitedCountry: 'NONE',
             multipleChoiceMode: true,
+            minPopulationDefault: 300000,
             mapOption: {
                 mapType : google.maps.MapTypeId.HYBRID,
                 borders: true,
@@ -93,6 +95,7 @@ data = {
             id: 3,
             limitedCountry: 'DE',
             multipleChoiceMode: true,
+            minPopulationDefault: 100000,
             mapOption: {
                 mapType : google.maps.MapTypeId.HYBRID,
                 borders: true,
@@ -103,7 +106,8 @@ data = {
             profileName: 'Hardcore',
             id: 4,
             limitedCountry: 'NONE',
-            multipleChoiceMode: true,
+            multipleChoiceMode: false,
+            minPopulationDefault: 300000,
             mapOption: {
                 mapType : google.maps.MapTypeId.SATELLITE,
                 borders: false,
