@@ -7,7 +7,8 @@ data = {
     constants : {
         midScreenMessageFadeInTimeMs: 400,
         midScreenMessageFadeOutTimeMs: 900,
-        maxDistanceErrorKm: 1000
+        maxDistanceErrorKm: 1000,
+        numberOfChoices: 5
     },
 
     geoObjType : {   //example: dataManager.getGeoObj(geoObjType.city, getRandomCountryCode(), 5)
@@ -45,21 +46,25 @@ data = {
         gm1 : {
             gameModeName: 'City Guessing',
             id: 1,
+            geoObjType: data.geoObjType.city,
             iconUrl: '../images/city.png'
         },
         gm2 : {
             gameModeName: 'River Guessing',
             id: 2,
+            geoObjType: data.geoObjType.river,
             iconUrl: '../images/user.png'   //TODO find img
         },
         gm3 : {
             gameModeName: 'Country Guessing',
             id: 3,
+            geoObjType: data.geoObjType.country,
             iconUrl: '../images/user.png'   //TODO find img
         },
         gm4 : {
             gameModeName: 'Stuff Guessing',
             id: 4,
+            geoObjType: data.geoObjType.city, //TODO ??
             iconUrl: '../images/user.png'   //TODO find img
         }
     },
@@ -69,7 +74,7 @@ data = {
         p1 : {
             profileName: 'Free Choice',
             id: 1,
-            limitedCountry: 'NONE',
+            limitedCountry: null,
             multipleChoiceMode: false,
             minPopulationDefault: 1000000,
             mapOption: {
@@ -81,7 +86,7 @@ data = {
         p2 : {
             profileName: 'Multiple Choice',
             id: 2,
-            limitedCountry: 'NONE',
+            limitedCountry: null,
             multipleChoiceMode: true,
             minPopulationDefault: 300000,
             mapOption: {
@@ -105,7 +110,7 @@ data = {
         p4 : {
             profileName: 'Hardcore',
             id: 4,
-            limitedCountry: 'NONE',
+            limitedCountry: null,
             multipleChoiceMode: false,
             minPopulationDefault: 300000,
             mapOption: {

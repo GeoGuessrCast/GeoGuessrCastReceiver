@@ -17,7 +17,10 @@
         console.log("\n======= Round " + gameModeManager.currentRound + " =======");
         renderManager.showMidScreenMessage('round ' + gameModeManager.currentRound + ' started...' )
         displayText('Round ' + gameModeManager.currentRound + ' started.' );
-        var queryResult = dataManager.getGeoObjects(data.geoObjType.city,"DE",1,100000);
+        var queryResult = dataManager.getGeoObjects(
+            data.geoObjType.city,gameModeManager.currentGameModeProfile.limitedCountry,
+            gameModeManager.currentGameModeProfile.multipleChoiceMode ? 1 : data.constants.numberOfChoices,
+            gameModeManager.currentGameModeProfile.minPopulationDefault);
         if (typeof queryResult == "null") {
             //TODO: Handle if false data
         }
@@ -49,7 +52,7 @@
         addresses = {};
         // GMB: send prepare()
         // describes game mode properties //TODO use parameters below !
-        var jsonData = {"event_type": data.eventType.startGame, "gameMode": gameModeManager.currentGameMode.id, "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : gameRoundManager.timePerRoundSec, "choices" : queryResult.choices};
+        var jsonData = {"event_type": data.eventType.startGame, "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode , "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : gameRoundManager.timePerRoundSec, "choices" : queryResult.choices};
         eventManager.broadcast(data.channelName.game, jsonData);
         //Set Timer
         //console.log("starting RoundTimer....");

@@ -100,7 +100,7 @@
     };
 
 
-    gmm.loadMap = function(gameModeObject, profileObject){
+    gmm.loadMap = function(){
         _loadGameUi();
         geocoder = new google.maps.Geocoder();
 
