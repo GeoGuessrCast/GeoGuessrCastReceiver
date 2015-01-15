@@ -25,7 +25,11 @@
         /** @type {number} */
         this.elevation  = elevation;
         /** @type {marker} */
-        this.marker = marker; //TODO: Geocoding
+        this.marker = marker; //TODO: create new marker here already ?
+
+        this.toString = function() {
+            return name + '(' + countryCode + '|' + long + '|' + lat + '|pop:' + population + ')';
+        }
     };
     /**
      *
@@ -149,10 +153,18 @@
             var population = response.rows[i][5];
             var elevation = response.rows[i][6];
             var geoObject = null;
-            if (typeof name == "string" && typeof lat == "number" && typeof long == "number" && typeof countryCode == "string" && typeof population == "string" && typeof elevation == "string"){ //&&
-                geoObject = new dataManager.GeoObject(name,lat,long,countryCode,population,elevation,null);
+            var onlyDigitsPattern = new RegExp("^[0-9]*$");
+            if (typeof(name) === "string"
+                && typeof(lat) === "number"
+                && typeof(long) === "number"
+                && typeof(countryCode) === "string"
+                && onlyDigitsPattern.test(population)
+                && onlyDigitsPattern.test(elevation)) {
+                    geoObject = new dataManager.GeoObject(name,lat,long,countryCode,population,elevation,null);
+                    console.log("[DM] geoObject: " + geoObject.toString());
+            } else {
+                console.error("[DM] error validating queryData: " + response )
             }
-            console.log("DataManager: new geoObject: "+ geoObject.name);
             geo[i] = geoObject;
         }
         return geo;

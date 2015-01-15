@@ -2,31 +2,34 @@
 
     var selectedGameMode;
 
+    if(!_isExecutedOnChromeCast()){     //TODO falk: make _isExecutedOnChromeCast public and move this check to init.js
+        renderManager.hideConsole(false);
+    }
+
+
     try {
-        // init
-        /** @type cast.receiver.CastMessageBus */
         var userMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.userChannel', cast.receiver.CastMessageBus.MessageType.JSON);
-        /** @type cast.receiver.CastMessageBus */
         var adminMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.adminChannel', cast.receiver.CastMessageBus.MessageType.JSON);
-        /** @type cast.receiver.CastMessageBus */
         var gameMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.gameChannel', cast.receiver.CastMessageBus.MessageType.JSON);
 
         _getUserMessageBus().onMessage = function(event) {
-            console.log('userMessageBus [' + event.senderId + ']: ' + event.data);
+            console.debug('onUserMessage -> ' + JSON.stringify(event.data));
             eventManager.event_onUserMessage(event);
         };
 
         _getAdminMessageBus().onMessage = function(event) {
-            console.log('adminMessageBus [' + event.senderId + ']: ' + event.data);
+            console.debug('onAdminMessage -> ' + JSON.stringify(event.data));
             eventManager.event_onAdminMessage(event);
         };
 
         _getGameMessageBus().onMessage = function(event) {
-            console.log('gameMessageBus [' + event.senderId + ']: ' + event.data);
+            console.debug('onGameMessage -> ' + JSON.stringify(event.data));
             eventManager.event_onGameMessage(event);
         };
     } catch(ex){
-        console.log(ex);
+        if(_isExecutedOnChromeCast()){
+            console.error(ex);
+        }
     }
 
     /**
@@ -200,7 +203,7 @@
         }
 
         if(eventData.event_type === data.eventType.hideConsole){
-            eventManager.hideConsole(eventData.hide);
+            renderManager.hideConsole(eventData.hide);
         }
 
         if(eventData.event_type === data.eventType.restart){
@@ -228,16 +231,9 @@
     castReceiver.event_onSystemVolumeChanged = function(event){
     };
 
-    castReceiver.hideConsole = function(hide) {
-        if (hide) {
-            $('#testConsole').hide();
-        } else {
-            $('#testConsole').show();
-        }
-    };
-
     castReceiver.restart = function() {
-        eventManager.broadcast(data.channelName.admin, data.eventType.restart);
+        var jsonData = {"event_type":data.eventType.restart}
+        eventManager.broadcast(data.channelName.admin,jsonData );
         window.location.reload(true);
     };
 

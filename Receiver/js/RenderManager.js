@@ -59,5 +59,13 @@
     };
 
 
+    rm.hideConsole = function(hide) {
+        if (hide) {
+            $('#testConsole').hide();
+        } else {
+            $('#testConsole').show();
+        }
+    };
+
 
 }(this.renderManager = this.renderManager || {}));
