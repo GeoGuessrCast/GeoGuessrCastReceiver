@@ -61,24 +61,5 @@ AndroidSender/*/*/build/
 AndroidSender/*.map
 AndroidSender/*.md5
 
-# CastCompanionLibrary
-AndroidSender/CastCompanionLibrary/*.apk
-AndroidSender/CastCompanionLibrary/*.ap_
-AndroidSender/CastCompanionLibrary/*.dex
-AndroidSender/CastCompanionLibrary/*.class
-AndroidSender/CastCompanionLibrary/bin/
-AndroidSender/CastCompanionLibrary/gen/
-AndroidSender/CastCompanionLibrary/.gradle/
-AndroidSender/CastCompanionLibrary/build/
-AndroidSender/CastCompanionLibrary/local.properties
-AndroidSender/CastCompanionLibrary/proguard/
-AndroidSender/CastCompanionLibrary/proguard-project.txt
-AndroidSender/CastCompanionLibrary/.project
-AndroidSender/CastCompanionLibrary/.classpath
-AndroidSender/CastCompanionLibrary/.settings/
-AndroidSender/CastCompanionLibrary/*.iml
-AndroidSender/CastCompanionLibrary/.idea
-
-
 # .DS_Store for Mac
 .DS_Store
