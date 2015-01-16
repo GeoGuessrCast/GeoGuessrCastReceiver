@@ -5,8 +5,8 @@ data = {
 
     // ======== global constants ========
     constants : {
-        midScreenMessageFadeInTimeMs: 400,
-        midScreenMessageFadeOutTimeMs: 900,
+        midScreenMessageFadeInTimeMs: 600,
+        midScreenMessageFadeOutTimeMs: 1500,
         maxDistanceErrorKm: 1000,
         numberOfChoices: 5
     },

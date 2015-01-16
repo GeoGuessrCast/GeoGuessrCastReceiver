@@ -3,14 +3,15 @@
     var goal;
 
     var guesses = {}; // Map UserID:Distanz zum Ziel
-    var positions = {}; //Map UserID:LatLong Position
+    var geoCodedUserAnswerPos = {}; //Map UserID:LatLong Position
     var results = {}; // Map UserId:Points
-    var addresses = {}; // Map UserId:Address (Name of Guess)
+    var userAnswers = {}; // Map UserId:Address (Name of Guess)
     var goalMarker; // Marker of goal
     var goalAddress = "";
     grm.roundTimer = null;
     grm.timePerRoundSec = 30;
     grm.roundEvaluationTimeSec = 10;
+    grm.goalGeoObject = null;
 
 
     grm.startRound = function(){
@@ -29,17 +30,17 @@
         //gameModeManager.getLayer().setMap(gameModeManager.getMap());
 
 
-        var geoObject = queryResult.choices[0]; //TODO dynamic
-        var address = geoObject.name;
+        gameRoundManager.goalGeoObject = queryResult.choices[0];
+        var address = gameRoundManager.goalGeoObject.name;
         goalAddress = address;
-        var lat = geoObject.latitude;
-        var long = geoObject.longitude;
+        var lat = gameRoundManager.goalGeoObject.latitude;
+        var long = gameRoundManager.goalGeoObject.longitude;
         var pos = new google.maps.LatLng(lat, long);
         goalMarker = _placeMarkerOnMap(pos,"goal","#ff0000"); //TODO use different marker icon for goal marker
         goalMarker.icon = {
             path: google.maps.SymbolPath.CIRCLE,
             scale: 3
-        }
+        };
         gameModeManager.getMap().setCenter(pos);
         gameModeManager.getMap().setZoom(6);
         //Set global goal var
@@ -48,8 +49,8 @@
         //reset user map
         guesses = {};
         results = {};
-        positions = {};
-        addresses = {};
+        geoCodedUserAnswerPos = {};
+        userAnswers = {};
 
         //choices for Android app
         //TODO: Choices?ChoicesNearby?
@@ -72,10 +73,49 @@
     };
 
     grm.choseAnswer = function(userMac, answer){
-        //console.log("New Guess: "+userMac+" : "+answer);
-        //displayText("New Guess: "+userMac+" chose "+answer);  events werden ohnehin mit allen JSON daten angezeigt !
-        _calculateGuess(answer,userMac);
+        console.log("[GRM] " + userManager.getUserByMac(userMac).name + " picked " + answer);
+        _calculateGuess(userMac, answer);
     };
+
+    /**
+     * Calculates the distance between the guess and the goal coordinates
+     * @param userMac
+     * @param answer
+     * @private
+     */
+    function _calculateGuess(userMac, answer){
+        // get Geolocation
+        userAnswers[userMac] = answer;
+        gameModeManager.getGeocoder().geocode({
+            address: answer,
+            region: gameRoundManager.goalGeoObject.countryCode
+
+        }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                var pos = results[0].geometry.location;
+                // Saves the Position the Player guessed
+                geoCodedUserAnswerPos[userMac] = pos;
+
+                // get Distance to right answer (if not the same)
+                var dist = _getDistance(pos,goal);
+
+                console.log("[GC] found " + answer + " at " + pos + "(dist=" + dist + ")");
+                // dist save
+                guesses[userMac] = dist;
+
+
+            } else {
+                console.log(userMac+ ' Address could not be geocoded: ' + status);
+                displayText(userMac+ ' Address could not be geocoded: '+answer+" : " + status);
+
+            }
+        });
+
+    }
+
+
+
+
 
     grm.endRound = function(){
         // send event
@@ -94,14 +134,14 @@
             results[userMac] = points;
             console.log("[GRM] " + userManager.getUserByMac(userMac).name + " got " + points + " points (for "+distInKm+" km)");
             // get the saved guessed position for this player
-            var pos = positions[userMac];
+            var pos = geoCodedUserAnswerPos[userMac];
             // Now Place the marker on the map:
             var user = userManager.getUserByMac(userMac);
             var color = user.color;
 
             var mark = _placeMarkerOnMap(pos, userMac,color);
 
-            var info = _createInfoWindow(user.name,addresses[userMac]);
+            var info = _createInfoWindow(user.name,userAnswers[userMac]);
             info.open(gameModeManager.getMap(),mark);
 
         }
@@ -175,43 +215,6 @@
     //TODO =============== ab hier überarbeiten ===================
 
 
-
-    /**
-     * Calculates the distance between the guess and the goal coordinates
-     * @param address
-     * @param userMac
-     * @private
-     */
-    function _calculateGuess(address, userMac){
-        // get Geolocation
-        console.log("[GRM] " + userManager.getUserByMac(userMac).name + " picked " + address);
-        addresses[userMac] = address;
-        gameModeManager.getGeocoder().geocode({
-            address: address,
-            region: "de" //TODO ... wtf?
-
-        }, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                var pos = results[0].geometry.location;
-                // Saves the Position the Player guessed
-                positions[userMac] = pos;
-
-                // get Distance to right answer (if not the same)
-                var dist = _getDistance(pos,goal);
-
-                console.log("[GC] found " + address + " at " + pos + "(dist=" + dist + ")");
-                // dist save
-                guesses[userMac] = dist;
-
-
-            } else {
-                console.log(userMac+ ' Address could not be geocoded: ' + status);
-                displayText(userMac+ ' Address could not be geocoded: '+address+" : " + status);
-
-            }
-        });
-
-    }
 
 
 
