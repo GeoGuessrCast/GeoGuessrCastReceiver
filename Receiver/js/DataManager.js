@@ -237,15 +237,17 @@
                     && onlyDigitsPattern.test(elevation)) {
                     geoObject = new dataManager.GeoObject(id, name, lat, long, countryCode, population, elevation, null);
                     //console.debug("[DM] geoObject: " + geoObject.toString());
+                    geo.push(geoObject);
                 } else {
 
                     console.error("[DM] error validating queryData: " + response+ ": "+name);
                 }
-                geo[i] = geoObject;
+
             }
         } else {
             console.error("[DM] Query returned no results.")
         }
+        console.debug("[DM] Query returned "+ geo.length+ " results.");
         return geo;
     }
 
