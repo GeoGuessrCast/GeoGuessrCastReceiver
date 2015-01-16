@@ -1,14 +1,36 @@
 (function(rm){
 
+    var currentTimerPosition = 0;
+    var numberSteps = 20;
+    var percentPerStep = 5;
     rm.consoleOutPutHidden = false;
 
 
+
     rm.playTimerAnimationWithRoundDisplay = function(animationDurationSec, currentRound, maxRounds) {
-        //TODO implement this. (here some example css names)
-        $('#roundDisplayAndTimer').show(); // the DIV roundDisplayAndTimer contains roundDisplay and roundTimer (stacked)
-        $('#roundDisplay').html('Round ' + currentRound + '/' + maxRounds);
-        //TODO start some animation stuff on $('#roundTimer') using executionManager.execPeriodically(...) and animationDurationSec
-        //delete timer.js, timer2.js, cleanup JS code from GameModeOverlay.html
+        currentTimerPosition = 0;
+        $('#roundDisplayAndTimer').show();
+        $('#roundDisplay').css('right', '100%'); // reset
+
+        $('#roundDisplayAndTimer').find('span').text('Round ' + currentRound + '/' + maxRounds);
+
+        var aniMs = parseInt(animationDurationSec)*1000;
+        /*
+         30 s
+         30000 ms
+         schrittlaenge 100? 5er Schritte
+         */
+
+        executionManager.execPeriodically(aniMs/numberSteps, numberSteps, renderManager.incTimerBy ,null );
+    };
+
+    rm.incTimerBy = function() {
+        var counter = 100 - (currentTimerPosition + percentPerStep);
+        currentTimerPosition = parseInt(currentTimerPosition) + parseInt(percentPerStep);
+
+        $('#roundDisplay').animate({
+            'right': parseInt(counter)+'%'
+        }, 200);
     };
 
     rm.hideTopRightRoundTimer = function() {

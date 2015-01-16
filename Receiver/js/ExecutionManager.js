@@ -53,7 +53,7 @@
             var data = e.data;
             if(data.success === true) {
                 if(parseInt(numberOfExecutions) > 0) {
-                    console.log('number of exec: ' + numberOfExecutions);
+                    //console.log('number of exec: ' + numberOfExecutions);
                     if (intervalFunc && typeof intervalFunc === 'function') {
                         intervalFunc();
                     }
