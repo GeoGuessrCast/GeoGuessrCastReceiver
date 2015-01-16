@@ -7,11 +7,13 @@
         app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
         app:showAsAction="always"/>
 
-
-    <group android:checkableBehavior="all">
+    <group android:id="@+id/adminMenu"
+        android:visible="false">
         <item android:id="@+id/toggleConsole"
-            android:title="Console Mode"
-            android:visible="false"/>
+            android:checkable="true"
+            android:title="Console Mode"/>
+        <item android:id="@+id/restartApp"
+            android:title="Restart Game"/>
     </group>
 
 </menu>

@@ -1,23 +1,22 @@
-package de.tud.kp.geoguessrcast;
+package de.tud.kp.geoguessrcast.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Vibrator;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import de.tud.kp.geoguessrcast.GameActivity;
+import de.tud.kp.geoguessrcast.R;
+import de.tud.kp.geoguessrcast.beans.User;
+import de.tud.kp.geoguessrcast.utilities.TimerWithVibration;
+import de.tud.kp.geoguessrcast.utilities.Utility;
 
 /**
  * Created by Kaijun on 11/12/14.
@@ -28,8 +27,8 @@ public class GameMode1Fragment extends Fragment {
     static String CURRENT_ROUND = "currentRound";
     static String TIME_ROUND = "timeRound";
 
-    MainActivity mActivity;
-    CountDownTimer timer;
+    GameActivity mActivity;
+    TimerWithVibration timer;
     boolean isAnswerSendet;
     int currentRound;
     int timeRound;
@@ -54,7 +53,7 @@ public class GameMode1Fragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        mActivity = (MainActivity)getActivity();
+        mActivity = (GameActivity)getActivity();
 
         final EditText cityNameEditText = (EditText) mActivity.findViewById(R.id.cityNameEditText);
         final Button sendCityNameBtn = (Button) mActivity.findViewById(R.id.sendCityName);
@@ -66,60 +65,43 @@ public class GameMode1Fragment extends Fragment {
 
         sendCityNameBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String cityNameJSON = "{\"event_type\":\"gameRound_answerChosen\" , \"answer\":" + "\"" + cityNameEditText.getText().toString() +  "\""+ ", \"userMac\":\"" + mActivity.user.getUserMac() + "\"}";
-                mActivity.sendMessage(mActivity.mUserChannel, cityNameJSON);
-                isAnswerSendet = true;
-                hideSoftKeyboard(mActivity);
-                mActivity.startFragment(new WaitRoundFragment());
-
+                Utility.hideSoftKeyboard(mActivity);
+                String answer = cityNameEditText.getText().toString();
+                if(!answer.isEmpty()){
+                    sendAnswer(answer);
+                    isAnswerSendet = true;
+                    mActivity.startFragment(new WaitRoundFragment());
+                }
             }
         });
 
-        cityNameEditText.setOnKeyListener(new View.OnKeyListener(){
+        cityNameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN)
-                {
-                    switch (i)
-                    {
-                        case KeyEvent.KEYCODE_ENTER:
-                            sendCityNameBtn.performClick();
-                            return true;
-                        default:
-                            break;
-                    }
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    sendCityNameBtn.performClick();
+                    handled = true;
                 }
-                return false;
+                return handled;
             }
         });
 
-        //TODO timer added into Utility
-        timer = new CountDownTimer(timeRound, 1000) {
-            public void onTick(long millisUntilFinished) {
-                long seconds = millisUntilFinished / 1000;
-                int percent = (int)seconds*100/(timeRound/1000);
-                countDownTimeTextView.setText(String.valueOf(seconds));
+
+        timer = new TimerWithVibration(timeRound, 5, mActivity) {
+            @Override
+            public void onTimerTick(int second, int percent) {
+                countDownTimeTextView.setText(String.valueOf(second));
                 countDownProgressBar.setProgress(percent);
-                //if the time is less than 5 sec, then make a vibration
-                //TODO 默认seconds=5, 可以多参数传入 也可以不传
-                if((int)seconds==5){
-                    Vibrator vibrator = (Vibrator) mActivity.getSystemService(mActivity.VIBRATOR_SERVICE);
-                    long[] pattern = {0, 100, 50, 100};
-                    vibrator.vibrate(pattern, -1);
-                }
             }
-            public void onFinish() {
+            @Override
+            public void onTimerFinish() {
                 if(!isAnswerSendet){
-                    String cityNameJSON = "{\"event_type\":\"gameRound_answerChosen\" , \"answer\":" + "\"\""+ ", \"userMac\":\"" + mActivity.user.getUserMac() + "\"}";
-                    mActivity.sendMessage(mActivity.mUserChannel, cityNameJSON);
+                    sendAnswer(cityNameEditText.getText().toString());
                     mActivity.startFragment(new WaitRoundFragment());
                 }
             }
         };
-        //notify the player that the round already started!
-        Vibrator vibrator = (Vibrator) mActivity.getSystemService(mActivity.VIBRATOR_SERVICE);
-        long[] pattern = {0, 200};
-        vibrator.vibrate(pattern, -1);
 
         timer.start();
     }
@@ -150,17 +132,17 @@ public class GameMode1Fragment extends Fragment {
         }
     }
 
-    //TODO remove if Utility finished!
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        try{
-            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+
+    private void sendAnswer(String answer){
+        String cityNameJSON = "{\"event_type\":\"gameRound_answerChosen\" , \"answer\":" + "\"" + answer +  "\""+ ", \"userMac\":\"" + User.getInstance().getUserMac() + "\"}";
+        //TODO: add SendMessage for channels. adding try catch.
+        try {
+            mActivity.getCastManager().sendDataMessage(cityNameJSON, getString(R.string.userChannel));
         }
         catch (Exception e){
-            Log.e(activity.getClass().getSimpleName(), "Exception while hiding soft keyboard", e);
+
         }
     }
-
     public static final GameMode1Fragment newInstance(int currentRound, int timeRound)
     {
         GameMode1Fragment f = new GameMode1Fragment();
