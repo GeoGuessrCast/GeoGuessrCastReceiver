@@ -37,43 +37,44 @@ data = {
         setGameMode: 'setGameMode',
         setGameProfile: 'setGameProfile',
         restart: 'restart',
-        startGame: 'startGame'
+        startGame: 'startGame',
+        sendModesAndProfiles: 'sendModesAndProfiles'
 
     },
 
 
-    gameMode : {
-        gm1 : {
+    gameMode : [
+        {
             gameModeName: 'City Guessing',
-            id: 1,
+            id: 0,
             geoObjType: 0,
             iconUrl: '../images/city.png'
         },
-        gm2 : {
+        {
             gameModeName: 'River Guessing',
-            id: 2,
+            id: 1,
             geoObjType: 1,
             iconUrl: '../images/user.png'   //TODO find img
         },
-        gm3 : {
+        {
             gameModeName: 'Country Guessing',
-            id: 3,
+            id: 2,
             geoObjType: 2,
             iconUrl: '../images/user.png'   //TODO find img
         },
-        gm4 : {
+        {
             gameModeName: 'Stuff Guessing',
-            id: 4,
+            id: 3,
             geoObjType: 0, //TODO ??
             iconUrl: '../images/user.png'   //TODO find img
         }
-    },
+    ],
 
 
-    gameModeProfile : {
-        p1 : {
+    gameModeProfile : [
+        {
             profileName: 'Free Choice',
-            id: 1,
+            id: 0,
             limitedCountry: null,
             multipleChoiceMode: false,
             minPopulationDefault: 500000,
@@ -84,9 +85,9 @@ data = {
                 showCountryNames: true
             }
         },
-        p2 : {
+        {
             profileName: 'Multiple Choice',
-            id: 2,
+            id: 1,
             limitedCountry: null,
             multipleChoiceMode: true,
             minPopulationDefault: 200000,
@@ -97,9 +98,9 @@ data = {
                 showCountryNames: true
             }
         },
-        p3 : {
+        {
             profileName: 'Multiple Choice (GER)',
-            id: 3,
+            id: 2,
             limitedCountry: 'DE',
             multipleChoiceMode: true,
             minPopulationDefault: 100000,
@@ -110,9 +111,9 @@ data = {
                 showCountryNames: false
             }
         },
-        p4 : {
+        {
             profileName: 'Hardcore',
-            id: 4,
+            id: 3,
             limitedCountry: null,
             multipleChoiceMode: false,
             minPopulationDefault: 250000,
@@ -123,7 +124,7 @@ data = {
                 showCountryNames: false
             }
         }
-    }
+    ]
 
 
 };

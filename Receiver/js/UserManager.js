@@ -87,6 +87,11 @@
         //inform the Sender if the user is game leader
         eventManager.send(event.senderId, data.channelName.user, userManager.isUserAdmin(event.data.userMac));
 
+        if (userManager.isUserAdmin(event.data.userMac)) {
+            var jsonData = { event_type:data.eventType.sendModesAndProfiles , gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
+            eventManager.send(event.senderId, data.channelName.admin, jsonData);
+        }
+
     };
 
     /**

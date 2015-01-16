@@ -84,23 +84,12 @@
 
         if(eventData.event_type === data.eventType.setGameMode){
             //eventData.gameModeNumber; ...deprecated
-            renderManager.loadGameProfileMenu(data.gameMode.gm1);  //TODO get gameMode from event data
+            renderManager.loadGameProfileMenu(data.gameMode[0]);  //TODO get gameMode from event data (as object)
         }
 
         if(eventData.event_type === data.eventType.setGameProfile){
             //TODO get gameModeProfile from event data
-            switch (eventData.gameProfileNumber){
-                case 1:
-                    gameModeManager.startGame(data.gameModeProfile.p1);
-                    break;
-                case 2:
-                    gameModeManager.startGame(data.gameModeProfile.p2);
-                    break;
-                default :
-                    gameModeManager.startGame(data.gameModeProfile.p1);
-                    break;
-            }
-
+            gameModeManager.startGame(data.gameModeProfile[eventData.gameProfileNumber])  //TODO get gameProfile as object
         }
 
         if(eventData.event_type === data.eventType.hideConsole){

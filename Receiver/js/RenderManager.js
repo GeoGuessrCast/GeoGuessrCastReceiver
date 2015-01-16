@@ -57,17 +57,17 @@
             $(this).html(content);
         });
 
-        $('#gm1').text(data.gameMode.gm1.gameModeName);
-        $('#gm1').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode.gm1);");
+        $('#gm1').text(data.gameMode[0].gameModeName);
+        $('#gm1').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[0]);");
 
-        $('#gm2').text(data.gameMode.gm2.gameModeName);
-        $('#gm2').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode.gm2);");
+        $('#gm2').text(data.gameMode[1].gameModeName);
+        $('#gm2').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[1]);");
 
-        $('#gm3').text(data.gameMode.gm3.gameModeName);
-        $('#gm3').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode.gm3);");
+        $('#gm3').text(data.gameMode[2].gameModeName);
+        $('#gm3').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[2]);");
 
-        $('#gm4').text(data.gameMode.gm4.gameModeName);
-        $('#gm4').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode.gm4);");
+        $('#gm4').text(data.gameMode[3].gameModeName);
+        $('#gm4').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[3]);");
 
         userManager.rebuildUserList();
     };
@@ -79,17 +79,17 @@
         $('#gameOverlay').load('templates/GameProfileMenu.html', function (content) {
             $(this).html(content);
 
-            $('#profile_1').text(data.gameModeProfile.p1.profileName);
-            $('#profile_1').attr('onclick', "gameModeManager.startGame(data.gameModeProfile.p1);");
+            $('#profile_1').text(data.gameModeProfile[0].profileName);
+            $('#profile_1').attr('onclick', "gameModeManager.startGame(data.gameModeProfile[0]);");
 
-            $('#profile_2').text(data.gameModeProfile.p2.profileName);
-            $('#profile_2').attr('onclick', "gameModeManager.startGame(data.gameModeProfile.p2);");
+            $('#profile_2').text(data.gameModeProfile[1].profileName);
+            $('#profile_2').attr('onclick', "gameModeManager.startGame(data.gameModeProfile[1]);");
 
-            $('#profile_3').text(data.gameModeProfile.p3.profileName);
-            $('#profile_3').attr('onclick', "gameModeManager.startGame(data.gameModeProfile.p3);");
+            $('#profile_3').text(data.gameModeProfile[2].profileName);
+            $('#profile_3').attr('onclick', "gameModeManager.startGame(data.gameModeProfile[2]);");
 
-            $('#profile_4').text(data.gameModeProfile.p4.profileName);
-            $('#profile_4').attr('onclick', "gameModeManager.startGame(data.gameModeProfile.p4);");
+            $('#profile_4').text(data.gameModeProfile[3].profileName);
+            $('#profile_4').attr('onclick', "gameModeManager.startGame(data.gameModeProfile[3]);");
 
             userManager.rebuildUserList();
         });
