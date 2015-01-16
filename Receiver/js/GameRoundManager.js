@@ -52,7 +52,7 @@
         addresses = {};
 
         //choices for Android app
-        var cityNameChoices = dataManager.getCityNameArray(geoObject.choices);
+        var cityNameChoices = dataManager.getCityNameArray(queryResult.choices);
 
         // GMB: send prepare()
         // describes game mode properties //TODO use parameters below !
