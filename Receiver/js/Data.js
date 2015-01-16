@@ -76,7 +76,7 @@ data = {
             id: 1,
             limitedCountry: null,
             multipleChoiceMode: false,
-            minPopulationDefault: 1000000,
+            minPopulationDefault: 500000,
             mapOption: {
                 mapType : google.maps.MapTypeId.HYBRID,
                 borders: true,
@@ -88,7 +88,7 @@ data = {
             id: 2,
             limitedCountry: null,
             multipleChoiceMode: true,
-            minPopulationDefault: 300000,
+            minPopulationDefault: 200000,
             mapOption: {
                 mapType : google.maps.MapTypeId.HYBRID,
                 borders: true,
@@ -112,7 +112,7 @@ data = {
             id: 4,
             limitedCountry: null,
             multipleChoiceMode: false,
-            minPopulationDefault: 300000,
+            minPopulationDefault: 250000,
             mapOption: {
                 mapType : google.maps.MapTypeId.SATELLITE,
                 borders: false,

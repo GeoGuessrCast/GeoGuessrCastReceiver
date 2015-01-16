@@ -32,8 +32,8 @@
         var geoObject = queryResult.choices[0]; //TODO dynamic
         var address = geoObject.name;
         goalAddress = address;
-        var lat = geoObject.lat;
-        var long = geoObject.long;
+        var lat = geoObject.latitude;
+        var long = geoObject.longitude;
         var pos = new google.maps.LatLng(lat, long);
         goalMarker = _placeMarkerOnMap(pos,"goal","#ff0000"); //TODO use different marker icon for goal marker
         goalMarker.icon = {

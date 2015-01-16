@@ -23,9 +23,9 @@
         /** @type {string} */
         this.countryCode = countryCode;
         /** @type {number} */
-        this.lat = lat;
+        this.latitude = lat;
         /** @type {number} */
-        this.long = long;
+        this.longitude = long;
         /** @type {number} */
         this.population = population;
         /** @type {number} */
@@ -190,8 +190,8 @@
             query = query + " OFFSET " + offset + " LIMIT "+ limit
         }
         if (spatial === true && center != null){
-            var lat = center.lat;
-            var long = center.long;
+            var lat = center.latitude;
+            var long = center.longitude;
             query = query + " ORDER BY ST_DISTANCE(col4,  LATLNG("+ lat+","+long+")) LIMIT 10";
         }
         console.debug("[DM] SQL Query: "+query);
