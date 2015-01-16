@@ -89,11 +89,11 @@
      */
     function getRandomSubsetOfArray(startArray, count) {
         if (startArray.length < count){
-            console.error("[DM] Random Subset was called with wrong parameters, setting subset size to Array size.")
+            console.debug("[DM] Random Subset was called with wrong parameters, setting subset size to Array size: "+startArray+" count: "+count);
             count = startArray.length;
         }
         var randomObjects = [];
-        var min = 1;
+        var min = 0;
         var max = startArray.length;
         var i = 0;
         while (i < count) {
