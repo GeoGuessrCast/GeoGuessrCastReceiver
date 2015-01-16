@@ -52,7 +52,8 @@
         addresses = {};
 
         //choices for Android app
-        var cityNameChoices = dataManager.getCityNameArray(queryResult.choices);
+        //TODO: Choices?ChoicesNearby?
+        var cityNameChoices = dataManager.getCityNameArray(queryResult.choicesNearby);
         console.log(queryResult.choices + cityNameChoices);
 
         // GMB: send prepare()
