@@ -12,13 +12,17 @@ public class GameMessage {
     boolean ended;
     int roundNumber;
 
+    boolean multipleChoiceMode;
+
+    public boolean isMultipleChoiceMode() {
+        return multipleChoiceMode;
+    }
+
+    public void setMultipleChoiceMode(boolean multipleChoiceMode) {
+        this.multipleChoiceMode = multipleChoiceMode;
+    }
+
     public GameMessage(){
-//        this.event_type = "";
-//        this.gameMode = "";
-//        this.started = false;
-//        this.timerRound = "";
-//        this.choices = "";
-//        this.ended = false;
     }
 
     public String getEvent_type() {

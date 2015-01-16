@@ -50,9 +50,13 @@
         results = {};
         positions = {};
         addresses = {};
+
+        //choices for Android app
+        var cityNameChoices = dataManager.getCityNameArray(geoObject.choices);
+
         // GMB: send prepare()
         // describes game mode properties //TODO use parameters below !
-        var jsonData = {"event_type": data.eventType.startGame, "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode , "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : gameRoundManager.timePerRoundSec, "choices" : queryResult.choices};
+        var jsonData = {"event_type": data.eventType.startGame, "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode , "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : gameRoundManager.timePerRoundSec, "choices" : cityNameChoices};
         eventManager.broadcast(data.channelName.game, jsonData);
         //Set Timer
         //console.log("starting RoundTimer....");

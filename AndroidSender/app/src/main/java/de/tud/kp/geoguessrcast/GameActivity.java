@@ -105,12 +105,14 @@ public class GameActivity extends ActionBarActivity {
                     if(gameMessage.getEvent_type().equals("startGame")){
                         if(gameMessage.isStarted()){
                             //switch gameMode to start GameMode
-                            if(gameMessage.getGameMode()==1) {
+//                            if(gameMessage.getGameMode()==1) {
+                            if(!gameMessage.isMultipleChoiceMode()){
                                 int roundNumber = gameMessage.getRoundNumber();
                                 int timeRound = gameMessage.getTimerRound();
                                 startFragment(GameMode1Fragment.newInstance(roundNumber, timeRound));
                             }
-                            if(gameMessage.getGameMode()==2) {
+                            else{
+//                            if(gameMessage.getGameMode()==2) {
                                 int roundNumber = gameMessage.getRoundNumber();
                                 int timeRound = gameMessage.getTimerRound();
                                 String choices = gameMessage.getChoices();

@@ -120,6 +120,18 @@
         return geoObjects;
     };
 
+    /**
+     * Returns a Array with all names of geoObjects
+     * @param {Array} geoObjects
+     * @return {Array}{String}
+     */
+    castReceiver.getCityNameArray = function (geoObjects) {
+        var cityNames = new Array();
+        geoObjects.map(function (geoObject) {
+            cityNames.push(geoObject.name);
+        })
+        return cityNames;
+    };
 
 
     castReceiver.persistHighScoreList = function(highScoreMap) {
