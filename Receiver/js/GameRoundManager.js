@@ -16,7 +16,7 @@
 
     grm.startRound = function(){
         console.log("\n======= Round " + gameModeManager.currentRound + " =======");
-        renderManager.showMidScreenMessage('round ' + gameModeManager.currentRound + ' started...' )
+        renderManager.showMidScreenMessage('round ' + gameModeManager.currentRound + ' started...' );
         displayText('Round ' + gameModeManager.currentRound + ' started.' );
         var queryResult = dataManager.getGeoObjects(
             data.geoObjType.city,gameModeManager.currentGameModeProfile.limitedCountry,
@@ -26,6 +26,7 @@
             //TODO: Handle if false data
         }
         gameModeManager.clearMarkers();
+        gameModeManager.clearInfoBubbles();
         //gameModeManager.setLayer(queryResult.ftLayer);
         //gameModeManager.getLayer().setMap(gameModeManager.getMap());
 
@@ -59,7 +60,7 @@
 
         // GMB: send prepare()
         // describes game mode properties //TODO use parameters below !
-        var jsonData = {"event_type": data.eventType.startGame, "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode , "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : gameRoundManager.timePerRoundSec, "choices" : cityNameChoices};
+        var jsonData = {"event_type": data.eventType.startGame, "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode , "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : gameModeManager.currentGameModeProfile.timePerRoundSec, "choices" : cityNameChoices};
         eventManager.broadcast(data.channelName.game, jsonData);
         //Set Timer
         //console.log("starting RoundTimer....");
@@ -68,8 +69,8 @@
         //    console.log("GRM: onMessage !");
         //    gameRoundManager.endRound();
         //};
-        executionManager.execDelayed(gameRoundManager.timePerRoundSec*1000, gameRoundManager.endRound);
-        renderManager.playTimerAnimationWithRoundDisplay(gameRoundManager.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
+        executionManager.execDelayed(gameModeManager.currentGameModeProfile.timePerRoundSec*1000, gameRoundManager.endRound);
+        renderManager.playTimerAnimationWithRoundDisplay(gameModeManager.currentGameModeProfile.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
     };
 
     grm.choseAnswer = function(userMac, answer){
@@ -123,6 +124,7 @@
         displayText('Round ' + gameModeManager.currentRound +  ' ended.<br>' );
         var goalInfo = _createInfoWindow("Goal",goalAddress);
         goalInfo.open(gameModeManager.getMap(), goalMarker);
+        gameModeManager.getInfoBubbles().push(goalInfo);
 
         for (var userMac in guesses) {
 
@@ -142,7 +144,9 @@
             var mark = _placeMarkerOnMap(pos, userMac,color);
 
             var info = _createInfoWindow(user.name,userAnswers[userMac]);
+            info.position = pos;
             info.open(gameModeManager.getMap(),mark);
+            gameModeManager.getInfoBubbles().push(info);
 
         }
         // notify game mode manager that round has ended
@@ -243,11 +247,26 @@
             player = player + ': ';
         }
 
-        var contentString = '<div id="content">'+player+''+guess+'</div>';
-        var infowindow = new google.maps.InfoWindow({
+        var contentString = '<div id="content">'+guess+'</div>';
+       /* = new google.maps.InfoWindow({
             content: contentString
-        });
+        });*/
+        var infowindow = new InfoBubble({
 
+            content: '<div class="mylabel">'+guess+'</div>',
+            shadowStyle: 0,
+            padding: 0,
+            backgroundColor: 'rgba(255,255,255,0)',
+            borderRadius: 2,
+            arrowSize: 1,
+            borderWidth: 1,
+            borderColor: '#2c2c2c',
+            disableAutoPan: true,
+            hideCloseButton: true,
+            arrowPosition: 30,
+            backgroundClassName: 'transparent',
+            arrowStyle: 2
+        });
         return infowindow;
     }
 
