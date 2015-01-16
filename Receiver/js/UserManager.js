@@ -85,11 +85,14 @@
             userManager.updateUser(event.data.userMac, event.data.userName, event.senderId);
         }
         //inform the Sender if the user is game leader
-        eventManager.send(event.senderId, data.channelName.user, userManager.isUserAdmin(event.data.userMac));
 
+        var jsonData;
         if (userManager.isUserAdmin(event.data.userMac)) {
-            var jsonData = { event_type:data.eventType.sendModesAndProfiles , gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
-            eventManager.send(event.senderId, data.channelName.admin, jsonData);
+            jsonData = {event_type:data.eventType.isAdmin, admin:true,  gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
+            eventManager.send(event.senderId, data.channelName.user, jsonData);
+        } else {
+            jsonData = {event_type:data.eventType.isAdmin, admin:false};
+            eventManager.send(event.senderId, data.channelName.user, jsonData);
         }
 
     };

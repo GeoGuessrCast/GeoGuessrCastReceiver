@@ -38,7 +38,7 @@ data = {
         setGameProfile: 'setGameProfile',
         restart: 'restart',
         startGame: 'startGame',
-        sendModesAndProfiles: 'sendModesAndProfiles'
+        isAdmin: 'isAdmin'
 
     },
 

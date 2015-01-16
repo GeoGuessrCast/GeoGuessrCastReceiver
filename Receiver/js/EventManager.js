@@ -89,7 +89,7 @@
 
         if(eventData.event_type === data.eventType.setGameProfile){
             //TODO get gameModeProfile from event data
-            gameModeManager.startGame(data.gameModeProfile[eventData.gameProfileNumber])  //TODO get gameProfile as object
+            gameModeManager.startGame(data.gameModeProfile[eventData.gameProfileNumber]);  //TODO get gameProfile as object
         }
 
         if(eventData.event_type === data.eventType.hideConsole){
