@@ -22,9 +22,7 @@
             data.geoObjType.city,gameModeManager.currentGameModeProfile.limitedCountry,
             gameModeManager.currentGameModeProfile.multipleChoiceMode ? 1 : data.constants.numberOfChoices,
             gameModeManager.currentGameModeProfile.minPopulationDefault);
-        if (typeof queryResult == "null") {
-            //TODO: Handle if false data
-        }
+
         gameModeManager.clearMarkers();
         gameModeManager.clearInfoBubbles();
         //gameModeManager.setLayer(queryResult.ftLayer);
@@ -60,7 +58,7 @@
 
         // GMB: send prepare()
         // describes game mode properties //TODO use parameters below !
-        var jsonData = {"event_type": data.eventType.startGame, "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode , "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : gameModeManager.currentGameModeProfile.timePerRoundSec, "choices" : cityNameChoices};
+        var jsonData = {"event_type": data.eventType.startGame, "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode , "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : gameModeManager.currentGameModeProfile.timePerRoundSec, "choices" : cityNameChoices.push(address)};
         eventManager.broadcast(data.channelName.game, jsonData);
         //Set Timer
         //console.log("starting RoundTimer....");
@@ -256,10 +254,10 @@
             content: '<div class="mylabel">'+guess+'</div>',
             shadowStyle: 0,
             padding: 0,
-            backgroundColor: 'rgba(255,255,255,0)',
+            backgroundColor: 'rgba(255,255,255,10)',
             borderRadius: 2,
             arrowSize: 1,
-            borderWidth: 1,
+            borderWidth: 0,
             borderColor: '#2c2c2c',
             disableAutoPan: true,
             hideCloseButton: true,
