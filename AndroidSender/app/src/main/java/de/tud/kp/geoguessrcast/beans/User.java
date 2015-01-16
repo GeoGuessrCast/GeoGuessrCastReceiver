@@ -7,16 +7,38 @@ import org.json.JSONObject;
  * Created by Kaijun on 10/12/14.
  */
 public class User {
-    private String userName;
-    private String userMac;
-    private boolean isAdmin;
-    private String event_type;
+
+    private static User mInstance =null;
+
+    private String userName = "";
+    private String userMac = "";
+    private boolean isAdmin = false;
+    private String event_type = "createUser";
+
+    public User() {
+    }
 
     public User(String userName, String userMac) {
         this.userName = userName;
         this.userMac = userMac;
         this.isAdmin = false;
         this.event_type = "createUser";
+    }
+
+    public static User getInstance(){
+        if(mInstance == null)
+        {
+            mInstance = new User();
+        }
+        return mInstance;
+    }
+
+    public static User newInstance(String userName, String userMac){
+        if(mInstance == null)
+        {
+            mInstance = new User(userName, userMac);
+        }
+        return mInstance;
     }
 
     public String toJSONString(){

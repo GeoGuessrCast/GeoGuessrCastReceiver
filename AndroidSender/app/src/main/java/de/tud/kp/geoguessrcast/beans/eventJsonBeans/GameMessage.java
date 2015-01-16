@@ -1,5 +1,10 @@
 package de.tud.kp.geoguessrcast.beans.eventJsonBeans;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 /**
  * Created by Kaijun on 12/12/14.
  */
@@ -8,17 +13,21 @@ public class GameMessage {
     int gameMode;
     boolean started;
     int timerRound;
-    String choices;
+    String[] choices;
     boolean ended;
     int roundNumber;
 
+    boolean multipleChoiceMode;
+
+    public boolean isMultipleChoiceMode() {
+        return multipleChoiceMode;
+    }
+
+    public void setMultipleChoiceMode(boolean multipleChoiceMode) {
+        this.multipleChoiceMode = multipleChoiceMode;
+    }
+
     public GameMessage(){
-//        this.event_type = "";
-//        this.gameMode = "";
-//        this.started = false;
-//        this.timerRound = "";
-//        this.choices = "";
-//        this.ended = false;
     }
 
     public String getEvent_type() {
@@ -53,11 +62,12 @@ public class GameMessage {
         this.timerRound = timerRound;
     }
 
-    public String getChoices() {
+    public String[] getChoices() {
+        shuffleArray(choices);
         return choices;
     }
 
-    public void setChoices(String choices) {
+    public void setChoices(String[] choices) {
         this.choices = choices;
     }
 
@@ -75,5 +85,18 @@ public class GameMessage {
 
     public void setRoundNumber(int roundNumber) {
         this.roundNumber = roundNumber;
+    }
+
+    static void shuffleArray(String[] ar)
+    {
+        Random rnd = new Random();
+        for (int i = ar.length - 1; i > 0; i--)
+        {
+            int index = rnd.nextInt(i + 1);
+            // Simple swap
+            String a = ar[index];
+            ar[index] = ar[i];
+            ar[i] = a;
+        }
     }
 }

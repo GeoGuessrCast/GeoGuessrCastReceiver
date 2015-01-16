@@ -72,7 +72,7 @@
         var queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, 0, false,null);
 
         var geoObjects = getRandomSubsetOfArray(queryGeoObjects, count);
-
+        console.debug("[DM] Choices:"+ geoObjects);
 
         var choiceGeoObjects = this.getNearestGeoObjects(geoObjects[0],5,100000);
         console.log("[DM] Goal: "+geoObjects[0]);
@@ -120,6 +120,18 @@
         return geoObjects;
     };
 
+    /**
+     * Returns a Array with all names of geoObjects
+     * @param {Array} geoObjects
+     * @return {Array}{String}
+     */
+    castReceiver.getCityNameArray = function (geoObjects) {
+        var cityNames = new Array();
+        geoObjects.map(function (geoObject) {
+            cityNames.push(geoObject.name);
+        })
+        return cityNames;
+    };
 
 
     castReceiver.persistHighScoreList = function(highScoreMap) {
