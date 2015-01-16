@@ -16,7 +16,7 @@
 
     grm.startRound = function(){
         console.log("\n======= Round " + gameModeManager.currentRound + " =======");
-        renderManager.showMidScreenMessage('round ' + gameModeManager.currentRound + ' started...' )
+        renderManager.showMidScreenMessage('round ' + gameModeManager.currentRound + ' started...' );
         displayText('Round ' + gameModeManager.currentRound + ' started.' );
         var queryResult = dataManager.getGeoObjects(
             data.geoObjType.city,gameModeManager.currentGameModeProfile.limitedCountry,
@@ -60,7 +60,7 @@
 
         // GMB: send prepare()
         // describes game mode properties //TODO use parameters below !
-        var jsonData = {"event_type": data.eventType.startGame, "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode , "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : gameRoundManager.timePerRoundSec, "choices" : cityNameChoices};
+        var jsonData = {"event_type": data.eventType.startGame, "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode , "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : gameModeManager.currentGameModeProfile.timePerRoundSec, "choices" : cityNameChoices};
         eventManager.broadcast(data.channelName.game, jsonData);
         //Set Timer
         //console.log("starting RoundTimer....");
@@ -69,8 +69,8 @@
         //    console.log("GRM: onMessage !");
         //    gameRoundManager.endRound();
         //};
-        executionManager.execDelayed(gameRoundManager.timePerRoundSec*1000, gameRoundManager.endRound);
-        renderManager.playTimerAnimationWithRoundDisplay(gameRoundManager.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
+        executionManager.execDelayed(gameModeManager.currentGameModeProfile.timePerRoundSec*1000, gameRoundManager.endRound);
+        renderManager.playTimerAnimationWithRoundDisplay(gameModeManager.currentGameModeProfile.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
     };
 
     grm.choseAnswer = function(userMac, answer){

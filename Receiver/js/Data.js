@@ -77,6 +77,7 @@ data = {
             limitedCountry: null,
             multipleChoiceMode: false,
             minPopulationDefault: 500000,
+            timePerRoundSec: 30,
             mapOption: {
                 mapType : google.maps.MapTypeId.HYBRID,
                 borders: true,
@@ -89,6 +90,7 @@ data = {
             limitedCountry: null,
             multipleChoiceMode: true,
             minPopulationDefault: 200000,
+            timePerRoundSec: 15,
             mapOption: {
                 mapType : google.maps.MapTypeId.HYBRID,
                 borders: true,
@@ -101,6 +103,7 @@ data = {
             limitedCountry: 'DE',
             multipleChoiceMode: true,
             minPopulationDefault: 100000,
+            timePerRoundSec: 15,
             mapOption: {
                 mapType : google.maps.MapTypeId.HYBRID,
                 borders: true,
@@ -113,6 +116,7 @@ data = {
             limitedCountry: null,
             multipleChoiceMode: false,
             minPopulationDefault: 250000,
+            timePerRoundSec: 45,
             mapOption: {
                 mapType : google.maps.MapTypeId.SATELLITE,
                 borders: false,
