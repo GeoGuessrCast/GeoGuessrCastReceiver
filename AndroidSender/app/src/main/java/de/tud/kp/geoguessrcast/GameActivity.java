@@ -120,8 +120,7 @@ public class GameActivity extends ActionBarActivity {
                                 int roundNumber = gameMessage.getRoundNumber();
                                 int timeRound = gameMessage.getTimerRound();
                                 String[] choices = gameMessage.getChoices();
-                                Log.d("test", choices.toString());
-                                Log.d("test2", gameMessage.getChoices().toString());
+                                Log.d("test", Arrays.toString(choices));
 //                                startFragment(GameMode2Fragment.newInstance(roundNumber, timeRound));
                             }
                         }

@@ -72,7 +72,7 @@
         var queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, 0, false,null);
 
         var geoObjects = getRandomSubsetOfArray(queryGeoObjects, count);
-
+        console.debug("[DM] Choices:"+ geoObjects);
 
         var choiceGeoObjects = this.getNearestGeoObjects(geoObjects[0],5,100000);
         console.log("[DM] Goal: "+geoObjects[0]);

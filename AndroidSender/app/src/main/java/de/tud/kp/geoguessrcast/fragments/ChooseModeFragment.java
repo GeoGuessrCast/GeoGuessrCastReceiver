@@ -66,7 +66,7 @@ public class ChooseModeFragment extends Fragment {
             public void onClick(View v) {
                 //TODO: add SendMessage for channels. adding try catch.
                 try {
-                    sCastManager.sendDataMessage("{\"event_type\": \"setGameProfile\", \"gameProfileNumber\": \"1\"}", getString(R.string.adminChannel));
+                    sCastManager.sendDataMessage("{\"event_type\": \"setGameProfile\", \"gameProfileNumber\": 1}", getString(R.string.adminChannel));
                 }
                 catch (Exception e){
 
@@ -80,7 +80,7 @@ public class ChooseModeFragment extends Fragment {
             public void onClick(View v) {
                 //TODO: add SendMessage for channels. adding try catch.
                 try {
-                    sCastManager.sendDataMessage("{\"event_type\": \"setGameProfile\", \"gameProfileNumber\": \"2\"}", getString(R.string.adminChannel));
+                    sCastManager.sendDataMessage("{\"event_type\": \"setGameProfile\", \"gameProfileNumber\": 2}", getString(R.string.adminChannel));
                 }
                 catch (Exception e){
 

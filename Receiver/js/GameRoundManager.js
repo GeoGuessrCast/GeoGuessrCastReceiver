@@ -53,6 +53,7 @@
 
         //choices for Android app
         var cityNameChoices = dataManager.getCityNameArray(queryResult.choices);
+        console.log(queryResult.choices + cityNameChoices);
 
         // GMB: send prepare()
         // describes game mode properties //TODO use parameters below !
