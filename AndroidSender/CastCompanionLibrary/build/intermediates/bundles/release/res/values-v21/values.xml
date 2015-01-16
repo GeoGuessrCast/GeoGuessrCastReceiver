@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/Users/Kaijun/GeoGuesser/GeoGuessrCastReceiver/AndroidSender/CastCompanionLibrary/res/values-v21/styles.xml -->
-    <eat-comment/>
-    <style name="CastDialog" parent="android:Theme.Material.Dialog">
-        <item name="android:windowTitleStyle">@style/CastDialogWindowTitle</item>
-    </style>
-</resources>

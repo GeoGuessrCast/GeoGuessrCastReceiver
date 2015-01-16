@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/Users/Kaijun/GeoGuesser/CastCompanionLibrary-android/res/values-land/dimens.xml -->
-    <eat-comment/>
-    <dimen name="ccl_castplayer_bgimage_width">300dp</dimen>
-</resources>
