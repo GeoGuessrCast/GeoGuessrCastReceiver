@@ -10,24 +10,24 @@ import android.os.Vibrator;
 
 public abstract class TimerWithVibration {
     private CountDownTimer t;
-    private long mMilliseconds;
+    private long mSeconds;
     private int mVibrateSec;
     private Vibrator mVibrator;
 
-    public TimerWithVibration(long millisecond, int vibrateSec, Activity activity){
+    public TimerWithVibration(int seconds, int vibrateSec, Activity activity){
 
-        mMilliseconds = millisecond;
+        mSeconds = seconds;
         mVibrateSec = vibrateSec;
         mVibrator = (Vibrator) activity.getSystemService(activity.VIBRATOR_SERVICE);
 
-        t = new CountDownTimer(mMilliseconds, 1000) {
+        t = new CountDownTimer(mSeconds*1000, 1000) {
             public void onTick(long millisUntilFinished) {
 
-                int seconds = (int)millisUntilFinished / 1000;
-                int percent = (int)(seconds*100/(mMilliseconds/1000));
+                int restSeconds = (int)millisUntilFinished / 1000;
+                int percent = (int)(restSeconds*100/mSeconds);
 
-                vibratePhone(seconds);
-                onTimerTick(seconds,percent);
+                vibratePhone(restSeconds);
+                onTimerTick(restSeconds,percent);
 
             }
             public void onFinish() {

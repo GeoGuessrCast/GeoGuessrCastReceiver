@@ -88,7 +88,19 @@
         }
 
         if(eventData.event_type === data.eventType.setGameProfile){
-            gameModeManager.startGame(data.gameModeProfile.p1);   //TODO get gameModeProfile from event data
+            //TODO get gameModeProfile from event data
+            switch (eventData.gameProfileNumber){
+                case 1:
+                    gameModeManager.startGame(data.gameModeProfile.p1);
+                    break;
+                case 2:
+                    gameModeManager.startGame(data.gameModeProfile.p2);
+                    break;
+                default :
+                    gameModeManager.startGame(data.gameModeProfile.p1);
+                    break;
+            }
+
         }
 
         if(eventData.event_type === data.eventType.hideConsole){

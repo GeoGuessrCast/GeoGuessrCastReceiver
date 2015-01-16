@@ -33,6 +33,10 @@ import com.google.gson.Gson;
 import com.google.sample.castcompanionlibrary.cast.DataCastManager;
 import com.google.sample.castcompanionlibrary.cast.callbacks.DataCastConsumerImpl;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import de.tud.kp.geoguessrcast.beans.User;
 import de.tud.kp.geoguessrcast.beans.eventJsonBeans.GameMessage;
 import de.tud.kp.geoguessrcast.fragments.ChooseModeFragment;
@@ -45,8 +49,8 @@ import de.tud.kp.geoguessrcast.fragments.WaitGameFragment;
  */
 
 /*
-TODO separate all Control flow, e.g. GameManager: start game, start waiting, show optionMenu...
-TODO all Fragments reference!!! not always new!!!
+TODO: separate all Control flow, e.g. GameManager: start game, start waiting, show optionMenu...
+TODO: all Fragments reference!!! not always new!!!
  */
 
 public class GameActivity extends ActionBarActivity {
@@ -115,8 +119,9 @@ public class GameActivity extends ActionBarActivity {
 //                            if(gameMessage.getGameMode()==2) {
                                 int roundNumber = gameMessage.getRoundNumber();
                                 int timeRound = gameMessage.getTimerRound();
-                                String choices = gameMessage.getChoices();
-                                Log.d("test", choices);
+                                String[] choices = gameMessage.getChoices();
+                                Log.d("test", choices.toString());
+                                Log.d("test2", gameMessage.getChoices().toString());
 //                                startFragment(GameMode2Fragment.newInstance(roundNumber, timeRound));
                             }
                         }
