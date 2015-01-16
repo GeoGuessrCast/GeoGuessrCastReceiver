@@ -2,6 +2,7 @@
 
     var layer, geocoder;
     var markers = []; //Google Map Marker
+    var infobubbles = []; //Google info bubbles
 
     /** @type number */
     gmm.maxRounds = 5;
@@ -42,6 +43,19 @@
         });
         markers = [];
     };
+    /**
+     * clears all markers on the map
+     */
+    gmm.clearInfoBubbles = function(){
+
+        infobubbles.forEach(function(entry) {
+            entry.close();
+        });
+        infobubbles.map(function (bubble) {
+            bubble.setMap(null);
+        });
+        infobubbles = [];
+    };
 
     gmm.getMap = function(){
         return map;
@@ -59,6 +73,9 @@
         return markers;
     };
 
+    gmm.getInfoBubbles = function(){
+        return infobubbles;
+    };
 
     /**
      * sets the current round to 1
@@ -99,6 +116,11 @@
         return markers;
     };
 
+
+    gmm.setInfoBubbles= function(setter){
+        infobubbles = setter;
+        return infobubbles;
+    };
 
     gmm.loadMap = function(){
         _loadGameUi();

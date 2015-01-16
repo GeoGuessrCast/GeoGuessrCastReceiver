@@ -26,6 +26,7 @@
             //TODO: Handle if false data
         }
         gameModeManager.clearMarkers();
+        gameModeManager.clearInfoBubbles();
         //gameModeManager.setLayer(queryResult.ftLayer);
         //gameModeManager.getLayer().setMap(gameModeManager.getMap());
 
@@ -123,6 +124,7 @@
         displayText('Round ' + gameModeManager.currentRound +  ' ended.<br>' );
         var goalInfo = _createInfoWindow("Goal",goalAddress);
         goalInfo.open(gameModeManager.getMap(), goalMarker);
+        gameModeManager.getInfoBubbles().push(goalInfo);
 
         for (var userMac in guesses) {
 
@@ -142,7 +144,9 @@
             var mark = _placeMarkerOnMap(pos, userMac,color);
 
             var info = _createInfoWindow(user.name,userAnswers[userMac]);
+            info.position = pos;
             info.open(gameModeManager.getMap(),mark);
+            gameModeManager.getInfoBubbles().push(info);
 
         }
         // notify game mode manager that round has ended
@@ -243,11 +247,26 @@
             player = player + ': ';
         }
 
-        var contentString = '<div id="content">'+player+''+guess+'</div>';
-        var infowindow = new google.maps.InfoWindow({
+        var contentString = '<div id="content">'+guess+'</div>';
+       /* = new google.maps.InfoWindow({
             content: contentString
-        });
+        });*/
+        var infowindow = new InfoBubble({
 
+            content: '<div class="mylabel">'+guess+'</div>',
+            shadowStyle: 0,
+            padding: 0,
+            backgroundColor: 'rgb(255,255,255)',
+            borderRadius: 5,
+            arrowSize: 8,
+            borderWidth: 1,
+            borderColor: '#2c2c2c',
+            disableAutoPan: true,
+            hideCloseButton: true,
+            arrowPosition: 30,
+            backgroundClassName: 'transparent',
+            arrowStyle: 2
+        });
         return infowindow;
     }
 
