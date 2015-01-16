@@ -118,12 +118,4 @@ public class GameMode2Fragment extends Fragment implements AbsListView.OnItemCli
         Log.d("Test", item);
     }
 
-
-/*
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
-    }
-*/
-
 }
