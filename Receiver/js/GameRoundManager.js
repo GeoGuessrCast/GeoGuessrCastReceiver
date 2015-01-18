@@ -1,18 +1,39 @@
 (function(grm){
 
-    var goal;
 
-    var guesses = {}; // Map UserID:Distanz zum Ziel
-    var geoCodedUserAnswerPos = {}; //Map UserID:LatLong Position
     var results = {}; // Map UserId:Points
-    var userAnswers = {}; // Map UserId:Address (Name of Guess)
-    var goalMarker; // Marker of goal
-    var goalAddress = "";
+    var userAnswers = []; // Array of Answer Objects
+
+    /**
+     *
+     * @param user
+     * @param guess String Answer
+     * @param gamemode
+     * @param distance
+     * @param geoObject
+     * @constructor
+     */
+    grm.Answer = function(user, guess, gamemode, distance, geoObject, points) {
+        /** @type {User} */
+        this.user = user;
+        /** @type {string} */
+        this.guess = guess;
+        /** @type {string} */
+        this.gamemode = gamemode;
+        /** @type {number} */
+        this.distance = distance;
+        /** @type {GeoObject} */
+        this.geoObject = geoObject;
+        /** @type {number} */
+        this.points = points;
+
+        this.toString("[Answer] "+this.user.name+" Location: " + this.guess + " at " + this.geoObject.position + "(dist=" + this.distance + ") Points="+this.points);
+    }
+
     grm.roundTimer = null;
     grm.timePerRoundSec = 30;
     grm.roundEvaluationTimeSec = 10;
-    grm.goalGeoObject = null;
-
+    grm.goalGeoObject = null; // Target GeoObject
 
     grm.startRound = function(){
         console.log("\n======= Round " + gameModeManager.currentRound + " =======");
@@ -31,25 +52,25 @@
 
         gameRoundManager.goalGeoObject = queryResult.choices[0];
         var address = gameRoundManager.goalGeoObject.name;
-        goalAddress = address;
+        //goalAddress = address;
         var lat = gameRoundManager.goalGeoObject.latitude;
         var long = gameRoundManager.goalGeoObject.longitude;
         var pos = new google.maps.LatLng(lat, long);
-        goalMarker = _placeMarkerOnMap(pos,"goal","#ff0000"); //TODO use different marker icon for goal marker
+        var goalMarker = _placeMarkerOnMap(pos,"goal","#ff0000"); //TODO use different marker icon for goal marker
         goalMarker.icon = {
             path: google.maps.SymbolPath.CIRCLE,
             scale: 3
         };
+        gameRoundManager.goalGeoObject.marker = goalMarker;
         gameModeManager.getMap().setCenter(pos);
         gameModeManager.getMap().setZoom(6);
-        //Set global goal var
-        goal = pos;
-        //console.log("Game Mode 1 started: "+jqxhr);
+
+
         //reset user map
-        guesses = {};
+        //guesses = {};
         results = {};
-        geoCodedUserAnswerPos = {};
-        userAnswers = {};
+        //geoCodedUserAnswerPos = {};
+        userAnswers = [];
 
         //choices for Android app
         //TODO: Choices?ChoicesNearby?
@@ -60,20 +81,16 @@
         // describes game mode properties //TODO use parameters below !
         var jsonData = {"event_type": data.eventType.startGame, "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode , "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : gameModeManager.currentGameModeProfile.timePerRoundSec, "choices" : cityNameChoices.push(address)};
         eventManager.broadcast(data.channelName.game, jsonData);
+
         //Set Timer
-        //console.log("starting RoundTimer....");
-        //gameRoundManager.roundTimer = new Worker('js/timer.js'); //External script
-        //gameRoundManager.roundTimer.onmessage = function(event) {    //Method called by external script
-        //    console.log("GRM: onMessage !");
-        //    gameRoundManager.endRound();
-        //};
         executionManager.execDelayed(gameModeManager.currentGameModeProfile.timePerRoundSec*1000, gameRoundManager.endRound);
         renderManager.playTimerAnimationWithRoundDisplay(gameModeManager.currentGameModeProfile.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
     };
 
     grm.choseAnswer = function(userMac, answer){
-        console.log("[GRM] " + userManager.getUserByMac(userMac).name + " picked " + answer);
-        _calculateGuess(userMac, answer);
+        var user = userManager.getUserByMac(userMac);
+        console.log("[GRM] " + user.name + " picked " + answer);
+        _calculateGuess(user, answer);
     };
 
     /**
@@ -82,9 +99,8 @@
      * @param answer
      * @private
      */
-    function _calculateGuess(userMac, answer){
+    function _calculateGuess(user, answer){
         // get Geolocation
-        userAnswers[userMac] = answer;
         gameModeManager.getGeocoder().geocode({
             address: answer,
             region: gameRoundManager.goalGeoObject.countryCode
@@ -92,15 +108,17 @@
         }, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var pos = results[0].geometry.location;
-                // Saves the Position the Player guessed
-                geoCodedUserAnswerPos[userMac] = pos;
-
+                var countryCode = results[0].address_components[2].short_name;
                 // get Distance to right answer (if not the same)
-                var dist = _getDistance(pos,goal);
+                var dist = _getDistance(pos,gameRoundManager.goalGeoObject.position);
+                // Create new GeoObject for given answer
+                var guessedGeoObject = new dataManager.GeoObject("1",answer,pos.k,pos.B,countryCode,0,0,null);
+                // Create new Answer Object
+                var answerObject = new grm.Answer(user,answer,gameModeManager.currentGameModeProfile.profileName,dist,guessedGeoObject,null); // Already calc points?
+
+                userAnswers.push(answerObject);
 
                 console.log("[GC] found " + answer + " at " + pos + "(dist=" + dist + ")");
-                // dist save
-                guesses[userMac] = dist;
 
 
             } else {
@@ -120,29 +138,30 @@
         // send event
         // calculate results, set markers visible
         displayText('Round ' + gameModeManager.currentRound +  ' ended.<br>' );
-        var goalInfo = _createInfoWindow("Goal",goalAddress);
-        goalInfo.open(gameModeManager.getMap(), goalMarker);
+        var goalInfo = _createInfoWindow("Goal",gameRoundManager.goalGeoObject.name);
+        goalInfo.open(gameModeManager.getMap(), gameRoundManager.goalGeoObject.marker);
         gameModeManager.getInfoBubbles().push(goalInfo);
 
-        for (var userMac in guesses) {
-
+        for (var i=0; i < userAnswers.length; i++ ) {
+            var answer = userAnswers[i];
             var points = 0;
-            var dist =  guesses[userMac];
+            var dist =  answer.distance;
             var distInKm = dist / 1000;
             points = Math.floor(Math.max(0,Math.min(10,(1100-distInKm)/100)));
-
-            results[userMac] = points;
-            console.log("[GRM] " + userManager.getUserByMac(userMac).name + " got " + points + " points (for "+distInKm+" km)");
+            answer.points = points;
+            var userMac = answer.user.mac;
+            results[userMac] = points; //TODO Change result map
+            console.log("[GRM] " + answer.user.name + " got " + points + " points (for "+distInKm+" km)");
             // get the saved guessed position for this player
-            var pos = geoCodedUserAnswerPos[userMac];
+            var guessedGeoObject = answer.geoObject;
             // Now Place the marker on the map:
-            var user = userManager.getUserByMac(userMac);
+            var user = answer.user;
             var color = user.color;
 
-            var mark = _placeMarkerOnMap(pos, userMac,color);
+            var mark = _placeMarkerOnMap(guessedGeoObject.position, user.name,color);
 
-            var info = _createInfoWindow(user.name,userAnswers[userMac]);
-            info.position = pos;
+            var info = _createInfoWindow(user.name,answer.guess);
+            info.position = guessedGeoObject.position;
             info.open(gameModeManager.getMap(),mark);
             gameModeManager.getInfoBubbles().push(info);
 
@@ -204,20 +223,6 @@
             executionManager.execDelayed(gameRoundManager.roundEvaluationTimeSec*1000, gameRoundManager.startRound);
         }
     };
-
-
-
-
-
-
-
-
-
-
-    //TODO =============== ab hier überarbeiten ===================
-
-
-
 
 
     /**

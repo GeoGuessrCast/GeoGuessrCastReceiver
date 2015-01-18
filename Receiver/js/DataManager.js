@@ -32,6 +32,11 @@
         this.elevation  = elevation;
         /** @type {marker} */
         this.marker = marker; //TODO: create new marker here already ?
+        /**
+         *
+         * @type {google.maps.LatLng}
+         */
+        this.position = new google.maps.LatLng(lat, long);
 
         this.toString = function() {
             return name + '(' + countryCode + '|' + long + '|' + lat + '|pop:' + population + ')';
