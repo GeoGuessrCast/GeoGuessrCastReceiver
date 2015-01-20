@@ -133,7 +133,7 @@
 
         if (geoObjects.length < minPoolSize) {
             var tries = 0;
-            while (geoObjects.length <= minPoolSize || tries <= 6) {
+            while (geoObjects.length <= minPoolSize && tries <= 6) {
                 minPopulation = minPopulation - (minPopulation * 0.10);
                 where = "col12 \x3e\x3d "+minPopulation+" and col8 contains ignoring case \x27"+goalGeoObject.countryCode+"\x27";
                 geoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, minPoolSize, orderBy);
