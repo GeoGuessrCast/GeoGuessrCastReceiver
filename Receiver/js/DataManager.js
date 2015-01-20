@@ -74,17 +74,16 @@
 
         //var ftLayer = _createFusionTableLayer(ftTableId,locationColumn, where, x, 1);
 
-        var queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, 0, false,null);
+        var queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, 0, null);
 
         var geoObjects = getRandomSubsetOfArray(queryGeoObjects, count);
-        console.debug("[DM] Choices:"+ geoObjects);
+        console.debug("[DM] Choices for GeoObjects:"+ geoObjects);
 
-        var choiceGeoObjects = this.getNearestGeoObjects(geoObjects[0],5,100000);
-        console.log("[DM] Goal: "+geoObjects[0]);
-        var queryResults = new dataManager.QueryResults(null,geoObjects,choiceGeoObjects);
-        console.debug("[DM] citiesNearby:"+choiceGeoObjects);
+
+        //var queryResults = new dataManager.QueryResults(null,geoObjects,choiceGeoObjects);
+
         //return query results object
-        return queryResults;
+        return geoObjects;
     };
     /**
      * Returns a random subsample of the Array
@@ -113,14 +112,38 @@
         return randomObjects;
     }
 
-    castReceiver.getNearestGeoObjects = function(goalGeoObjct, count, population) {
+    castReceiver.getRandomCountryCode = function(){
+        return getRandomSubsetOfArray(randomCountryCode,1);
+    }
+
+    castReceiver.getNearestGeoObjects = function(goalGeoObject, minPoolSize, minPopulation,maxRadius) {
         //TODO make a query and return 'count' geoObjects, if countryCode null get a random countryCode
+        console.log("[DM] Goal for nearest Search: "+goalGeoObject);
 
-        var where = "col12 \x3e\x3d "+population+" and col8 contains ignoring case \x27"+goalGeoObjct.countryCode+"\x27";
+        var lat = goalGeoObject.latitude;
+        var long = goalGeoObject.longitude;
+        var where = "col12 \x3e\x3d "+minPopulation+" and col8 contains ignoring case \x27"+goalGeoObject.countryCode+"\x27";
 
-        var queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, 0, true, goalGeoObjct);
+        //where = where + " AND ST_INTERSECTS(col12, CIRCLE(LATLNG("+lat+","+long+"),"+maxRadius+"))"
 
-        var geoObjects = getRandomSubsetOfArray(queryGeoObjects, count);
+
+        var orderBy = " ORDER BY ST_DISTANCE(col4,  LATLNG("+ lat+","+long+"))";
+
+        var geoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, minPoolSize, orderBy);
+
+        if (geoObjects.length < minPoolSize) {
+            var tries = 0;
+            while (geoObjects.length <= minPoolSize && tries < 6) {
+                minPopulation = minPopulation - (minPopulation * 0.10);
+                where = "col12 \x3e\x3d "+minPopulation+" and col8 contains ignoring case \x27"+goalGeoObject.countryCode+"\x27";
+                geoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, minPoolSize, orderBy);
+                console.debug("[DM] citiesNearby: had to reduce population to satisify minPopulation: "+ minPopulation+ " returned "+ geoObjects.length+ " objects, try: "+tries);
+                tries++; // try maximum prevents flooding of gmaps api and therefor rate limit timeout
+            }
+
+        }
+        geoObjects = getRandomSubsetOfArray(geoObjects, minPoolSize);
+        console.debug("[DM] citiesNearby: "+geoObjects);
 
         return geoObjects;
     };
@@ -182,22 +205,24 @@
      * @param where
      * @param offset
      * @param limit
-     * @param spatial
-     * @param center
+     * @param orderBy
      * @returns {*}
      * @private
      */
-    function _createFusionTableQuery(ftTableId, where, offset, limit, spatial, center) {
+    function _createFusionTableQuery(ftTableId, where, offset, limit, orderBy) {
         // Builds a Fusion Tables SQL query and hands the result to  dataHandler
         // write your SQL as normal, then encode it
         var query = "SELECT * FROM " + ftTableId + " WHERE " + where;
-        if (offset != 0 && limit != 0){
-            query = query + " OFFSET " + offset + " LIMIT "+ limit
+
+        if (orderBy != null){
+            query = query + " "+ orderBy;
         }
-        if (spatial === true && center != null){
-            var lat = center.latitude;
-            var long = center.longitude;
-            query = query + " ORDER BY ST_DISTANCE(col4,  LATLNG("+ lat+","+long+")) LIMIT 10";
+
+        if (offset != 0){
+            query = query + " OFFSET " + offset;
+        }
+        if (limit != 0){
+            query = query + " LIMIT "+ limit;
         }
         console.debug("[DM] SQL Query: "+query);
         var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);

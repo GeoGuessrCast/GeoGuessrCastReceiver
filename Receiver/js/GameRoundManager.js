@@ -39,10 +39,18 @@
         console.log("\n======= Round " + gameModeManager.currentRound + " =======");
         renderManager.showMidScreenMessage('round ' + gameModeManager.currentRound + ' started...' );
         displayText('Round ' + gameModeManager.currentRound + ' started.' );
-        var queryResult = dataManager.getGeoObjects(
+
+        // new random country code, usage?
+        var countryCode = dataManager.getRandomCountryCode();
+
+        var geoObjects = dataManager.getGeoObjects(
             data.geoObjType.city,gameModeManager.currentGameModeProfile.limitedCountry,
             gameModeManager.currentGameModeProfile.multipleChoiceMode ? 1 : data.constants.numberOfChoices,
             gameModeManager.currentGameModeProfile.minPopulationDefault);
+        //TODO handling of nearby Geo Objects: If Game mode without choices, no query... ?
+        //TODO minPopulation definition for each game mode
+        var nearbyGeoObjects = dataManager.getNearestGeoObjects(geoObjects[0],5,500000,5000);
+
 
         gameModeManager.clearMarkers();
         gameModeManager.clearInfoBubbles();
@@ -50,9 +58,8 @@
         //gameModeManager.getLayer().setMap(gameModeManager.getMap());
 
 
-        gameRoundManager.goalGeoObject = queryResult.choices[0];
+        gameRoundManager.goalGeoObject = geoObjects[0];
         var address = gameRoundManager.goalGeoObject.name;
-        //goalAddress = address;
         var lat = gameRoundManager.goalGeoObject.latitude;
         var long = gameRoundManager.goalGeoObject.longitude;
         var pos = new google.maps.LatLng(lat, long);
@@ -74,8 +81,8 @@
 
         //choices for Android app
         //TODO: Choices?ChoicesNearby?
-        var cityNameChoices = dataManager.getCityNameArray(queryResult.choicesNearby);
-        console.log(queryResult.choices + cityNameChoices);
+        var cityNameChoices = dataManager.getCityNameArray(nearbyGeoObjects);
+        console.log(geoObjects + cityNameChoices);
 
         // GMB: send prepare()
         // describes game mode properties //TODO use parameters below !
