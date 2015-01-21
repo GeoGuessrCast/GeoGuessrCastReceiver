@@ -9,7 +9,7 @@
 
 
     rm.playTimerAnimationWithRoundDisplay = function(animationDurationSec, currentRound, maxRounds) {
-        currentTimerPosition = 0;
+        currentTimerPosition = percentPerStep;
         $('#roundDisplayAndTimer').show();
         $('#roundDisplayAndTimer').css('background',
             'linear-gradient(to right, rgba(222, 45, 45, 0.90) 0%, rgba(87, 87, 87, 0.70) '+diffusePartPercet+'%, rgba(218, 218, 218, 0.70))');
