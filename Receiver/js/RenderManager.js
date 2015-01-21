@@ -9,10 +9,9 @@
 
 
     rm.playTimerAnimationWithRoundDisplay = function(animationDurationSec, currentRound, maxRounds) {
-        currentTimerPosition = percentPerStep;
+        currentTimerPosition = 0;
         $('#roundDisplayAndTimer').show();
-        $('#roundDisplayAndTimer').css('background',
-            'linear-gradient(to right, rgba(222, 45, 45, 0.90) 0%, rgba(87, 87, 87, 0.70) '+diffusePartPercet+'%, rgba(218, 218, 218, 0.70))');
+        renderManager.incTimerBy();
         $('#roundDisplayAndTimer').html('Round ' + currentRound + '/' + maxRounds);
 
         var aniMs = parseInt(animationDurationSec)*1000;
@@ -27,13 +26,10 @@
 
     rm.incTimerBy = function() {
         var counter = (currentTimerPosition + percentPerStep);
+        var counter2=parseInt(counter)+diffusePartPercet;
         currentTimerPosition = parseInt(currentTimerPosition) + parseInt(percentPerStep);
-
-        var perc=parseInt(counter);
-        var perc2=parseInt(counter)+diffusePartPercet;
-
         $('#roundDisplayAndTimer').css('background',
-            'linear-gradient(to right, rgba(222, 45, 45, 0.90) '+perc+'%, rgba(87, 87, 87, 0.70) '+perc2+'%, rgba(218, 218, 218, 0.70))');
+            'linear-gradient(to right, rgba(222, 45, 45, 0.90) '+counter+'%, rgba(87, 87, 87, 0.70) '+counter2+'%, rgba(218, 218, 218, 0.70))');
     };
 
     rm.hideTopRightRoundTimer = function() {
