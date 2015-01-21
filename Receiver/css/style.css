@@ -26,6 +26,7 @@ html, body, #map-canvas, #gameOverlay {
     background-color: rgba(218, 218, 218, 0.70);
     z-index: 1;
 }
+
 h1 {
     font-size: 7vh;
     font-weight: bold;
@@ -182,17 +183,24 @@ h3 {
     left: 3%;
     width: 40%;
 
-    background-color: rgba(30, 30, 30, 0.0);
     font-size: 2vh;
+    opacity: 0.3;
 
     display: none;
     vertical-align: bottom;
 }
 #testConsole > input {
     font-family: "Arial Narrow",sans-serif;
-    background-color: rgba(218, 218, 218, 0.40);
+    font-size: 1.7vh;
+    opacity: 0.6;
     cursor:pointer;
     padding: 0;
+}
+#testConsole > input:hover {
+    opacity: 1;
+}
+#testConsole:hover {
+    opacity: 0.8;
 }
 #testConsoleOutput {
     height: 20%;
@@ -212,36 +220,22 @@ h3 {
 }
 
 
-/* timer */
 #roundDisplayAndTimer {
     position: absolute;
-    right: 1vw;
-    top: 2vh;
-    /*background-color: #375789;*/
+    right: 0.33vh;
+    top: 0.2vh;
     display: block;
-    overflow: hidden;
     width: 30vw;
-    height: 7vh;
-}
+    background: linear-gradient(to right, rgba(222, 45, 45, 0.90) 0%, rgba(87, 87, 87, 0.70) 3%, rgba(218, 218, 218, 0.70));
+    z-index: 1000;
 
-#roundDisplayAndTimer > span {
-    position: absolute;
-    display: block;
-    z-index: 100;
-    text-align: left;
-    vertical-align: middle;
-    font-size: 6vh;
-    width: 100%;
-    top: 1vh;
-}
-
-
-#roundDisplay {
-    /*background-color: green;*/
-    background: linear-gradient(to left, rgb(21, 29, 240) 0%,rgba(125,185,232,0) 100%);
-    position: relative;
-    display: block;
-    width: 30vh;
-    height: 7vh;
-    right: 100%;
+    border-top: 0.2vh solid #dddddd;
+    border-left: 0.2vh solid #dddddd;
+    border-bottom: 0.2vh solid #4f4f4f;
+    border-right: 0.2vh solid #4f4f4f;
+    border-radius: 2.0vh;
+    margin: 1.1vh 3.1vh 0vh 3.1vh;
+    padding: 1.1vh;
+    font-size: 5vh;
+    font-weight: bold;
 }
