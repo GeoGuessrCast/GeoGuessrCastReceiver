@@ -22,7 +22,7 @@ html, body, #map-canvas, #gameOverlay {
     border-bottom: 0.2vh solid #4f4f4f;
     border-right: 0.2vh solid #4f4f4f;
     border-radius: 2.0vh;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.70);
+    box-shadow: 0.5vh 0.5vh 1.5vh rgba(0, 0, 0, 0.70);
     background-color: rgba(218, 218, 218, 0.70);
     z-index: 1;
 }
@@ -78,6 +78,10 @@ h3 {
     padding: 1.1vh;
     font-size: 5vh;
     font-weight: bold;
+}
+.menuButton:hover {
+    background-color: rgba(248, 248, 248, 0.70);
+    box-shadow: 0.5vh 0.5vh 2.5vh rgba(0, 0, 0, 0.70);
 }
 
 .centeredMenu {
