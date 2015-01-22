@@ -29,7 +29,8 @@
                     callbackFunc();
                 }
             }
-        }
+        };
+        return w;
     };
 
     /**
@@ -41,7 +42,7 @@
      * @returns {boolean}
      */
     em.execPeriodically = function(intervalMs, numberOfExecutions, intervalFunc, endingFunc){
-        if(parseInt(numberOfExecutions) === 0) return true;
+        if(parseInt(numberOfExecutions) === 0) return null;
 
         var w;
         if(typeof(Worker) != 'undefined' ){
@@ -68,6 +69,7 @@
                 }
             }
         };
+        return w;
     };
 
 }(this.executionManager = this.executionManager || {}));

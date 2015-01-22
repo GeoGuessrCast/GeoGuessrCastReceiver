@@ -177,7 +177,7 @@
     function _loadGameUi(){
         $('#gameOverlay').load('templates/GameModeOverlay.html', function (data) {
             $(this).html(data);
-            userManager.refreshBottomScoreboard();
+            renderManager.refreshBottomScoreboard();
         });
     }
 

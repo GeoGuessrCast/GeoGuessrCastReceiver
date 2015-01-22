@@ -63,9 +63,11 @@
         userList.push(user);
         _setUserList(userList);
 
-
-        userManager.rebuildUserList();
-        userManager.refreshBottomScoreboard(); //TODO call only 1 function - depending on gameState
+        if (gameRoundManager.currentGameState == data.gameState.ended) {
+            renderManager.rebuildUserList();
+        } else {
+            renderManager.refreshBottomScoreboard();
+        }
     };
 
     /**
@@ -99,46 +101,6 @@
 
     };
 
-    /**
-     * rebuilds/updates #mainMenuUserList
-     */
-    um.rebuildUserList = function() { //TODO @falk _getUserList public and move this function to renderManager
-        var userCssClass;
-        var userList = _getUserList();
-        var userLength = userList.length;
-        $('#mainMenuUserList').find('ul').html('');
-        for(var i = 0; i < userLength; i++){
-            if (userList[i].admin) {
-                userCssClass = 'admin';
-            } else {
-                userCssClass = 'user';
-            }
-            //$('#mainMenuUserList').find('ul').append('<li style="color:' + userList[i].color + '" class="' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
-            $('#mainMenuUserList').find('ul').append('<li class="noLinebreak ' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
-        }
-    };
-
-    /**
-     * refreshes scoreboard on bottom
-     */
-    um.refreshBottomScoreboard = function() { //TODO @falk _getUserList public and move this function to renderManager
-        var userCssClass;
-        var userList = _getUserList();
-        var userLength = userList.length;
-        $('#bottomScoreboard').html('');
-        for(var i = 0; i < userLength; i++){
-            if (userList[i].admin) {
-                userCssClass = 'admin';
-            } else {
-                userCssClass = 'user';
-            }
-            //$('#bottomScoreboard').find('ul').append('<li class="noLinebreak ' + userCssClass + '" id="'+userList[i].mac
-            //+ '"><span style="color:' + userList[i].color + '">' + userList[i].name + ': <span class="score">' + userList[i].pointsInCurrentGame + '</span></span></li>');
-            $('#bottomScoreboard').append('<span><div><span class="userStates" id="userState_'+userList[i].mac+'">Dresden</span></div><span class="'
-            + userCssClass + ' noLinebreak userName">' + userList[i].name + ': </span><span class="score">' + userList[i].pointsInCurrentGame
-            + '</span></span>');
-        }
-    };
 
     /**
      * returns a {User} with a given mac address, false otherwise
@@ -244,6 +206,12 @@
             }
         }
         _setUserList(userList);
+        if (gameRoundManager.currentGameState == data.gameState.ended) {
+            renderManager.rebuildUserList();
+        } else {
+            renderManager.refreshBottomScoreboard();
+        }
+
     };
 
     /**

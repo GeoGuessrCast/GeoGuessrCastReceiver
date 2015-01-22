@@ -2,10 +2,12 @@
 
 
     grm.roundTimer = null;
+    grm.roundTimerAnim = null;
     grm.timePerRoundSec = 30;
     grm.roundEvaluationTimeSec = 10;
     grm.goalGeoObject = null; // Target GeoObject
     grm.goalMarker = null; // Target GeoObject
+    grm.currentGameState = data.gameState.ended;
 
 
 
@@ -20,18 +22,23 @@
         this.points = points;
 
         this.toString = function() {
-            return "[Answer] "+this.user.name+" Location: " + this.guess + " at " + this.geoObject.position + "(dist=" + this.distance + ") Points="+this.points;
+            return "[Answer] guessedName: " + this.guessedName + ", geoObject: " + this.geoObject + ", dist: " + this.distanceToGoalKm + ", points: " + this.points;
         };
     };
 
 
     grm.startRound = function(){
+        gameRoundManager.currentGameState = data.gameState.guessing;
         console.log("\n======= Round " + gameModeManager.currentRound + " =======");
         displayText("\n======= Round " + gameModeManager.currentRound + " =======");
 
-        renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6 );
-
         //var countryCode = dataManager.getRandomCountryCode();
+        var userList = userManager.getUserList();
+        for(var i = 0; i < userList.length; i++){
+            userList[i].lastAnswerGiven = null;
+        }
+        renderManager.refreshBottomScoreboard();
+        renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6 );
 
         var geoObjects = dataManager.getGeoObjects(
             data.geoObjType.city,gameModeManager.currentGameModeProfile.limitedCountry,
@@ -39,11 +46,7 @@
             gameModeManager.currentGameModeProfile.minPopulationDefault);
 
         gameRoundManager.goalGeoObject = geoObjects[0];
-
-        var goalName = gameRoundManager.goalGeoObject.name;
-        var lat = gameRoundManager.goalGeoObject.latitude;
-        var long = gameRoundManager.goalGeoObject.longitude;
-        var goalPos = new google.maps.LatLng(lat, long);
+        var goalPos = new google.maps.LatLng(gameRoundManager.goalGeoObject.latitude, gameRoundManager.goalGeoObject.longitude);
         _placeGoalMarker(goalPos);
 
         gameModeManager.getMap().setCenter(goalPos);
@@ -63,8 +66,8 @@
             "choices" : geoNameChoices};
         eventManager.broadcast(data.channelName.game, jsonData);
 
-        executionManager.execDelayed(gameModeManager.currentGameModeProfile.timePerRoundSec*1000, gameRoundManager.endRound);
-        renderManager.playTimerAnimationWithRoundDisplay(gameModeManager.currentGameModeProfile.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
+        gameRoundManager.roundTimer = executionManager.execDelayed(gameModeManager.currentGameModeProfile.timePerRoundSec*1000, gameRoundManager.endRound);
+        gameRoundManager.roundTimerAnim = renderManager.playTimerAnimationWithRoundDisplay(gameModeManager.currentGameModeProfile.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
     };
 
 
@@ -82,6 +85,7 @@
 
 
     grm.endRound = function(){
+        gameRoundManager.currentGameState = data.gameState.evaluating;
         displayText('Round ' + gameModeManager.currentRound +  ' ended.<br>' );
         renderManager.showMidScreenMessage('Answer: ' + gameRoundManager.goalGeoObject.name, gameRoundManager.roundEvaluationTimeSec-3 );
         var userList = userManager.getUserList();
@@ -92,7 +96,7 @@
                 displayText("[GRM] " + user.name + " got " + user.lastAnswerGiven.points + " points (for "+user.lastAnswerGiven.distanceToGoalKm+" km)");
             }
         }
-        userManager.refreshBottomScoreboard();
+        renderManager.refreshBottomScoreboard();
         var jsonData = {"event_type":"round_ended", "ended": true};
         eventManager.broadcast(data.channelName.game, jsonData);
         gameRoundManager.nextRound();
@@ -100,8 +104,14 @@
 
 
     grm.cancelRoundTimer = function() {
+        gameRoundManager.currentGameState = data.gameState.ended;
         if (gameRoundManager.roundTimer != null) {
-            //gameRoundManager.roundTimer.terminate(); //TODO fixme
+            gameRoundManager.roundTimer.terminate();
+            console.log('[GRM] killed roundTimer: ' + gameRoundManager.roundTimer);
+        }
+        if (gameRoundManager.roundTimerAnim != null) {
+            gameRoundManager.roundTimerAnim.terminate();
+            console.log('[GRM] killed roundTimerAnim: ' + gameRoundManager.roundTimerAnim);
         }
     };
 
@@ -142,6 +152,7 @@
             console.log("[GRM] " + user.name + " got " + points + " points for the WRONG answer.");
         }
         user.lastAnswerGiven = new grm.Answer(answer,0,null,points);
+        renderManager.refreshBottomScoreboard();
     }
 
 
@@ -164,10 +175,8 @@
                 // Create new Answer Object
                 var points = Math.floor(Math.max(0,Math.min(data.constants.maxPointsPerAnswer,(data.constants.maxDistanceErrorKm+100-distInKm)/100)));
                 user.lastAnswerGiven = new grm.Answer(answer,distInKm,guessedGeoObject,points);
-
+                renderManager.refreshBottomScoreboard();
                 console.log("[GRM] " + user.name + " got " + points + " points (for "+distInKm+" km)");
-
-
             } else {
                 console.log(userMac+ ' Address could not be geocoded: ' + status);
                 displayText(userMac+ ' Address could not be geocoded: '+answer+" : " + status);
