@@ -13,15 +13,16 @@
      * @constructor
      */
     um.User = function(senderId, name, mac, admin){
-        var trimmedName = name.substring(0, data.constants.maxNameLength);
         /** @type {number} */
         this.senderId = senderId;
         /** @type {string} */
-        this.name = trimmedName;
+        this.name = name;
         /** @type {string} */
         this.mac = mac;
         /** @type {number} */
         this.pointsInCurrentGame = 0;
+        /** @type {Answer} */
+        this.lastAnswerGiven = null;
         /** @type {boolean} */
         this.admin = admin;
         /** @type {string} **/
@@ -73,17 +74,18 @@
      */
     um.createOrUpdateUser = function(event) {
         var hasUser = userManager.hasUserMac(event.data.userMac);
+        var trimmedName = event.data.userName.substring(0, data.constants.maxNameLength);
         if (!hasUser) {
             //add new User
             var isAdmin = false;
             if (userManager.getUserList().length === 0) {
                 isAdmin = true;
             }
-            var user = new userManager.User(event.senderId, event.data.userName, event.data.userMac, isAdmin);
+            var user = new userManager.User(event.senderId, trimmedName, event.data.userMac, isAdmin);
             userManager.addUser(user);
         } else {
             // update name and senderId
-            userManager.updateUser(event.data.userMac, event.data.userName, event.senderId);
+            userManager.updateUser(event.data.userMac, trimmedName, event.senderId);
         }
         //inform the Sender if the user is game leader
 
@@ -100,7 +102,7 @@
     /**
      * rebuilds/updates #mainMenuUserList
      */
-    um.rebuildUserList = function() {
+    um.rebuildUserList = function() { //TODO @falk _getUserList public and move this function to renderManager
         var userCssClass;
         var userList = _getUserList();
         var userLength = userList.length;
@@ -119,11 +121,11 @@
     /**
      * refreshes scoreboard on bottom
      */
-    um.refreshBottomScoreboard = function() {
+    um.refreshBottomScoreboard = function() { //TODO @falk _getUserList public and move this function to renderManager
         var userCssClass;
         var userList = _getUserList();
         var userLength = userList.length;
-        $('#bottomScoreboard').find('ul').html('');
+        $('#bottomScoreboard').html('');
         for(var i = 0; i < userLength; i++){
             if (userList[i].admin) {
                 userCssClass = 'admin';
@@ -132,8 +134,9 @@
             }
             //$('#bottomScoreboard').find('ul').append('<li class="noLinebreak ' + userCssClass + '" id="'+userList[i].mac
             //+ '"><span style="color:' + userList[i].color + '">' + userList[i].name + ': <span class="score">' + userList[i].pointsInCurrentGame + '</span></span></li>');
-            $('#bottomScoreboard').find('ul').append('<li class="' + userCssClass + '" id="'+userList[i].mac
-            + '"><span class="noLinebreak">' + userList[i].name + ': <span class="score">' + userList[i].pointsInCurrentGame + '</span></span></li>');
+            $('#bottomScoreboard').append('<span><div><span class="userStates" id="userState_'+userList[i].mac+'">Dresden</span></div><span class="'
+            + userCssClass + ' noLinebreak userName">' + userList[i].name + ': </span><span class="score">' + userList[i].pointsInCurrentGame
+            + '</span></span>');
         }
     };
 

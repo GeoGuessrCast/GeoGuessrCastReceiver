@@ -77,7 +77,6 @@
         var queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, 0, null);
 
         var geoObjects = getRandomSubsetOfArray(queryGeoObjects, count);
-        console.debug("[DM] Choices for GeoObjects:"+ geoObjects);
 
 
         //var queryResults = new dataManager.QueryResults(null,geoObjects,choiceGeoObjects);

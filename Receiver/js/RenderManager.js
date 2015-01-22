@@ -96,7 +96,16 @@
 
 
     rm.displayUserAnswer = function(userMac, answerString, answerWorthFact){
+        var userStateCssSelector = '#userState_'+userMac;
+        $(userStateCssSelector).html(answerString);
+        //$(userStateCssSelector).text(answerString);
+        $('.userStates').html('TEST');
+        //$('#userState_222').text('TEST');
 
+        //var greenValue = answerWorthFact*255;
+        //var redValue = (1-answerWorthFact)*255;
+         //   $(userStateCssSelector).css('color', 'rgb('+redValue+','+greenValue+',0)' );
+        displayText('displayUserAnswer('+userStateCssSelector+','+answerString+','+answerWorthFact+')');
     };
 
 
