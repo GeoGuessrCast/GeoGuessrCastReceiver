@@ -72,12 +72,14 @@
 
 
     grm.choseAnswer = function(userMac, answer){
+        var cleanedAnswerString = answer.replace(/([^a-z\s]+)/gi, ' ');
+        cleanedAnswerString = cleanedAnswerString.substring(0, data.constants.maxAnswerLength);
         var user = userManager.getUserByMac(userMac);
-        print("[GRM] " + user.name + " picked " + answer);
+        print("[GRM] " + user.name + " picked " + cleanedAnswerString);
         if (gameModeManager.currentGameModeProfile.multipleChoiceMode) {
-            _calculateAnswer(user, answer);
+            _calculateAnswer(user, cleanedAnswerString);
         } else {
-            _calculateAnswerWithGeocoder(user, answer);
+            _calculateAnswerWithGeocoder(user, cleanedAnswerString);
         }
     };
 

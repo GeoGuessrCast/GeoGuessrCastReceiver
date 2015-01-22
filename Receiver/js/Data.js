@@ -10,7 +10,8 @@ data = {
         maxDistanceErrorKm: 1000,
         numberOfChoices: 5,
         maxPointsPerAnswer: 10,
-        maxNameLength: 15
+        maxNameLength: 15,
+        maxAnswerLength: 25
     },
 
     geoObjType : {   //example: dataManager.getGeoObj(geoObjType.city, getRandomCountryCode(), 5)

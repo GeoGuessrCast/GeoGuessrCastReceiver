@@ -185,6 +185,8 @@ h3 {
     background-position: center center;
     background-repeat: no-repeat;
     background-size: 5vh;
+
+    max-width: 3vh;
 }
 
 .userName {
