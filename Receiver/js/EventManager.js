@@ -6,9 +6,9 @@
 
     // ============ INIT ============
 
-    if(!_isExecutedOnChromeCast()){     //TODO falk: make _isExecutedOnChromeCast public and move this check to init.js
+    if(!_isExecutedOnChromeCast()){
         renderManager.hideConsole(false);
-        renderManager.hideConsoleOutput(true);
+        renderManager.hideConsoleOutput(false);
     }
     try {
         var userMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.userChannel', cast.receiver.CastMessageBus.MessageType.JSON);
@@ -37,16 +37,13 @@
 
     // ============ GLOBAL EVENTS ============
     castReceiver.event_onReady = function(event) {
-        displayEvent('onReady', event);
         renderManager.loadMainMenu();
     };
 
     castReceiver.event_onSenderConnected = function(event){
-        displayEvent('onSenderConnected', event);
     };
 
     castReceiver.event_onSenderDisconnected = function(event){
-        displayEvent('onSenderDisconnected', event);
         userManager.removeUser(event.data.userMac);
         if (window.castReceiverManager.getSenders().length == 0) {
             window.close();
@@ -62,7 +59,6 @@
      * @param event
      */
     castReceiver.event_onUserMessage = function(event){
-        displayEvent('onUserMessage', event);
         var eventData = event.data;
 
         if(eventData.event_type === data.eventType.createOrUpdateUser) {
@@ -79,7 +75,6 @@
      * @param event
      */
     castReceiver.event_onAdminMessage = function(event){
-        displayEvent('onAdminMessage', event);
         var eventData = event.data;
 
         if(eventData.event_type === data.eventType.setGameMode){
@@ -108,14 +103,6 @@
      * @param event
      */
     castReceiver.event_onGameMessage = function(event){
-        displayEvent('onGameMessage', event);
-
-        // aktueller game mode?
-        // aktuelle runde?
-        // was koennen fuer msg kommen?
-        // next round
-        // game started
-        // game ended
 
     };
 
@@ -123,7 +110,7 @@
     };
 
     castReceiver.restart = function() {
-        var jsonData = {"event_type":data.eventType.restart}
+        var jsonData = {"event_type":data.eventType.restart};
         eventManager.broadcast(data.channelName.admin,jsonData );
         window.location.reload(true);
     };

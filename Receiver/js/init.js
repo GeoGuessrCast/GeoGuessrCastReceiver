@@ -9,7 +9,7 @@ function initialize() {
         console.log("[init] ChromeCast mode started");
         window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
     } else {
-        console.log("[init] Local mode started");
+        print("[init] Local mode started");
     }
 
 
@@ -46,37 +46,6 @@ function initialize() {
 
     renderManager.loadDefaultMap();
 
-    //window.userMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.userChannel', cast.receiver.CastMessageBus.MessageType.JSON);
-    //window.adminMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.adminChannel', cast.receiver.CastMessageBus.MessageType.JSON);
-    //window.gameMessageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.tud.kp.geoguessrcast.gameChannel', cast.receiver.CastMessageBus.MessageType.JSON);
 
-    // create user
-    //window.userMessageBus.onMessage = function(event) {
-    //    console.log('userMessageBus [' + event.senderId + ']: ' + event.data);
-    //    eventManager.event_onUserMessage(event);
-    //};
-    //
-    ////
-    //window.adminMessageBus.onMessage = function(event) {
-    //    console.log('adminMessageBus [' + event.senderId + ']: ' + event.data);
-    //    eventManager.event_onAdminMessage(event);
-    //};
-    //
-    //window.gameMessageBus.onMessage = function(event) {
-    //    console.log('gameMessageBus [' + event.senderId + ']: ' + event.data);
-    //    eventManager.event_onGameMessage(event);
-    //};
-
-
-
-
-    /*
-    var worker = new Worker('js/timer.js'); //External script
-    worker.onmessage = function(event) {    //Method called by external script
-        console.log("init.js: onmessage !");
-        eventManager.event_onReady(null);
-    };
-    console.log("init.js ended")
-    */
 }
 
