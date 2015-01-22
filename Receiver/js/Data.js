@@ -26,8 +26,8 @@ data = {
     },
 
     gameState : {
-        initialized: 0,
-        running: 1,
+        guessing: 0,
+        evaluating: 1,
         ended: 2
     },
 
@@ -50,25 +50,25 @@ data = {
             gameModeName: 'City Guessing',
             id: 0,
             geoObjType: 0,
-            iconUrl: '../images/city.png'
+            iconUrl: 'images/city.png'
         },
         {
             gameModeName: 'River Guessing',
             id: 1,
             geoObjType: 1,
-            iconUrl: '../images/user.png'   //TODO find img
+            iconUrl: 'images/user.png'   //TODO find img
         },
         {
             gameModeName: 'Country Guessing',
             id: 2,
             geoObjType: 2,
-            iconUrl: '../images/user.png'   //TODO find img
+            iconUrl: 'images/user.png'   //TODO find img
         },
         {
             gameModeName: 'Stuff Guessing',
             id: 3,
             geoObjType: 0, //TODO ??
-            iconUrl: '../images/user.png'   //TODO find img
+            iconUrl: 'images/user.png'   //TODO find img
         }
     ],
 

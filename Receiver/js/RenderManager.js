@@ -10,9 +10,10 @@
 
     rm.playTimerAnimationWithRoundDisplay = function(animationDurationSec, currentRound, maxRounds) {
         currentTimerPosition = 0;
-        $('#roundDisplayAndTimer').show();
         renderManager.incTimerBy();
-        $('#roundDisplayAndTimer').html('Round ' + currentRound + '/' + maxRounds);
+        $('#roundDisplayAndTimer')
+            .show()
+            .html('Round ' + currentRound + '/' + maxRounds);
 
         var aniMs = parseInt(animationDurationSec)*1000;
         /*
@@ -20,8 +21,8 @@
          30000 ms
          schrittlaenge 100? 5er Schritte
          */
-
-        executionManager.execPeriodically(aniMs/numberSteps, numberSteps, renderManager.incTimerBy ,null );
+        return executionManager.execPeriodically(aniMs/numberSteps, numberSteps, renderManager.incTimerBy ,null );
+        //return executionManager.execDelayed(aniMs, renderManager.incTimerBy ); ....no crash with this
     };
 
     rm.incTimerBy = function() {
@@ -56,19 +57,23 @@
             $(this).html(content);
         });
 
-        $('#gm1').text(data.gameMode[0].gameModeName);
-        $('#gm1').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[0]);");
+        $('#gm1')
+            .text(data.gameMode[0].gameModeName)
+            .attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[0]);");
 
-        $('#gm2').text(data.gameMode[1].gameModeName);
-        $('#gm2').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[1]);");
+        $('#gm2')
+            .text(data.gameMode[1].gameModeName)
+            .attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[1]);");
 
-        $('#gm3').text(data.gameMode[2].gameModeName);
-        $('#gm3').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[2]);");
+        $('#gm3')
+            .text(data.gameMode[2].gameModeName)
+            .attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[2]);");
 
-        $('#gm4').text(data.gameMode[3].gameModeName);
-        $('#gm4').attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[3]);");
+        $('#gm4')
+            .text(data.gameMode[3].gameModeName)
+            .attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[3]);");
 
-        userManager.rebuildUserList();
+        renderManager.rebuildUserList();
     };
 
     rm.loadGameProfileMenu = function(selectedGameModeObject){
@@ -78,50 +83,113 @@
         $('#gameOverlay').load('templates/GameProfileMenu.html', function (content) {
             $(this).html(content);
 
-            $('#profile_1').text(data.gameModeProfile[0].profileName);
-            $('#profile_1').attr('onclick', "gameModeManager.startGame(data.gameModeProfile[0]);");
+            $('#profile_1')
+                .text(data.gameModeProfile[0].profileName)
+                .attr('onclick', "gameModeManager.startGame(data.gameModeProfile[0]);");
 
-            $('#profile_2').text(data.gameModeProfile[1].profileName);
-            $('#profile_2').attr('onclick', "gameModeManager.startGame(data.gameModeProfile[1]);");
+            $('#profile_2')
+                .text(data.gameModeProfile[1].profileName)
+                .attr('onclick', "gameModeManager.startGame(data.gameModeProfile[1]);");
 
-            $('#profile_3').text(data.gameModeProfile[2].profileName);
-            $('#profile_3').attr('onclick', "gameModeManager.startGame(data.gameModeProfile[2]);");
+            $('#profile_3')
+                .text(data.gameModeProfile[2].profileName)
+                .attr('onclick', "gameModeManager.startGame(data.gameModeProfile[2]);");
 
-            $('#profile_4').text(data.gameModeProfile[3].profileName);
-            $('#profile_4').attr('onclick', "gameModeManager.startGame(data.gameModeProfile[3]);");
+            $('#profile_4')
+                .text(data.gameModeProfile[3].profileName)
+                .attr('onclick', "gameModeManager.startGame(data.gameModeProfile[3]);");
 
-            userManager.rebuildUserList();
+            renderManager.rebuildUserList();
         });
     };
 
 
-    rm.displayUserAnswer = function(userMac, answerString, answerWorthFact){
-        var userStateCssSelector = '#userState_'+userMac;
-        $(userStateCssSelector).html(answerString);
-        //$(userStateCssSelector).text(answerString);
-        $('.userStates').html('TEST');
-        //$('#userState_222').text('TEST');
-
-        //var greenValue = answerWorthFact*255;
-        //var redValue = (1-answerWorthFact)*255;
-         //   $(userStateCssSelector).css('color', 'rgb('+redValue+','+greenValue+',0)' );
-        displayText('displayUserAnswer('+userStateCssSelector+','+answerString+','+answerWorthFact+')');
+    /**
+     * rebuilds/updates #mainMenuUserList
+     */
+    rm.rebuildUserList = function() {
+        var userCssClass;
+        var userList = userManager.getUserList();
+        var userLength = userList.length;
+        var mainMenuUserList = $('#mainMenuUserList');
+        mainMenuUserList.find('ul').html('');
+        for(var i = 0; i < userLength; i++){
+            if (userList[i].admin) {
+                userCssClass = 'admin';
+            } else {
+                userCssClass = 'user';
+            }
+            //$('#mainMenuUserList').find('ul').append('<li style="color:' + userList[i].color + '" class="' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
+            mainMenuUserList.find('ul').append('<li class="noLinebreak ' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
+        }
     };
 
 
+    rm.refreshBottomScoreboard = function() {
+        var userCssClass;
+        var userList = userManager.getUserList();
+        var bottomScoreboard = $('#bottomScoreboard');
+        var isGuessingState = (gameRoundManager.currentGameState == data.gameState.guessing);
+
+        bottomScoreboard.html('');
+
+        for(var i = 0; i < userList.length; i++){
+            var icon = 'none';
+            var color = 'rgb(180,180,180)';
+            var user = userList[i];
+            if (user.admin) {
+                userCssClass = 'admin';
+            } else {
+                userCssClass = 'user';
+            }
+            var userAnswerCity;
+            var userAnswer = user.lastAnswerGiven;
+            if (isGuessingState) {
+                if (userAnswer == null) {
+                    icon = 'url(images/hourglass.png)';
+                } else {
+                    icon = 'url(images/tick_gray.png)';
+                }
+                userAnswerCity = '&nbsp&nbsp&nbsp&nbsp';
+            } else {
+                if (userAnswer == null) {
+                    userAnswerCity = '(no answer)';
+                } else {
+                    userAnswerCity = userAnswer.guessedName;
+                    var answerWorthFact = userAnswer.points/data.constants.maxPointsPerAnswer; // 0=worst answer, 1=best
+                    var red = Math.floor((1-answerWorthFact)*160);
+                    var green = Math.floor(answerWorthFact*160);
+                    color = 'rgb(' + red + ',' + green + ',0)';
+                }
+            }
+
+            bottomScoreboard
+                .append('<span><div><span class="userStates" id="userState_' + user.mac + '">' + userAnswerCity + '</span></div><span class="'
+                + userCssClass + ' noLinebreak userName">' + user.name + ': </span><span class="score">' + user.pointsInCurrentGame
+                + '</span></span>');
+
+            $('#userState_'+user.mac).css({
+                'background-image': icon,
+                'color': color
+            });
+        }
+    };
+
 
     rm.showMidScreenMessage = function(message, holdTimeSec){
-        $('#midScreenMessage').hide();
-        $('#midScreenMessage').html(message);
-        $('#midScreenMessage').fadeIn(data.constants.midScreenMessageFadeInTimeMs, function () {
+        $('#midScreenMessage')
+            .hide()
+            .html(message)
+            .fadeIn(data.constants.midScreenMessageFadeInTimeMs, function () {
             executionManager.execDelayed(holdTimeSec*1000,renderManager.clearMidScreenMessage);
         });
     };
 
     rm.setMidScreenMessage = function(message){
-        $('#midScreenMessage').hide();
-        $('#midScreenMessage').html(message);
-        $('#midScreenMessage').fadeIn(data.constants.midScreenMessageFadeInTimeMs);
+        $('#midScreenMessage')
+            .hide()
+            .html(message)
+            .fadeIn(data.constants.midScreenMessageFadeInTimeMs);
     };
 
     rm.clearMidScreenMessage = function(){

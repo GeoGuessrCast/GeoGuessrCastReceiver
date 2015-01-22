@@ -269,7 +269,7 @@
                     geo.push(geoObject);
                 } else {
 
-                    console.error("[DM] error validating queryData: " + response+ ": "+name);
+                    console.debug("[DM] error validating geoObjRow for: " + name);
                 }
 
             }

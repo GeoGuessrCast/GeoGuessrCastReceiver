@@ -154,7 +154,7 @@ h3 {
 #bottomScoreboard > span {
     margin: 0.5vh 3vh 1.5vh 3vh;
     font-size: 3vh;
-    text-align: left;
+    text-align: center;
 }
 #bottomScoreboard > span > div {
     width: 100%;
@@ -183,7 +183,6 @@ h3 {
     font-size: 3vh;
 
     background-position: center center;
-    background-image: url(../images/hourglass.png);
     background-repeat: no-repeat;
     background-size: 5vh;
 }
@@ -194,7 +193,7 @@ h3 {
 
 .score {
     font-weight: bold;
-    color: #017c00;
+    color: #000c7c;
 }
 
 
@@ -254,7 +253,7 @@ h3 {
     top: 0.2vh;
     display: block;
     width: 30vw;
-    background: linear-gradient(to right, rgba(222, 45, 45, 0.90) 0%, rgba(87, 87, 87, 0.70) 3%, rgba(218, 218, 218, 0.70));
+    background: linear-gradient(to right, rgba(180, 45, 45, 0.90) 0%, rgba(87, 87, 87, 0.70) 3%, rgba(218, 218, 218, 0.70));
     z-index: 1000;
 
     border-top: 0.2vh solid #dddddd;
