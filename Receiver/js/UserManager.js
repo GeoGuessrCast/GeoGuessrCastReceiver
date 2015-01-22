@@ -91,9 +91,9 @@
 
         var jsonData;
         if (userManager.isUserAdmin(event.data.userMac)) {
-            jsonData = {event_type:data.eventType.isAdmin, admin:true,  gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
+            jsonData = {event_type:data.eventType.isAdmin, isAdmin:true,  gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
         } else {
-            jsonData = {event_type:data.eventType.isAdmin, admin:false};
+            jsonData = {event_type:data.eventType.isAdmin, isAdmin:false};
         }
         eventManager.send(event.senderId, data.channelName.user, jsonData);
 
