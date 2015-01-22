@@ -27,6 +27,12 @@ html, body, #map-canvas, #gameOverlay {
     z-index: 1;
 }
 
+.noLinebreak {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 h1 {
     font-size: 7vh;
     font-weight: bold;
@@ -90,6 +96,7 @@ h3 {
     left: 33%;
     width: 33%;
     height: 60%;
+    min-width: 45vh;
 }
 
 #mainMenuUserList {
@@ -97,6 +104,7 @@ h3 {
     right: 1%;
     height: 60%;
     width: 20%;
+    min-width: 20vh;
 }
 #mainMenuUserList > ul > li {
     background-repeat: no-repeat;
@@ -122,8 +130,8 @@ h3 {
     width: 100%;
     height: 8vh;
     font-size: 8vh;
-    color: #ffd996;
-    text-shadow: 0.0vh 0.0vh 3.3vh #000000;
+    color: rgba(180, 45, 45, 0.90);
+    text-shadow: 0.0vh 0.0vh 5.3vh #FFFFFF;
     font-weight: bold;
     padding: 0;
     border: 0;
@@ -134,7 +142,6 @@ h3 {
     bottom: 1%;
     left: 0;
     width: 100%;
-    height: 7%;
     text-align: left;
     display: flex;
     vertical-align: middle;
@@ -157,6 +164,7 @@ h3 {
     padding-left: 4vh;
     text-align: left;
 }
+
 .userName {
     padding-left: 6vh;
     padding-right: 1vh;

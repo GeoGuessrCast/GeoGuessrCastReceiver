@@ -13,10 +13,11 @@
      * @constructor
      */
     um.User = function(senderId, name, mac, admin){
+        var trimmedName = name.substring(0, data.constants.maxNameLength);
         /** @type {number} */
         this.senderId = senderId;
         /** @type {string} */
-        this.name = name;
+        this.name = trimmedName;
         /** @type {string} */
         this.mac = mac;
         /** @type {number} */
@@ -110,7 +111,8 @@
             } else {
                 userCssClass = 'user';
             }
-            $('#mainMenuUserList').find('ul').append('<li style="color:' + userList[i].color + '" class="' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
+            //$('#mainMenuUserList').find('ul').append('<li style="color:' + userList[i].color + '" class="' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
+            $('#mainMenuUserList').find('ul').append('<li class="noLinebreak ' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
         }
     };
 
@@ -128,8 +130,10 @@
             } else {
                 userCssClass = 'user';
             }
+            //$('#bottomScoreboard').find('ul').append('<li class="noLinebreak ' + userCssClass + '" id="'+userList[i].mac
+            //+ '"><span style="color:' + userList[i].color + '">' + userList[i].name + ': <span class="score">' + userList[i].pointsInCurrentGame + '</span></span></li>');
             $('#bottomScoreboard').find('ul').append('<li class="' + userCssClass + '" id="'+userList[i].mac
-            + '"><span style="color:' + userList[i].color + '">' + userList[i].name + ': <span class="score">' + userList[i].pointsInCurrentGame + '</span></span></li>');
+            + '"><span class="noLinebreak">' + userList[i].name + ': <span class="score">' + userList[i].pointsInCurrentGame + '</span></span></li>');
         }
     };
 

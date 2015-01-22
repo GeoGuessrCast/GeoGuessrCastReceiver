@@ -6,9 +6,11 @@ data = {
     // ======== global constants ========
     constants : {
         midScreenMessageFadeInTimeMs: 600,
-        midScreenMessageFadeOutTimeMs: 1500,
+        midScreenMessageFadeOutTimeMs: 800,
         maxDistanceErrorKm: 1000,
-        numberOfChoices: 5
+        numberOfChoices: 5,
+        maxPointsPerAnswer: 10,
+        maxNameLength: 15
     },
 
     geoObjType : {   //example: dataManager.getGeoObj(geoObjType.city, getRandomCountryCode(), 5)

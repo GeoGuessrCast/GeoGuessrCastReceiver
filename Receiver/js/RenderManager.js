@@ -95,11 +95,17 @@
     };
 
 
-    rm.showMidScreenMessage = function(message){
+    rm.displayUserAnswer = function(userMac, answerString, answerWorthFact){
+
+    };
+
+
+
+    rm.showMidScreenMessage = function(message, holdTimeSec){
         $('#midScreenMessage').hide();
         $('#midScreenMessage').html(message);
         $('#midScreenMessage').fadeIn(data.constants.midScreenMessageFadeInTimeMs, function () {
-            renderManager.clearMidScreenMessage();
+            executionManager.execDelayed(holdTimeSec*1000,renderManager.clearMidScreenMessage);
         });
     };
 

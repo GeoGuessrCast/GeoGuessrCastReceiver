@@ -4,6 +4,13 @@
     var results = {}; // Map UserId:Points
     var userAnswers = []; // Array of Answer Objects
 
+    grm.roundTimer = null;
+    grm.timePerRoundSec = 30;
+    grm.roundEvaluationTimeSec = 10;
+    grm.goalGeoObject = null; // Target GeoObject
+    grm.goalMarker = null; // Target GeoObject
+
+
     /**
      *
      * @param user
@@ -22,23 +29,21 @@
         this.gamemode = gamemode;
         /** @type {number} */
         this.distance = distance;
-        /** @type {GeoObject} */
+        /** @type {geoObject} */
         this.geoObject = geoObject;
         /** @type {number} */
         this.points = points;
 
-        this.toString("[Answer] "+this.user.name+" Location: " + this.guess + " at " + this.geoObject.position + "(dist=" + this.distance + ") Points="+this.points);
-    }
-
-    grm.roundTimer = null;
-    grm.timePerRoundSec = 30;
-    grm.roundEvaluationTimeSec = 10;
-    grm.goalGeoObject = null; // Target GeoObject
+        this.toString = function() {
+            return "[Answer] "+this.user.name+" Location: " + this.guess + " at " + this.geoObject.position + "(dist=" + this.distance + ") Points="+this.points;
+        };
+    };
 
     grm.startRound = function(){
         console.log("\n======= Round " + gameModeManager.currentRound + " =======");
-        renderManager.showMidScreenMessage('round ' + gameModeManager.currentRound + ' started...' );
-        displayText('Round ' + gameModeManager.currentRound + ' started.' );
+        displayText('Round ' + gameModeManager.currentRound );
+
+        renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6 );
 
         // new random country code, usage?
         var countryCode = dataManager.getRandomCountryCode();
@@ -48,12 +53,14 @@
             gameModeManager.currentGameModeProfile.multipleChoiceMode ? 1 : data.constants.numberOfChoices,
             gameModeManager.currentGameModeProfile.minPopulationDefault);
         //TODO handling of nearby Geo Objects: If Game mode without choices, no query... ?
-        //TODO minPopulation definition for each game mode
+        //TODO minPopulation definition for each game mode  //martin: what about gameModeManager.currentGameModeProfile.minPopulationDefault ? (see 2 lines above)
+
+        //TODO ... WHY are there 2 arrays with geoObjects ?????? clarify API !
         var nearbyGeoObjects = dataManager.getNearestGeoObjects(geoObjects[0],5,500000,5000);
 
 
-        gameModeManager.clearMarkers();
-        gameModeManager.clearInfoBubbles();
+        //gameModeManager.clearMarkers();
+        //gameModeManager.clearInfoBubbles();
         //gameModeManager.setLayer(queryResult.ftLayer);
         //gameModeManager.getLayer().setMap(gameModeManager.getMap());
 
@@ -63,12 +70,13 @@
         var lat = gameRoundManager.goalGeoObject.latitude;
         var long = gameRoundManager.goalGeoObject.longitude;
         var pos = new google.maps.LatLng(lat, long);
-        var goalMarker = _placeMarkerOnMap(pos,"goal","#ff0000"); //TODO use different marker icon for goal marker
-        goalMarker.icon = {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 3
-        };
-        gameRoundManager.goalGeoObject.marker = goalMarker;
+        //var goalMarker = _placeMarkerOnMap(pos,"goal","#ff0000"); //TODO use different marker icon for goal marker
+        _placeGoalMarker(pos);
+        //goalMarker.icon = {
+        //    path: google.maps.SymbolPath.CIRCLE,
+        //    scale: 3
+        //};
+        gameRoundManager.goalGeoObject.marker = gameRoundManager.goalMarker; //TODO ...
         gameModeManager.getMap().setCenter(pos);
         gameModeManager.getMap().setZoom(6);
 
@@ -84,8 +92,8 @@
         var cityNameChoices = dataManager.getCityNameArray(nearbyGeoObjects);
         console.log(geoObjects + cityNameChoices);
 
-        // GMB: send prepare()
-        // describes game mode properties //TODO use parameters below !
+
+        //TODO clean up that shit:
         var jsonData = {"event_type": data.eventType.startGame, "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode , "started": true, "roundNumber": gameModeManager.currentRound, "timerRound" : gameModeManager.currentGameModeProfile.timePerRoundSec, "choices" : cityNameChoices.push(address)};
         eventManager.broadcast(data.channelName.game, jsonData);
 
@@ -142,19 +150,21 @@
 
 
     grm.endRound = function(){
+
         // send event
         // calculate results, set markers visible
         displayText('Round ' + gameModeManager.currentRound +  ' ended.<br>' );
-        var goalInfo = _createInfoWindow("Goal",gameRoundManager.goalGeoObject.name);
-        goalInfo.open(gameModeManager.getMap(), gameRoundManager.goalGeoObject.marker);
-        gameModeManager.getInfoBubbles().push(goalInfo);
+        //var goalInfo = _createInfoWindow("Goal",gameRoundManager.goalGeoObject.name);
+        //goalInfo.open(gameModeManager.getMap(), gameRoundManager.goalGeoObject.marker);
+        renderManager.showMidScreenMessage('Answer: ' + gameRoundManager.goalGeoObject.name, gameRoundManager.roundEvaluationTimeSec-3 );
+        //gameModeManager.getInfoBubbles().push(goalInfo);
 
         for (var i=0; i < userAnswers.length; i++ ) {
             var answer = userAnswers[i];
             var points = 0;
             var dist =  answer.distance;
             var distInKm = dist / 1000;
-            points = Math.floor(Math.max(0,Math.min(10,(1100-distInKm)/100)));
+            points = Math.floor(Math.max(0,Math.min(data.constants.maxPointsPerAnswer,(data.constants.maxDistanceErrorKm+100-distInKm)/100)));
             answer.points = points;
             var userMac = answer.user.mac;
             results[userMac] = points; //TODO Change result map
@@ -165,12 +175,12 @@
             var user = answer.user;
             var color = user.color;
 
-            var mark = _placeMarkerOnMap(guessedGeoObject.position, user.name,color);
-
-            var info = _createInfoWindow(user.name,answer.guess);
-            info.position = guessedGeoObject.position;
-            info.open(gameModeManager.getMap(),mark);
-            gameModeManager.getInfoBubbles().push(info);
+            //var mark = _placeMarkerOnMap(guessedGeoObject.position, user.name, color);
+            renderManager.displayUserAnswer(user.mac, answer.guess, answer.points/data.constants.maxPointsPerAnswer);
+            //var info = _createInfoWindow(user.name,answer.guess);
+            //info.position = guessedGeoObject.position;
+            //info.open(gameModeManager.getMap(),mark);
+            //gameModeManager.getInfoBubbles().push(info);
 
         }
         // notify game mode manager that round has ended
@@ -187,16 +197,15 @@
             for(var i = 0; i<userListLength; i++){
                 if(userList[i].mac == key) {
                     userList[i].pointsInCurrentGame = userList[i].pointsInCurrentGame + results[key];
-                    displayText('userMac: ' + userList[i].mac + ', points added: '+ results[key]);
+                    displayText("[GRM] " + answer.user.name + " got " + points + " points (for "+distInKm+" km)");
                 }
             }
         }
         userManager.setUserList(userList);
-        userManager.refreshBottomScoreboard(); //TODO test !
+        userManager.refreshBottomScoreboard();
         // call prepareNextRound
         var jsonData = {"event_type":"round_ended", "ended": true};
         eventManager.broadcast(data.channelName.game, jsonData);
-        displayText('[GRM] setGameRoundEnded broadcasted');
         // calc points
         // set scorebaord
         // update user points
@@ -208,7 +217,7 @@
 
     grm.cancelRoundTimer = function() {
         if (gameRoundManager.roundTimer != null) {
-            gameRoundManager.roundTimer.terminate();
+            //gameRoundManager.roundTimer.terminate(); //TODO fixme
         }
     };
 
@@ -221,8 +230,7 @@
             displayText('[GRM] maxRounds reached: ' + gameModeManager.maxRounds);
             var jsonData = {"ended": true, "event_type":"game_ended"};
             eventManager.broadcast(data.channelName.game, jsonData);
-
-            renderManager.loadMainMenu();
+            executionManager.execDelayed(gameRoundManager.roundEvaluationTimeSec*1000, renderManager.loadMainMenu);
             // todo fm show final scoreboard
         } else {
             // next round...
@@ -245,28 +253,21 @@
         return google.maps.geometry.spherical.computeDistanceBetween (p1, p2); // returns the distance in meter
     }
 
-    /**
-     *
-     * @param player
-     * @param guess
-     * @returns {google.maps.InfoWindow}
-     * @private
-     */
+
     function _createInfoWindow(player, guess){
         if (player != " "){
             player = player + ': ';
         }
 
-        var contentString = '<div id="content">'+guess+'</div>';
+        //var contentString = '<div id="content">'+guess+'</div>';
        /* = new google.maps.InfoWindow({
             content: contentString
         });*/
         var infowindow = new InfoBubble({
-
             content: '<div class="mylabel">'+guess+'</div>',
             shadowStyle: 0,
             padding: 0,
-            backgroundColor: 'rgba(255,255,255,10)',
+            backgroundColor: 'rgba(255,255,255,0.5)',
             borderRadius: 2,
             arrowSize: 1,
             borderWidth: 0,
@@ -305,6 +306,31 @@
         gameModeManager.getMarkers().push(marker);
 
         return marker;
+    }
+
+    function _placeGoalMarker(position){
+        if (gameModeManager.goalMarker == null) {
+            //TODO create a good crosshair image
+            //var image = {
+            //    url: 'images/crosshair_red.png',
+            //    size: new google.maps.Size(16, 16),
+            //    origin: new google.maps.Point(0,0),
+            //    anchor: new google.maps.Point(8, 8)
+            //};
+
+            gameModeManager.goalMarker = new google.maps.Marker({
+                position: position,
+                map: gameModeManager.getMap(),
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 4,
+                    strokeColor: '#B42D2D'
+                }
+            });
+
+        } else {
+            gameModeManager.goalMarker.setPosition(position);
+        }
     }
 
 
