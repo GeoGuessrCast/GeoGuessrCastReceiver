@@ -11,10 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.gson.Gson;
 import com.google.sample.castcompanionlibrary.cast.DataCastManager;
 
 import de.tud.kp.geoguessrcast.GameActivity;
 import de.tud.kp.geoguessrcast.R;
+import de.tud.kp.geoguessrcast.beans.GameMessage;
+import de.tud.kp.geoguessrcast.beans.GameMode;
+import de.tud.kp.geoguessrcast.beans.GameSetting;
 
 public class ChooseModeFragment extends Fragment {
 
@@ -51,7 +55,11 @@ public class ChooseModeFragment extends Fragment {
 
                 //TODO: add SendMessage for channels. adding try catch.
                 try {
-                    sCastManager.sendDataMessage("{\"event_type\": \"setGameMode\", \"gameModeNumber\": \"1\" }",getString(R.string.adminChannel));
+                    //TODO: add Json generating method for setGameMode...
+                    GameMessage gameMessage = new GameMessage();
+                    gameMessage.setEvent_type("setGameMode");
+                    gameMessage.setGameMode(GameSetting.getInstance().getGameModes()[0]);
+                    sCastManager.sendDataMessage(new Gson().toJson(gameMessage),getString(R.string.adminChannel));
                 }
                 catch (Exception e){
 
@@ -66,7 +74,10 @@ public class ChooseModeFragment extends Fragment {
             public void onClick(View v) {
                 //TODO: add SendMessage for channels. adding try catch.
                 try {
-                    sCastManager.sendDataMessage("{\"event_type\": \"setGameProfile\", \"gameProfileNumber\": 1}", getString(R.string.adminChannel));
+                    GameMessage gameMessage = new GameMessage();
+                    gameMessage.setEvent_type("setGameProfile");
+                    gameMessage.setGameProfile(GameSetting.getInstance().getGameProfiles()[0]);
+                    sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.adminChannel));
                 }
                 catch (Exception e){
 
@@ -80,7 +91,10 @@ public class ChooseModeFragment extends Fragment {
             public void onClick(View v) {
                 //TODO: add SendMessage for channels. adding try catch.
                 try {
-                    sCastManager.sendDataMessage("{\"event_type\": \"setGameProfile\", \"gameProfileNumber\": 2}", getString(R.string.adminChannel));
+                    GameMessage gameMessage = new GameMessage();
+                    gameMessage.setEvent_type("setGameProfile");
+                    gameMessage.setGameProfile(GameSetting.getInstance().getGameProfiles()[1]);
+                    sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.adminChannel));
                 }
                 catch (Exception e){
 
