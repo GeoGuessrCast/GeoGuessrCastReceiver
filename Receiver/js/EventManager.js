@@ -79,14 +79,13 @@
 
         if(eventData.event_type === data.eventType.setGameMode){
             //eventData.gameModeNumber; ...deprecated
-            //renderManager.loadGameProfileMenu(data.gameMode[0]);  //TODO get gameMode from event data (as object)
-            renderManager.loadGameProfileMenu(eventData.gameMode);  //TODO Done: to be tested:  get gameMode from event data (as object)
+            renderManager.loadGameProfileMenu(data.gameMode[0]);  //TODO get gameMode from event data (as object)
+
         }
 
         if(eventData.event_type === data.eventType.setGameProfile){
             //TODO get gameModeProfile from event data
-            //gameModeManager.startGame(data.gameModeProfile[eventData.gameProfileNumber]);  //TODO get gameProfile as object
-            gameModeManager.startGame(eventData.gameProfile);  //TODO Done: to be tested: get gameProfile as object
+            gameModeManager.startGame(data.gameModeProfile[1]);  //TODO get gameProfile as object
         }
 
         if(eventData.event_type === data.eventType.hideConsole){
