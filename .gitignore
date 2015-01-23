@@ -57,12 +57,13 @@ AndroidSender/.gradle/
 AndroidSender/local.properties
 AndroidSender/.idea/
 AndroidSender/build
-AndroidSender/*/*/build/
+AndroidSender/app/build/**
 AndroidSender/*.map
 AndroidSender/*.md5
 
 # except the build apk!
-!AndroidSender/app/build/outputs/apkapp-debug.apk
+!AndroidSender/app/build/**/
+!AndroidSender/app/build/outputs/apk/app-debug.apk
 
 # CastCompanionLibrary
 AndroidSender/CastCompanionLibrary/*.apk
