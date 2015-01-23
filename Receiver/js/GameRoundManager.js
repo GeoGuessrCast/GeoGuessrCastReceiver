@@ -72,7 +72,7 @@
 
 
     grm.choseAnswer = function(userMac, answer){
-        var cleanedAnswerString = answer.replace(/([^a-z\s]+)/gi, ' ');
+        var cleanedAnswerString = answer.replace(/([^a-zäöü\s]+)/gi, ' ');
         cleanedAnswerString = cleanedAnswerString.substring(0, data.constants.maxAnswerLength);
         var user = userManager.getUserByMac(userMac);
         print("[GRM] " + user.name + " picked " + cleanedAnswerString);

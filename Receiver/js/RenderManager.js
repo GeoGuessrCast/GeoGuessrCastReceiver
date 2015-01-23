@@ -134,7 +134,7 @@
         bottomScoreboard.html('');
 
         for(var i = 0; i < userList.length; i++){
-            var icon = 'none';
+            var iconCssClass = 'noIcon';
             var color = 'rgb(180,180,180)';
             var user = userList[i];
             if (user.admin) {
@@ -146,9 +146,9 @@
             var userAnswer = user.lastAnswerGiven;
             if (isGuessingState) {
                 if (userAnswer == null) {
-                    icon = 'url(https://geoguessrcast.github.io/GeoGuessrCastReceiver/Receiver/images/hourglass.png)'; //TODO
+                    iconCssClass = 'waitingIcon'; //TODO
                 } else {
-                    icon = 'url(https://geoguessrcast.github.io/GeoGuessrCastReceiver/Receiver/images/tick_gray.png)';
+                    iconCssClass = 'readyIcon';
                 }
                 userAnswerCity = '&nbsp&nbsp&nbsp&nbsp';
             } else {
@@ -168,8 +168,12 @@
                 + userCssClass + ' noLinebreak userName">' + user.name + ': </span><span class="score">' + user.pointsInCurrentGame
                 + '</span></span>');
 
-            $('#userState_'+user.mac).css({
-                'background-image': icon,
+            var userStateDiv = $('#userState_'+user.mac);
+            userStateDiv.removeClass('waitingIcon');
+            userStateDiv.removeClass('readyIcon');
+            userStateDiv.removeClass('noIcon');
+            userStateDiv.addClass(iconCssClass);
+            userStateDiv.css({
                 'color': color
             });
         }

@@ -67,9 +67,17 @@ h3 {
 .mountainIcon {
     background-image: url(../images/snowyMountain_outline.png);
 }
-
 .cityIcon {
     background-image: url(../images/city.png);
+}
+.waitingIcon {
+    background-image: url(../images/hourglass.png);
+}
+.readyIcon {
+    background-image: url(../images/tick_gray.png);
+}
+.noIcon {
+    background-image: none;
 }
 
 
