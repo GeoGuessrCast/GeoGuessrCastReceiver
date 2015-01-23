@@ -146,7 +146,7 @@
             var userAnswer = user.lastAnswerGiven;
             if (isGuessingState) {
                 if (userAnswer == null) {
-                    iconCssClass = 'mountainIcon'; //TODO
+                    iconCssClass = 'waitingIcon'; //TODO
                 } else {
                     iconCssClass = 'readyIcon';
                 }
@@ -169,13 +169,13 @@
                 + '</span></span>');
 
             var userStateDiv = $('#userState_'+user.mac);
-            userStateDiv.removeClass('mountainIcon');
-            userStateDiv.removeClass('readyIcon');
-            userStateDiv.removeClass('noIcon');
-            userStateDiv.addClass(iconCssClass);
-            userStateDiv.css({
-                'color': color
-            });
+
+            print(color);
+            userStateDiv.css('color', color);
+            //userStateDiv.removeClass('waitingIcon');
+            //userStateDiv.removeClass('readyIcon');
+            //userStateDiv.removeClass('noIcon');
+            //userStateDiv.addClass(iconCssClass);
         }
     };
 
