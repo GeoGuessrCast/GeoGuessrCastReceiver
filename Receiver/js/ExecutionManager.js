@@ -27,10 +27,11 @@
             if(data.success === true) {
                 if(callbackFunc && typeof callbackFunc === 'function'){
                     callbackFunc();
+                    w.terminate();
                 }
             }
         };
-        return w;
+        return null;
     };
 
     /**
@@ -65,11 +66,12 @@
                         }
                     } else {
                         em.execPeriodically(intervalMs, numberOfExecutions - 1, intervalFunc, endingFunc);
+                        w.terminate();
                     }
                 }
             }
         };
-        return w;
+        return null;
     };
 
 }(this.executionManager = this.executionManager || {}));
