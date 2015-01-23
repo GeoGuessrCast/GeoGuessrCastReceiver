@@ -61,21 +61,21 @@
         }
         function createFakeUser(){
             fakeUser('1111',"Rei",'111');
-            fakeUser('2222',"Mister long and cool name",'222');
-            fakeUser('3333',"X7",'333');
-            fakeUser('4444',"some§7uff",'444');
+            fakeUser('2222',"Kaori",'222');
+            fakeUser('3333',"Mister long and cool name",'333');
+            fakeUser('4444',"lee33t<br> h!!!aaa$4xxxor",'444');
             fakeUser('5555',"Falk",'555');
             fakeUser('6666',"Kaijun",'666');
             fakeUser('7777',"Stefan",'777');
             fakeUser('8888',"Martin",'888');
         }
-        function userOneFakeAnswer(string){
-            eventManager.event_onUserMessage({senderID:1111, data:{event_type: 'gameRound_answerChosen', answer: string , userMac: '111'}});
+        function userFakeAnswer(string,senderID,userMac){
+            eventManager.event_onUserMessage({senderID:senderID, data:{event_type: 'gameRound_answerChosen', answer: string , userMac: userMac}});
         }
         function keyPress(e) {
             if (!e) e = window.event; // needed for cross browser compatibility
             if (e.keyCode == 13) {
-                userOneFakeAnswer(document.getElementById('testInput').value);
+                userFakeAnswer(document.getElementById('testInput').value, '2222', '222');
                 document.getElementById('testInput').value='-type a city-';
             }
             return false;
@@ -106,7 +106,7 @@
         <input type="button" onclick="renderManager.toggleConsoleOutput()" value="[c]"/>
         <input type="button" onclick="eventManager.event_onReady(null)" value="onReady"/>
         <input type="button" onclick="createFakeUser()" value="fakeUser"/>
-        <input type="button" onclick="userOneFakeAnswer('Berlin')" value="u1:Berlin"/>
+        <input type="button" onclick="userFakeAnswer('Berlin','1111','111')" value="u1:Berlin"/>
         <input type="text" style="cursor: text" id="testInput" size="8" onclick="document.getElementById('testInput').value=''" onkeydown="keyPress()" value="-type a city-"/>
         <input type="button" onclick="gameRoundManager.cancelRoundTimer()" value="killTimer"/>
     </div>

@@ -76,7 +76,8 @@
      */
     um.createOrUpdateUser = function(event) {
         var hasUser = userManager.hasUserMac(event.data.userMac);
-        var trimmedName = event.data.userName.substring(0, data.constants.maxNameLength);
+        var trimmedName = event.data.userName.replace(/([^a-z0-9_.\s]+)/gi, ' ');
+        trimmedName = trimmedName.substring(0, data.constants.maxNameLength);
         if (!hasUser) {
             //add new User
             var isAdmin = false;
@@ -258,4 +259,13 @@
         }
         _setUserList(userList);
     };
+
+
+    um.sortUsersByScore = function() {
+      userList.sort(function(u1, u2){
+          return u2.pointsInCurrentGame - u1.pointsInCurrentGame;
+      });
+    };
+
+
 }(this.userManager = this.userManager || {}));

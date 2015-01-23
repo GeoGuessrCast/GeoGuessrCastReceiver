@@ -210,15 +210,17 @@
 
     rm.hideConsoleOutput = function(hide) {
         if (hide) {
+            renderManager.consoleOutPutHidden = true;
             $('#testConsoleOutput').hide();
         } else {
+            renderManager.consoleOutPutHidden = false;
             $('#testConsoleOutput').show();
         }
     };
 
     rm.toggleConsoleOutput = function() {
-        renderManager.hideConsoleOutput(renderManager.consoleOutPutHidden);
         renderManager.consoleOutPutHidden = !renderManager.consoleOutPutHidden;
+        renderManager.hideConsoleOutput(renderManager.consoleOutPutHidden);
     };
 
 

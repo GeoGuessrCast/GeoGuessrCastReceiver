@@ -210,7 +210,7 @@ h3 {
     position: absolute;
     bottom: 14%;
     left: 3%;
-    width: 40%;
+    max-width: 40%;
 
     font-size: 2vh;
     opacity: 0.3;

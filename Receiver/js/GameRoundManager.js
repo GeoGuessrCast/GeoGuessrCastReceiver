@@ -96,6 +96,7 @@
                 user.pointsInCurrentGame += user.lastAnswerGiven.points;
             }
         }
+        userManager.sortUsersByScore();
         renderManager.refreshBottomScoreboard();
         var jsonData = {"event_type":"round_ended", "ended": true};
         eventManager.broadcast(data.channelName.game, jsonData);
@@ -168,27 +169,38 @@
             if (status == google.maps.GeocoderStatus.OK) {
                 var pos = results[0].geometry.location;
                 //console.debug(results[0]);
-                var countryCode = '';
-                for (var i=0; i<results[0].address_components.length; i++) {
-                    for (var b=0;b<results[0].address_components[i].types.length;b++) {
-                        if (results[0].address_components[i].types[b] == "country") {
-                            countryCode = results[0].address_components[i];
-                            break;
-                        }
+                var isValidLocality = false;
+                for (var a=0; a<results[0].types.length; a++) {
+                    if (results[0].types[a] == "locality") {
+                        isValidLocality = true;
+                        break;
                     }
                 }
-                // get Distance to right answer (if not the same)
-                var distInKm = _getDistance(pos,gameRoundManager.goalGeoObject.position)/1000;
-                // Create new GeoObject for given answer
-                var guessedGeoObject = new dataManager.GeoObject(user.mac,answer,pos.k,pos.B,countryCode,0,0,null);
-                // Create new Answer Object
-                var points = Math.floor(Math.max(0,Math.min(data.constants.maxPointsPerAnswer,(data.constants.maxDistanceErrorKm+100-distInKm)/100)));
-                distInKm = Math.floor(distInKm);
-                user.lastAnswerGiven = new grm.Answer(answer,distInKm,guessedGeoObject,points);
-                renderManager.refreshBottomScoreboard();
-                print("[GRM] " + user.name + " got " + points + " points (for "+distInKm+" km)");
+                if (isValidLocality) {
+                    var countryCode = null;
+                    for (var i=0; i<results[0].address_components.length; i++) {
+                        for (var b=0;b<results[0].address_components[i].types.length;b++) {
+                            if (results[0].address_components[i].types[b] == "country") {
+                                countryCode = results[0].address_components[i].short_name;
+                                break;
+                            }
+                        }
+                    }
+                    // get Distance to right answer (if not the same)
+                    var distInKm = _getDistance(pos,gameRoundManager.goalGeoObject.position)/1000;
+                    // Create new GeoObject for given answer
+                    var guessedGeoObject = new dataManager.GeoObject(user.mac, answer, pos.k, pos.B, countryCode, 0, 0, null);
+                    // Create new Answer Object
+                    var points = Math.floor(Math.max(0,Math.min(data.constants.maxPointsPerAnswer,(data.constants.maxDistanceErrorKm+100-distInKm)/100)));
+                    distInKm = Math.floor(distInKm);
+                    user.lastAnswerGiven = new grm.Answer(answer,distInKm,guessedGeoObject,points);
+                    renderManager.refreshBottomScoreboard();
+                    print("[GRM] " + user.name + " got " + points + " points for " + guessedGeoObject.name + ' (' + countryCode + ', '+distInKm+'km)');
+                } else {
+                    print('[GRM] no valid locality for: '+answer);
+                }
             } else {
-                print(user.mac+ ' Address could not be geocoded: '+answer+" : " + status);
+                print('[GRM] could not be geocoded: '+answer+" (" + status +')');
 
             }
         });
