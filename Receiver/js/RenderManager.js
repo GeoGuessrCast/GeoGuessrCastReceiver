@@ -164,18 +164,17 @@
             }
 
             bottomScoreboard
-                .append('<span><div><span class="userStates" id="userState_' + user.mac + '">' + userAnswerCity + '</span></div><span class="'
+                .append('<span><div><span class="userStates" id="userState_' + user.senderId + '">' + userAnswerCity + '</span></div><span class="'
                 + userCssClass + ' noLinebreak userName">' + user.name + ': </span><span class="score">' + user.pointsInCurrentGame
                 + '</span></span>');
 
-            var userStateDiv = $('#userState_'+user.mac);
+            var userStateDiv = $('#userState_'+user.senderId);
 
-            print(color);
             userStateDiv.css('color', color);
-            //userStateDiv.removeClass('waitingIcon');
-            //userStateDiv.removeClass('readyIcon');
-            //userStateDiv.removeClass('noIcon');
-            //userStateDiv.addClass(iconCssClass);
+            userStateDiv.removeClass('waitingIcon');
+            userStateDiv.removeClass('readyIcon');
+            userStateDiv.removeClass('noIcon');
+            userStateDiv.addClass(iconCssClass);
         }
     };
 

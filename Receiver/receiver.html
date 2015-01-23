@@ -57,7 +57,7 @@
             }
         }
         function fakeUser(senderID, userName, userMac) {
-            eventManager.event_onUserMessage({senderID:senderID, data:{event_type: 'createUser', userName: userName, userMac: userMac}});
+            eventManager.event_onUserMessage({senderId:senderID, data:{event_type: 'createUser', userName: userName, userMac: userMac}});
         }
         function createFakeUser(){
             fakeUser('1111',"Rei",'111');
@@ -70,7 +70,7 @@
             fakeUser('8888',"Martin",'888');
         }
         function userFakeAnswer(string,senderID,userMac){
-            eventManager.event_onUserMessage({senderID:senderID, data:{event_type: 'gameRound_answerChosen', answer: string , userMac: userMac}});
+            eventManager.event_onUserMessage({senderId:senderID, data:{event_type: 'gameRound_answerChosen', answer: string , userMac: userMac}});
         }
         function keyPress(e) {
             if (!e) e = window.event; // needed for cross browser compatibility
