@@ -146,9 +146,9 @@
             var userAnswer = user.lastAnswerGiven;
             if (isGuessingState) {
                 if (userAnswer == null) {
-                    icon = 'url(../images/hourglass.png)';
+                    icon = 'url(https://geoguessrcast.github.io/GeoGuessrCastReceiver/Receiver/images/hourglass.png)'; //TODO
                 } else {
-                    icon = 'url(../images/tick_gray.png)';
+                    icon = 'url(https://geoguessrcast.github.io/GeoGuessrCastReceiver/Receiver/images/tick_gray.png)';
                 }
                 userAnswerCity = '&nbsp&nbsp&nbsp&nbsp';
             } else {
