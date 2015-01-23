@@ -60,7 +60,7 @@
             eventManager.event_onUserMessage({senderId:senderID, data:{event_type: 'createUser', userName: userName, userMac: userMac}});
         }
         function createFakeUser(){
-            fakeUser('1111',"Rei",'111');
+            fakeUser('1111',"Rei",'1:11a!');
             fakeUser('2222',"Kaori",'222');
             fakeUser('3333',"Mister long and cool name",'333');
             fakeUser('4444',"lee33t<br> h!!!aaa$4xxxor",'444');
@@ -106,7 +106,7 @@
         <input type="button" onclick="renderManager.toggleConsoleOutput()" value="[c]"/>
         <input type="button" onclick="eventManager.event_onReady(null)" value="onReady"/>
         <input type="button" onclick="createFakeUser()" value="fakeUser"/>
-        <input type="button" onclick="userFakeAnswer('Berlin','1111','111')" value="u1:Berlin"/>
+        <input type="button" onclick="userFakeAnswer('Berlin','1111','1:11a!')" value="u1:Berlin"/>
         <input type="text" style="cursor: text" id="testInput" size="8" onclick="document.getElementById('testInput').value=''" onkeydown="keyPress()" value="-type a city-"/>
         <input type="button" onclick="gameRoundManager.cancelRoundTimer()" value="killTimer"/>
     </div>

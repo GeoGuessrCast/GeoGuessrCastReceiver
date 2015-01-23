@@ -137,6 +137,7 @@
             var iconCssClass = 'noIcon';
             var color = 'rgb(180,180,180)';
             var user = userList[i];
+            var userMacCleaned = user.mac.replace(/([^a-z0-9]+)/gi, '_');
             if (user.admin) {
                 userCssClass = 'admin';
             } else {
@@ -164,11 +165,11 @@
             }
 
             bottomScoreboard
-                .append('<span><div><span class="userStates" id="userState_' + user.senderId + '">' + userAnswerCity + '</span></div><span class="'
+                .append('<span><div><span class="userStates" id="userState_' + userMacCleaned + '">' + userAnswerCity + '</span></div><span class="'
                 + userCssClass + ' noLinebreak userName">' + user.name + ': </span><span class="score">' + user.pointsInCurrentGame
                 + '</span></span>');
 
-            var userStateDiv = $('#userState_'+user.senderId);
+            var userStateDiv = $('#userState_'+userMacCleaned);
 
             userStateDiv.css('color', color);
             userStateDiv.removeClass('waitingIcon');
