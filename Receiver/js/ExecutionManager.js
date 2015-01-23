@@ -27,8 +27,8 @@
             if(data.success === true) {
                 if(callbackFunc && typeof callbackFunc === 'function'){
                     callbackFunc();
-                    w.terminate();
                 }
+                w.terminate();
             }
         };
         return null;
@@ -66,9 +66,9 @@
                         }
                     } else {
                         em.execPeriodically(intervalMs, numberOfExecutions - 1, intervalFunc, endingFunc);
-                        w.terminate();
                     }
                 }
+                w.terminate();
             }
         };
         return null;
