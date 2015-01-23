@@ -91,7 +91,9 @@ public class WelcomeActivity extends ActionBarActivity {
                     try {
                         String userName = usernameEditText.getText().toString();
                         String userMac = DeviceInfo.getDeviceMacAddr(mContext);
-                        mUser = User.newInstance(userName, userMac);
+                        mUser = User.getInstance();
+                        mUser.setUserName(userName);
+                        mUser.setUserMac(userMac);
                         storeUsername(userName);
                         sCastManager.sendDataMessage(mUser.toJSONString(), getString(R.string.userChannel));
                     } catch (Exception e) {
@@ -117,6 +119,19 @@ public class WelcomeActivity extends ActionBarActivity {
                                                String sessionId, boolean wasLaunched) {
                 startGameBtn.setText("Los!");
                 startGameBtn.setEnabled(true);
+
+                //TODO: GameManager - StartGame
+                try {
+                    String userName = usernameEditText.getText().toString();
+                    String userMac = DeviceInfo.getDeviceMacAddr(mContext);
+                    mUser = User.getInstance();
+                    mUser.setUserName(userName);
+                    mUser.setUserMac(userMac);
+                    storeUsername(userName);
+                    sCastManager.sendDataMessage(mUser.toJSONString(), getString(R.string.userChannel));
+                } catch (Exception e) {
+                    Log.e("Error", "Exception while sending message", e);
+                }
             }
 
             @Override
@@ -128,6 +143,10 @@ public class WelcomeActivity extends ActionBarActivity {
                         GameSetting gameSetting = GameSetting.getInstance();
                         gameSetting.setGameModes(gameMessage.getGameModes());
                         gameSetting.setGameProfiles(gameMessage.getGameProfiles());
+                        Intent intent = new Intent(WelcomeActivity.this, GameActivity.class);
+                        WelcomeActivity.this.startActivity(intent);
+                    }
+                    else{
                         Intent intent = new Intent(WelcomeActivity.this, GameActivity.class);
                         WelcomeActivity.this.startActivity(intent);
                     }
