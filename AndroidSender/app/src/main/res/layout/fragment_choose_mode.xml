@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:paddingLeft="50dp"
+    android:paddingRight="50dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center">
@@ -10,9 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:id="@+id/playerConfirmTip"
-        android:paddingLeft="25sp"
-        android:paddingRight="25sp">
+        android:id="@+id/playerConfirmTip">
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -34,52 +34,32 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
         android:id="@+id/gameModes">
 
-        <Button
-            android:layout_width="wrap_content"
+        <ListView android:id="@+id/game_modes_list"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Game Mode 1"
-            android:id="@+id/gameMode1" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Game Mode 2"
-            android:id="@+id/gameMode2" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Game Mode 3"
-            android:id="@+id/gameMode3" />
+            android:focusable="true" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
         android:id="@+id/gameProfiles">
 
-        <Button
-            android:layout_width="wrap_content"
+
+        <ListView android:id="@+id/game_profiles_list"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Game Profile 1"
-            android:id="@+id/gameProfile1" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Game Profile 2"
-            android:id="@+id/gameProfile2" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Game Profile 3"
-            android:id="@+id/gameProfile3" />
+            android:focusable="true" />
+
 
     </LinearLayout>
 </LinearLayout>

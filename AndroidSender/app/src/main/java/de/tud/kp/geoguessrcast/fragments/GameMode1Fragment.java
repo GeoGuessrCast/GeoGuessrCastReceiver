@@ -28,7 +28,7 @@ public class GameMode1Fragment extends Fragment {
     static String TIME_ROUND = "timeRound";
 
     GameActivity mActivity;
-    TimerWithVibration timer;
+    TimerWithVibration mTimer;
     boolean isAnswerSendet;
     int currentRound;
     int timeRound;
@@ -88,7 +88,7 @@ public class GameMode1Fragment extends Fragment {
         });
 
 
-        timer = new TimerWithVibration(timeRound, 5, mActivity) {
+        mTimer = new TimerWithVibration(timeRound, 5, mActivity) {
             @Override
             public void onTimerTick(int second, int percent) {
                 countDownTimeTextView.setText(String.valueOf(second));
@@ -103,7 +103,7 @@ public class GameMode1Fragment extends Fragment {
             }
         };
 
-        timer.start();
+        mTimer.start();
     }
 
     @Override
@@ -126,13 +126,13 @@ public class GameMode1Fragment extends Fragment {
     }
 
     private void resetTimer(){
-        if(this.timer!=null){
-            this.timer.cancel();
-            this.timer = null;
+        if(mTimer !=null){
+            mTimer.cancel();
+            mTimer = null;
         }
     }
 
-
+    //TODO: EventTransitionManager - send ansewer!
     private void sendAnswer(String answer){
         String cityNameJSON = "{\"event_type\":\"gameRound_answerChosen\" , \"answer\":" + "\"" + answer +  "\""+ ", \"userMac\":\"" + User.getInstance().getUserMac() + "\"}";
         //TODO: add SendMessage for channels. adding try catch.

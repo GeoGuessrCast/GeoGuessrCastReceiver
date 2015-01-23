@@ -104,24 +104,19 @@ public class GameActivity extends ActionBarActivity {
                     Log.d(TAG, "onMessageReceived from AdminChannel: " + message);
                 }
                 else if (namespace.equals(getString(R.string.gameChannel))){
-                    Log.d("Fuck", message);
                     GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
                     if(gameMessage.getEvent_type().equals("startGame")){
                         if(gameMessage.isStarted()){
-                            //switch gameMode to start GameMode
-//                            if(gameMessage.getGameMode()==1) {
                             if(!gameMessage.isMultipleChoiceMode()){
                                 int roundNumber = gameMessage.getRoundNumber();
                                 int timeRound = gameMessage.getTimerRound();
                                 startFragment(GameMode1Fragment.newInstance(roundNumber, timeRound));
                             }
                             else{
-//                            if(gameMessage.getGameMode()==2) {
                                 int roundNumber = gameMessage.getRoundNumber();
                                 int timeRound = gameMessage.getTimerRound();
                                 String[] choices = gameMessage.getChoices();
-                                Log.d("test", Arrays.toString(choices));
-//                                startFragment(GameMode2Fragment.newInstance(roundNumber, timeRound));
+                                startFragment(GameMode2Fragment.newInstance(roundNumber, timeRound, choices));
                             }
                         }
                     }

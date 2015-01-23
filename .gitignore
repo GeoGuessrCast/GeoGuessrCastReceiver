@@ -61,6 +61,9 @@ AndroidSender/*/*/build/
 AndroidSender/*.map
 AndroidSender/*.md5
 
+# except the build apk!
+!AndroidSender/app/build/outputs/apkapp-debug.apk
+
 # CastCompanionLibrary
 AndroidSender/CastCompanionLibrary/*.apk
 AndroidSender/CastCompanionLibrary/*.ap_
@@ -78,6 +81,7 @@ AndroidSender/CastCompanionLibrary/.classpath
 AndroidSender/CastCompanionLibrary/.settings/
 AndroidSender/CastCompanionLibrary/*.iml
 AndroidSender/CastCompanionLibrary/.idea
+
 
 
 # .DS_Store for Mac
