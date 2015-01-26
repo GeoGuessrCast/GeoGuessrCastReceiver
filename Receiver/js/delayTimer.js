@@ -1,14 +1,22 @@
-var delay = 0;
+var delay = 0,
+    intervalDelay = 0,
+    repeat = 0;
+
 function delayTimer(){
     // wait for start signal with parameter
     onmessage = function (e) {
         var data = e.data;
-        delay = parseInt(data.delay);
+        delay = intervalDelay = data.delay;
+        repeat = data.repeat;
 
-        if(delay > 0) {
-            count();
-        }
+        start();
     };
+}
+
+function start(){
+    if(delay > 0 && repeat > 0) {
+        count();
+    }
 }
 
 function count(){
@@ -16,7 +24,13 @@ function count(){
     if(delay >= 0) {
         setTimeout(function(){count();},100);
     } else {
-        postMessage({'success' : true});
+        repeat = --repeat;
+        delay = intervalDelay;
+        postMessage({'tick' : repeat});
+
+        if(repeat >= 0) {
+            start();
+        }
     }
 }
 

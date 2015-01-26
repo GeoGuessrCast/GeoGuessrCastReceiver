@@ -1,37 +1,11 @@
 (function(em){
-
-    /**
-     * to be deleted
-     */
-    em.test = function(){
-        console.log('test called!');
-    };
-    em.testEnde = function(){
-        console.log('test ENDE called!');
-    };
-
     /**
      * executes a given callback function after a given time
      * @param {number} delayMs
      * @param {function} callbackFunc
      */
     em.execDelayed = function(delayMs, callbackFunc){
-        var w;
-        if(typeof(Worker) != 'undefined' ){
-            w = new Worker('js/delayTimer.js');
-            w.postMessage({'delay':  parseInt(delayMs)});
-        }
-
-        w.onmessage = function(e) {
-            var data = e.data;
-            if(data.success === true) {
-                if(callbackFunc && typeof callbackFunc === 'function'){
-                    callbackFunc();
-                }
-                w.terminate();
-            }
-        };
-        return null;
+        return em.execPeriodically(delayMs, 1, null, callbackFunc);
     };
 
     /**
@@ -43,35 +17,50 @@
      * @returns {boolean}
      */
     em.execPeriodically = function(intervalMs, numberOfExecutions, intervalFunc, endingFunc){
-        if(parseInt(numberOfExecutions) === 0) return null;
+        var count = ~~numberOfExecutions,
+        delay = ~~intervalMs;
+
+        if(count === 0){
+            return null;
+        }
 
         var w;
         if(typeof(Worker) != 'undefined' ){
             w = new Worker('js/delayTimer.js');
-            w.postMessage({'delay':  parseInt(intervalMs)});
+            w.postMessage({'delay':  delay, 'repeat': count});
         }
 
         w.onmessage = function(e) {
             var data = e.data;
-            if(data.success === true) {
-                if(parseInt(numberOfExecutions) > 0) {
-                    //console.log('number of exec: ' + numberOfExecutions);
-                    if (intervalFunc && typeof intervalFunc === 'function') {
-                        intervalFunc();
-                    }
 
-                    if (parseInt(numberOfExecutions) === 1) { // last iteration
-                        if (endingFunc && typeof endingFunc === 'function') {
-                            endingFunc();
-                        }
-                    } else {
-                        em.execPeriodically(intervalMs, numberOfExecutions - 1, intervalFunc, endingFunc);
-                    }
+            //console.log('period tick! ' +data.tick);
+            if(data.tick >= 0) {
+                if (intervalFunc && typeof intervalFunc === 'function') {
+                    intervalFunc();
                 }
-                w.terminate();
+
+                if (data.tick === 0) { // last iteration
+                    if (endingFunc && typeof endingFunc === 'function') {
+                        endingFunc();
+                    }
+                    _stopWorker(w);
+                    return null;
+                }
             }
         };
         return null;
     };
+
+    /**
+     * stops the given web worker
+     * @param {Worker} worker
+     * @private
+     */
+    function _stopWorker(worker){
+        if(typeof worker!== 'undefined'){
+            //console.log('worker terminated!');
+            worker.terminate();
+        }
+    }
 
 }(this.executionManager = this.executionManager || {}));
