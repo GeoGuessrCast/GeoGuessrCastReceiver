@@ -40,7 +40,7 @@
         renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6 );
 
         var geoObjects = dataManager.getGeoObjects(
-            data.geoObjType.city, gameModeManager.currentGameModeProfile.limitedCountry,
+            gameModeManager.currentGameModeProfile.geoObjType, gameModeManager.currentGameModeProfile.limitedCountry,
             gameModeManager.currentGameModeProfile.multipleChoiceMode ? data.constants.numberOfChoices : 1,
             gameModeManager.currentGameModeProfile.minPopulationDefault);
 
@@ -140,7 +140,6 @@
 
 
     function _getDistance(p1, p2) {
-        //TODO {sh} : in case of rate limit, use formular not api
         return google.maps.geometry.spherical.computeDistanceBetween (p1, p2); // returns the distance in meter
     }
 

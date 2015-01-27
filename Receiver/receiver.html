@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="css/style.css" type="text/css" media="all">
     <script src="https://apis.google.com/js/client.js?onload=load"></script>
     <!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>-->
-    <script src="https://maps.google.com/maps/api/js?sensor=false&v=3&libraries=geometry"></script>
+    <script src="https://maps.google.com/maps/api/js?sensor=false&language=en&v=3&libraries=geometry"></script>
     <script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js"></script>
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -92,8 +92,9 @@
             <h1>Geo Guessing</h1>
         </div>
         <div class="roundedMenu centeredMenu">
-            <br><br><br><br><br><br><br><br>
+            <br><br><br><br><br><br><br>
             waiting for users to connect...
+            <br><br><br><br><br><br><br>
         </div>
     </div>
 
@@ -108,7 +109,7 @@
         <input type="button" onclick="createFakeUser()" value="fakeUser"/>
         <input type="button" onclick="userFakeAnswer('Berlin','1111','1:11a!')" value="u1:Berlin"/>
         <input type="text" style="cursor: text" id="testInput" size="8" onclick="document.getElementById('testInput').value=''" onkeydown="keyPress()" value="-type a city-"/>
-        <input type="button" onclick="gameRoundManager.cancelGame()" value="cancelGame"/>
+        <input type="button" onclick="gameRoundManager.cancelGame()" value="stopTimer"/>
     </div>
 
 </body>

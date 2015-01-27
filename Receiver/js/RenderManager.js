@@ -39,66 +39,161 @@
 
 
 
-    rm.loadDefaultMap = function() {
-        window.map = new google.maps.Map(document.getElementById('map-canvas'), {
-            center: new google.maps.LatLng(45.74167213456433, 38.26884827734375),
-            zoom: 3,
-            mapTypeControl: true,
-            disableDefaultUI: true,
-            mapTypeId: google.maps.MapTypeId.SATELLITE
-        });
+    rm.applyGameMenuMapstyle = function() {
+        window.map.setCenter(new google.maps.LatLng(45.74167213456433, 38.26884827734375));
+        window.map.setZoom(2);
+        renderManager.applyMapOptions(
+            {
+                gameModeName: 'Menu Screen',
+                id: -1,
+                geoObjType: 0,
+                iconUrl: 'images/snowyMountain_outline.png'
+            },
+            {
+                profileName: 'Menu Background Map',
+                id: -1,
+                limitedCountry: null,
+                multipleChoiceMode: false,
+                pointingMode: false,
+                minPopulationDefault: 0,
+                timePerRoundSec: 1000,
+                mapOption: {
+                    mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || SATELLITE || HYBRID || TERRAIN
+                    borders: false,
+                    roads: false,
+                    showCityNames: false,
+                    showRiverNames: false,
+                    showCountryNames: false,
+                    renderOptions: {
+                        globalHue: '#ff2b00',
+                        globalGamma: 0.2,
+                        globalSaturation: -99,
+                        waterColor: '#100000',
+                        borderColor: '#ffffff',
+                        borderWeight: 0.3
+                    }
+
+                }
+            }
+        );
+    };
+
+    rm.applyMapOptions = function(gameModeObject, profileObject){
+
+        var cityNameVis = gameModeObject.geoObjType==data.geoObjType.city || profileObject.mapOption.showCityNames==false ? "off" : "on";
+        var riverNameVis = gameModeObject.geoObjType==data.geoObjType.river || profileObject.mapOption.showRiverNames==false ? "off" : "on";
+        var countryNameVis = gameModeObject.geoObjType==data.geoObjType.country || profileObject.mapOption.showCountryNames==false ? "off" : "simplified";
+
+        var mapTypeTemplate = profileObject.mapOption.mapType;
+        var countryBorderVis = profileObject.mapOption.borders ? "on" : "off";
+        var roadVis = profileObject.mapOption.roads ? "simplified" : "off";
+
+        // basic settings
+        var featureOpts = [
+            {
+                "stylers": [
+                    { "visibility": "off" }
+                ]
+            },{
+                "featureType": "administrative.country",
+                "elementType": "geometry",
+                "stylers": [
+                    { "visibility": countryBorderVis }
+                ]
+            },{
+                "featureType": "water",
+                "elementType": "geometry",
+                "stylers": [
+                    { "visibility": "on" }
+                ]
+            },{
+                "featureType": "landscape",
+                "elementType": "geometry",
+                "stylers": [
+                    { "visibility": "on" }
+                ]
+            },{
+                "featureType": "road",
+                "elementType": "geometry",
+                "stylers": [
+                    { "saturation": -33 },
+                    { "gamma": 3.6 },
+                    { "visibility": roadVis }
+                ]
+            },{
+                "featureType": "administrative.country",
+                "elementType": "labels.text",
+                "stylers": [
+                    { "visibility": countryNameVis },
+                    { "gamma": 3.8 }
+                ]
+            },{
+                "featureType": "water",
+                "elementType": "labels",
+                "stylers": [
+                    { "visibility": riverNameVis }
+                ]
+            },{
+                "featureType": "administrative.locality",
+                "elementType": "labels",
+                "stylers": [
+                    { "visibility": cityNameVis }
+                ]
+            }
+        ];
+
+        //optional render settings
+        if (profileObject.mapOption.hasOwnProperty('renderOptions')) {
+            var renderOpts = profileObject.mapOption.renderOptions;
+
+            if (renderOpts.hasOwnProperty('globalHue')) {
+                featureOpts[0]["stylers"].push({hue: renderOpts['globalHue']});
+            }
+            if (renderOpts.hasOwnProperty('globalGamma')) {
+                featureOpts[0]["stylers"].push({gamma: renderOpts['globalGamma']});
+            }
+            if (renderOpts.hasOwnProperty('globalSaturation')) {
+                featureOpts[0]["stylers"].push({saturation: renderOpts['globalSaturation']});
+            }
+            if (renderOpts.hasOwnProperty('waterColor')) {
+                featureOpts[2]["stylers"].push({color: renderOpts['waterColor']});
+            }
+            if (renderOpts.hasOwnProperty('borderColor')) {
+                featureOpts[1]["stylers"].push({color: renderOpts['borderColor']});
+            }
+            if (renderOpts.hasOwnProperty('borderWeight')) {
+                featureOpts[1]["stylers"].push({weight: renderOpts['borderWeight']});
+            }
+        }
+
+        map.setMapTypeId(mapTypeTemplate);
+        map.setOptions({styles: featureOpts});
     };
 
     rm.loadMainMenu = function(){
         gameRoundManager.cancelGame();
-        renderManager.loadDefaultMap();
+        renderManager.applyGameMenuMapstyle();
 
         $('#gameOverlay').load('templates/MainMenu.html', function (content) {
             $(this).html(content);
+            var gameModeList = $('#gameModeList');
+            for (var g = 0; g < data.gameMode.length; g++){
+                gameModeList.append('<li class="menuButton noLinebreak" onclick="renderManager.loadGameProfileMenu(data.gameMode['+g+']);">'+data.gameMode[g].gameModeName+'</li>');
+            }
+            renderManager.rebuildUserList();
         });
-
-        $('#gm1')
-            .text(data.gameMode[0].gameModeName)
-            .attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[0]);");
-
-        $('#gm2')
-            .text(data.gameMode[1].gameModeName)
-            .attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[1]);");
-
-        $('#gm3')
-            .text(data.gameMode[2].gameModeName)
-            .attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[2]);");
-
-        $('#gm4')
-            .text(data.gameMode[3].gameModeName)
-            .attr('onclick', "renderManager.loadGameProfileMenu(data.gameMode[3]);");
-
-        renderManager.rebuildUserList();
     };
 
     rm.loadGameProfileMenu = function(selectedGameModeObject){
-        gameModeManager.setGameMode(selectedGameModeObject);
         gameRoundManager.cancelGame();
+        gameModeManager.setGameMode(selectedGameModeObject);
 
         $('#gameOverlay').load('templates/GameProfileMenu.html', function (content) {
             $(this).html(content);
-
-            $('#profile_1')
-                .text(data.gameModeProfile[0].profileName)
-                .attr('onclick', "gameModeManager.startGame(data.gameModeProfile[0]);");
-
-            $('#profile_2')
-                .text(data.gameModeProfile[1].profileName)
-                .attr('onclick', "gameModeManager.startGame(data.gameModeProfile[1]);");
-
-            $('#profile_3')
-                .text(data.gameModeProfile[2].profileName)
-                .attr('onclick', "gameModeManager.startGame(data.gameModeProfile[2]);");
-
-            $('#profile_4')
-                .text(data.gameModeProfile[3].profileName)
-                .attr('onclick', "gameModeManager.startGame(data.gameModeProfile[3]);");
-
+            var profileList = $('#profileList');
+            for (var p = 0; p < data.gameModeProfile.length; p++){
+                profileList.append('<li class="menuButton noLinebreak" onclick="gameModeManager.startGame(data.gameModeProfile['+p+']);">'+data.gameModeProfile[p].profileName+'</li>');
+            }
             renderManager.rebuildUserList();
         });
     };
