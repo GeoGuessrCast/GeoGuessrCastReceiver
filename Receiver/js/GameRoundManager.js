@@ -72,6 +72,9 @@
 
 
     grm.choseAnswer = function(userMac, answer){
+        if (gameRoundManager.currentGameState != data.gameState.guessing) {
+            return;
+        }
         var cleanedAnswerString = answer.replace(/([^a-zäöü\s]+)/gi, ' ');
         cleanedAnswerString = cleanedAnswerString.substring(0, data.constants.maxAnswerLength);
         var user = userManager.getUserByMac(userMac);
@@ -104,7 +107,7 @@
     };
 
 
-    grm.cancelRoundTimer = function() {
+    grm.cancelGame = function() {
         gameRoundManager.currentGameState = data.gameState.ended;
         if (gameRoundManager.roundTimer != null) {
             gameRoundManager.roundTimer.terminate();

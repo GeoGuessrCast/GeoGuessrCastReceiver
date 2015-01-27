@@ -48,7 +48,7 @@
                 }
             }
         };
-        return null;
+        return w;
     };
 
     /**

@@ -50,7 +50,7 @@
     };
 
     rm.loadMainMenu = function(){
-        gameRoundManager.cancelRoundTimer();
+        gameRoundManager.cancelGame();
         renderManager.loadDefaultMap();
 
         $('#gameOverlay').load('templates/MainMenu.html', function (content) {
@@ -78,7 +78,7 @@
 
     rm.loadGameProfileMenu = function(selectedGameModeObject){
         gameModeManager.setGameMode(selectedGameModeObject);
-        gameRoundManager.cancelRoundTimer();
+        gameRoundManager.cancelGame();
 
         $('#gameOverlay').load('templates/GameProfileMenu.html', function (content) {
             $(this).html(content);
