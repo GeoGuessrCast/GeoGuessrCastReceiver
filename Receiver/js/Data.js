@@ -82,10 +82,14 @@ data = {
             multipleChoiceMode: false,
             minPopulationDefault: 500000,
             timePerRoundSec: 30,
+            mapTypeId: 'map-style',
             mapOption: {
                 mapType : google.maps.MapTypeId.HYBRID,
-                borders: true,
-                showCountryNames: true
+                borders: "on",
+                showCityNames: "off",
+                showRoads: "off",
+                showCountryNames: "on",
+                zoom: 6
             }
         },
         {
@@ -95,10 +99,14 @@ data = {
             multipleChoiceMode: true,
             minPopulationDefault: 200000,
             timePerRoundSec: 15,
+            mapTypeId: 'map-style',
             mapOption: {
                 mapType : google.maps.MapTypeId.HYBRID,
-                borders: true,
-                showCountryNames: true
+                borders: "on",
+                showCityNames: "off",
+                showRoads: "off",
+                showCountryNames: "on",
+                zoom: 6
             }
         },
         {
@@ -108,10 +116,14 @@ data = {
             multipleChoiceMode: true,
             minPopulationDefault: 100000,
             timePerRoundSec: 15,
+            mapTypeId: 'map-style',
             mapOption: {
                 mapType : google.maps.MapTypeId.HYBRID,
-                borders: true,
-                showCountryNames: false
+                borders: "off",
+                showCityNames: "off",
+                showRoads: "off",
+                showCountryNames: "off",
+                zoom: 6
             }
         },
         {
@@ -121,10 +133,14 @@ data = {
             multipleChoiceMode: false,
             minPopulationDefault: 250000,
             timePerRoundSec: 45,
+            mapTypeId: 'satellite',
             mapOption: {
                 mapType : google.maps.MapTypeId.SATELLITE,
-                borders: false,
-                showCountryNames: false
+                borders: "off",
+                showCityNames: "off",
+                showRoads: "off",
+                showCountryNames: "off",
+                zoom: 10
             }
         }
     ]

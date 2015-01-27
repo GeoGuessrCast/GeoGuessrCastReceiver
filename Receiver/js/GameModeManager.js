@@ -25,8 +25,47 @@
     /**
      *
      */
-    gmm.applyMapOptions = function(gameModeObject, profileObject){
-        this.loadMap(gameModeObject, profileObject);
+    gmm.applyMapOptions = function(profileObject){
+        console.debug("Profile: "+profileObject.profileName+ " ID: "+ profileObject.mapTypeId);
+
+        var style = [
+            {
+                "featureType": "administrative.locality", // Citynames
+                "elementType": "labels.text",
+                "stylers": [
+                    {"visibility": profileObject.mapOption.showCityNames}
+                ]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'all',
+                stylers: [
+                    {visibility: profileObject.mapOption.showRoads}
+                ]
+            },
+            {
+                "featureType": "administrative.country",
+                "elementType": "labels",
+                "stylers": [
+                    {"visibility": profileObject.mapOption.showCountryNames}
+                ]
+            },
+            {
+                "featureType": "administrative.country",
+                "elementType": "geometry",
+                "stylers": [
+                    { "visibility": profileObject.mapOption.borders }
+                ]
+            }
+        ];
+        var styledMapType = new google.maps.StyledMapType(style, {
+            map: map,
+            name: 'styled-map'
+
+        });
+        map.mapTypes.set('map-style', styledMapType);
+        map.setMapTypeId(profileObject.mapTypeId);
+        map.setZoom(profileObject.mapOption.zoom);
 
     };
 
@@ -90,10 +129,20 @@
      */
     gmm.startGame = function(profileObject){
         gameModeManager.setGameModeProfile(profileObject);
+        console.debug("Profile: "+profileObject);
         gmm.resetGame();
+
+        _loadGameUi();
+        geocoder = new google.maps.Geocoder();
+
         this.loadMap();
+
+        this.applyMapOptions(profileObject)
+
         // init grm.init
 
+
+        gameRoundManager.startRound( gameModeManager.currentRound ); //TODO use members
     };
 
     gmm.setMap = function(setter){
@@ -134,38 +183,7 @@
             mapTypeId: google.maps.MapTypeId.SATELLITE
 
         });
-        var style = [
-            {
-                "featureType": "administrative",
-                "elementType": "labels.text",
-                "stylers": [
-                    {"visibility": "off"}
-                ]
-            },
-            {
-                featureType: 'road.highway',
-                elementType: 'all',
-                stylers: [
-                    {visibility: 'off'}
-                ]
-            },
-            {
-                "featureType": "administrative.country",
-                "elementType": "labels",
-                "stylers": [
-                    {"visibility": "off"}
-                ]
-            }
-        ];
-        var styledMapType = new google.maps.StyledMapType(style, {
-            map: map,
-            name: 'Styled Map'
 
-        });
-        map.mapTypes.set('map-style', styledMapType);
-        map.setMapTypeId('map-style');
-
-        gameRoundManager.startRound( gameModeManager.currentRound ); //TODO use members
     };
 
 
