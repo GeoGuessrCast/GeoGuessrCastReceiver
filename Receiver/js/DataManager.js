@@ -1,16 +1,9 @@
 (function(castReceiver){
-
+    /** @type Array.<GeoObject> */
+    //var geoObjects = [];
     //Fusion Table ID:
     var ftTableIdCity = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
-    var userHighscoreTable = "1eUC797_4AgjDAn0IRdGcNVdll245lnJaSCXe0YPz"
     var locationColumn = "col4";
-    var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
-    //Google API Key
-    var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
-    var randomCountryCode = ["DE","GB","FR","US","ES","RU","IT"]; // and many more.... TODO
-    var clientID = '309924748076-rjhri6p3mqng1iej0agdllo4ijvrcgje.apps.googleusercontent.com';
-    var scopes = 'https://www.googleapis.com/auth/fusiontables';
-    var accessToken = '?access_token=nGh0RYqr85xlpQacEnGVVMYr';
     /**
      *
      * @param name
@@ -65,7 +58,10 @@
 
     };
 
-
+    var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
+    //Google API Key
+    var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
+    var randomCountryCode = ["DE","GB","FR","US","ES","RU","IT"]; // and many more....
 
     castReceiver.getGeoObjects = function(geoObjType, countryCode, count, population) {
         if (countryCode == null){
@@ -114,19 +110,6 @@
         }
         return randomObjects;
     }
-    // Run OAuth 2.0 authorization.
-    function _auth(immediate) {
-        gapi.auth.authorize({
-            client_id: "nGh0RYqr85xlpQacEnGVVMYr",
-            scope: "https://www.googleapis.com/auth/fusiontables",
-            embedded: true,
-            immediate: immediate
-        }, handleAuthResult);
-    }
-    // Handle the results of the OAuth 2.0 flow.
-    function handleAuthResult(authResult) {
-        console.debug("Auth: "+authResult);
-    }
 
     castReceiver.getRandomCountryCode = function(){
         return getRandomSubsetOfArray(randomCountryCode,1);
@@ -161,15 +144,6 @@
         geoObjects = getRandomSubsetOfArray(geoObjects, minPoolSize);
         console.debug("[DM] citiesNearby: "+geoObjects);
 
-        _auth(true);
-
-        //----TEST
-        var userscores = {};
-        userscores["1234124"] = 12;
-        //this.insertFusionTableQuery(userHighscoreTable,userscores);
-
-        //----
-
         return geoObjects;
     };
 
@@ -187,54 +161,12 @@
     };
 
 
-    castReceiver.persistHighScoreList = function(userList) {
-        if (!window.localStorage) {
-            console.error("ChromeCast does not support local stoarge.")
-            return false;
-        }
-        var userLength = userList.length;
+    castReceiver.persistHighScoreList = function(highScoreMap) {
+        //TODO persist the map (user->maxScore%)
+    };
 
-        for(var i = 0; i < userLength; i++){
-            var user = userList[i];
-            if (localStorage.getItem(user.mac) === null)
-            {
-                localStorage.setItem(user.mac,user.pointsInCurrentGame);
-                console.debug("Saved new user highscore: "+user.mac+ ": "+ user.pointsInCurrentGame);
-            } else {
-                var oldScore = parseInt(localStorage.getItem(user.mac))
-                var newScore = oldScore + user.pointsInCurrentGame
-
-                localStorage.setItem(user.mac, newScore);
-                console.debug("updated user highscore: "+user.mac+ ": "+ newScore);
-            }
-        }
-        return true;
-        };
-
-    castReceiver.getHighScoreList = function(userList) {
-        if (!window.localStorage) {
-            console.error("ChromeCast does not support local stoarge.")
-            return false;
-        }
-        var scores = {};
-        var userLength = userList.length;
-
-        for(var i = 0; i < userLength; i++){
-            var user = userList[i];
-            if (localStorage.getItem(user.mac) === null)
-            {
-                console.debug("No Entry for: "+user);
-            } else {
-
-                var entry = localStorage.getItem(user.mac);
-                var oldScore = parseInt(entry);
-                scores[user] = oldScore;
-
-                console.debug("found user highscore: "+user.mac+ ": "+ oldScore);
-            }
-        }
-        return scores;
-
+    castReceiver.getHighScoreList = function() {
+        //TODO return map (user->maxScore%)
     };
     /**
      *
@@ -291,7 +223,7 @@
         if (limit != 0){
             query = query + " LIMIT "+ limit;
         }
-        console.debug("[DM] SQL SELECT Query: "+query);
+        console.debug("[DM] SQL Query: "+query);
         var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
 
         var geoObjects = null;
@@ -304,30 +236,6 @@
         });
 
         return geoObjects;
-    }
-     castReceiver.insertFusionTableQuery = function(ftTableId, userData) {
-        // Builds a Fusion Tables SQL query and hands the result to  dataHandler
-        // write your SQL as normal, then encode it
-        var query = "INSERT INTO " + ftTableId + " (UserID, Scores) VALUES (";
-        var values = "";
-        var valueEnd = ")";
-        for (var userid in userData){
-            values = values + " " + userid + "," + userData[userid];
-        }
-        query = query + values + valueEnd;
-        console.debug("[DM] SQL INSERT Query: "+query);
-        var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
-
-        jQuery.ajax({
-            url: queryurl,
-            method:"POST",
-            success: function(data) {
-                console.log("Insert successfull");
-            },
-            async:false
-        });
-
-        return true;
     }
     /**
      * gets the data from the sql query with the address

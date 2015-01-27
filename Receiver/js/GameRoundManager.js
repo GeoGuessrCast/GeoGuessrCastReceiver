@@ -49,6 +49,7 @@
         _placeGoalMarker(goalPos);
 
         gameModeManager.getMap().setCenter(goalPos);
+        gameModeManager.getMap().setZoom(6);
 
 
         var geoNameChoices = dataManager.getCityNameArray(geoObjects);
@@ -99,7 +100,6 @@
             }
         }
         userManager.sortUsersByScore();
-        dataManager.persistHighScoreList(userManager.getUserList());
         renderManager.refreshBottomScoreboard();
         var jsonData = {"event_type":"round_ended", "ended": true};
         eventManager.broadcast(data.channelName.game, jsonData);
