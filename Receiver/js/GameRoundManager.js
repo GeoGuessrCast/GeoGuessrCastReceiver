@@ -104,6 +104,7 @@
         var jsonData = {"event_type":"round_ended", "ended": true};
         eventManager.broadcast(data.channelName.game, jsonData);
         gameRoundManager.nextRound();
+        //renderManager.displayUserAnswer(user.mac, answer.guess, answer.points/data.constants.maxPointsPerAnswer);
     };
 
 
@@ -118,6 +119,27 @@
             print('[GRM] killed roundTimerAnim: ' + gameRoundManager.roundTimerAnim);
         }
     };
+
+
+    function _placeMarkerOnMap(pos,player,color){
+
+        var pinColor = color.split("#")[1];
+        var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor);
+
+
+        var marker = new google.maps.Marker({
+            position: pos,
+            //map: map,
+            icon: pinImage,
+            title: "Player: "+player,
+            animation: google.maps.Animation.DROP
+        });
+
+        marker.setMap(gameModeManager.getMap());
+        gameModeManager.getMarkers().push(marker);
+
+        return marker;
+    }
 
 
 
