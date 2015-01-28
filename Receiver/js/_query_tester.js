@@ -1,14 +1,18 @@
 
 function sqlTest() {
 
+    //USAGE:  type  sqlTest()   into console
+    //ERROR INSPECTION:  under "Network" a red queryObejct
+
 
     var fusionTableId = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
     var googleApiKey = "AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo";
 
     var queryStr = [];
-    queryStr.push("SELECT countryCode, COUNT() as numberOfCities, SUM(population) AS populationSum "); //ATTENTION:  MIN(latitude) AS minLat -> BAD_REQUEST (some lattidues are STRINGS  :( )
+    queryStr.push("SELECT countryCode, COUNT() as numberOfCities, SUM(population) AS populationSum," +
+    " MINIMUM(longitude) AS countryMinLong, MAXIMUM(longitude) AS countryMaxLong "); //ERROR_503:    , MINIMUM(latitude) AS countryMinLat, MAXIMUM(latitude) AS countryMaxLat
     queryStr.push(" FROM " + fusionTableId);
-    queryStr.push(" WHERE countryCode='DE'");
+    queryStr.push(" WHERE countryCode='DE'"); // <- JUST FOR CONSOLE TESTING
     queryStr.push(" GROUP BY countryCode");
 
 
