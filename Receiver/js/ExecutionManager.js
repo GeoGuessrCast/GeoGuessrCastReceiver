@@ -44,7 +44,7 @@
                         endingFunc();
                     }
                     _stopWorker(w);
-                    return null;
+                    //return null;
                 }
             }
         };
