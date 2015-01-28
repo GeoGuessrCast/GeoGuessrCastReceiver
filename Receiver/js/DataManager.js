@@ -161,12 +161,53 @@
     };
 
 
-    castReceiver.persistHighScoreList = function(highScoreMap) {
-        //TODO persist the map (user->maxScore%)
+    castReceiver.persistHighScoreList = function(userList) {
+        if (!window.localStorage) {
+            console.error("ChromeCast does not support local stoarge.")
+            return false;
+        }
+        var userLength = userList.length;
+
+        for(var i = 0; i < userLength; i++){
+            var user = userList[i];
+            if (localStorage.getItem(user.mac) === null)
+            {
+                localStorage.setItem(user.mac,user.pointsInCurrentGame);
+                console.debug("Saved new user highscore: "+user.mac+ ": "+ user.pointsInCurrentGame);
+            } else {
+                var oldScore = parseInt(localStorage.getItem(user.mac))
+                var newScore = oldScore + user.pointsInCurrentGame
+
+                localStorage.setItem(user.mac, newScore);
+                console.debug("updated user highscore: "+user.mac+ ": "+ newScore);
+            }
+        }
+        return true;
     };
 
-    castReceiver.getHighScoreList = function() {
-        //TODO return map (user->maxScore%)
+    castReceiver.getHighScoreList = function(userList) {
+        if (!window.localStorage) {
+            console.error("ChromeCast does not support local stoarge.")
+            return false;
+        }
+        var scores = {};
+        var userLength = userList.length;
+
+        for(var i = 0; i < userLength; i++){
+            var user = userList[i];
+            if (localStorage.getItem(user.mac) === null)
+            {
+                console.debug("No Entry for: "+user);
+            } else {
+
+                var entry = localStorage.getItem(user.mac);
+                var oldScore = parseInt(entry);
+                scores[user] = oldScore;
+
+                console.debug("found user highscore: "+user.mac+ ": "+ oldScore);
+            }
+        }
+        return scores;
     };
     /**
      *

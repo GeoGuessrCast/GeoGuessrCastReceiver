@@ -44,7 +44,16 @@ function initialize() {
     }
 
 
-    renderManager.loadDefaultMap();
+    window.map = new google.maps.Map(document.getElementById('map-canvas'), {
+        center: new google.maps.LatLng(45.74167213456433, 38.26884827734375),
+        zoom: 3,
+        mapTypeControl: false,
+        disableDefaultUI: true,
+        scrollwheel: false,
+        mapTypeId: google.maps.MapTypeId.TERRAIN
+    });
+
+    renderManager.applyGameMenuMapstyle();
 
 
 }

@@ -40,7 +40,7 @@
         renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6 );
 
         var geoObjects = dataManager.getGeoObjects(
-            data.geoObjType.city, gameModeManager.currentGameModeProfile.limitedCountry,
+            gameModeManager.currentGameModeProfile.geoObjType, gameModeManager.currentGameModeProfile.limitedCountry,
             gameModeManager.currentGameModeProfile.multipleChoiceMode ? data.constants.numberOfChoices : 1,
             gameModeManager.currentGameModeProfile.minPopulationDefault);
 
@@ -72,6 +72,9 @@
 
 
     grm.choseAnswer = function(userMac, answer){
+        if (gameRoundManager.currentGameState != data.gameState.guessing) {
+            return;
+        }
         var cleanedAnswerString = answer.replace(/([^a-zäöü\s]+)/gi, ' ');
         cleanedAnswerString = cleanedAnswerString.substring(0, data.constants.maxAnswerLength);
         var user = userManager.getUserByMac(userMac);
@@ -104,7 +107,7 @@
     };
 
 
-    grm.cancelRoundTimer = function() {
+    grm.cancelGame = function() {
         gameRoundManager.currentGameState = data.gameState.ended;
         if (gameRoundManager.roundTimer != null) {
             gameRoundManager.roundTimer.terminate();
@@ -137,7 +140,6 @@
 
 
     function _getDistance(p1, p2) {
-        //TODO {sh} : in case of rate limit, use formular not api
         return google.maps.geometry.spherical.computeDistanceBetween (p1, p2); // returns the distance in meter
     }
 

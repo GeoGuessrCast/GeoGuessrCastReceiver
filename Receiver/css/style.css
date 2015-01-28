@@ -103,8 +103,8 @@ h3 {
     top: 20%;
     left: 33%;
     width: 33%;
-    height: 60%;
     min-width: 45vh;
+    padding-bottom: 7vh;
 }
 
 #mainMenuUserList {
@@ -252,7 +252,7 @@ h3 {
 }
 
 
-.gmnoprint, .gm-style>div>a {
+.gmnoprint {
     display: none;
 }
 
