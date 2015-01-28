@@ -3,7 +3,7 @@
     //var geoObjects = [];
     //Fusion Table ID:
     var ftTableIdCity = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
-    var locationColumn = "col4";
+    var locationColumn = "col4"; // TODO Column Names
     /**
      *
      * @param name
@@ -42,7 +42,15 @@
             return name + '(' + countryCode + '|' + long + '|' + lat + '|pop:' + population + ')';
         }
     };
+    castReceiver.Highscore = function(userMac,points,totalPoints){
+        this.userMac = userMac;
+        this.points = points;
+        this.totalPoints = totalPoints;
 
+        this.toString = function() {
+            return '[ '+userMac+' ('+ points +'/'+totalPoints+ ')]';
+        }
+    };
     var minPopWeigthsPerCountry = {
         'DE': 0.5,
         'IT': 1.0,
@@ -178,27 +186,39 @@
     };
 
 
-    castReceiver.persistHighScoreList = function(userList) {
+    castReceiver.persistHighScoreList = function(userMac, userPoints, maxPoints) {
         if (!window.localStorage) {
             console.error("ChromeCast does not support local stoarge.")
             return false;
         }
-        var userLength = userList.length;
+        var highscores = [];
 
-        for(var i = 0; i < userLength; i++){
-            var user = userList[i];
-            if (localStorage.getItem(user.mac) === null)
-            {
-                localStorage.setItem(user.mac,user.pointsInCurrentGame);
-                console.debug("Saved new user highscore: "+user.mac+ ": "+ user.pointsInCurrentGame);
-            } else {
-                var oldScore = parseInt(localStorage.getItem(user.mac))
-                var newScore = oldScore + user.pointsInCurrentGame
+        if (localStorage.getItem("highscores") === null)
+        {
 
-                localStorage.setItem(user.mac, newScore);
-                console.debug("updated user highscore: "+user.mac+ ": "+ newScore);
+            highscores.push(new this.Highscore(userMac,userPoints, maxPoints));
+
+            localStorage.setItem("highscores",JSON.stringify(highscores));
+            console.debug("[DM] Saved new user highscore: "+highscores);
+        } else {
+            highscores = JSON.parse(localStorage.getItem("highscores"));
+            console.debug("user highscores: "+highscores.length);
+
+            for (var i = 0; i < highscores.length; i++){
+                var oldScore = highscores[i];
+
+                if(oldScore.userMac === userMac){
+                    var newScore = new this.Highscore(userMac,oldScore.points + userPoints, oldScore.totalPoints + maxPoints);
+                    highscores[i] = newScore;
+                    console.debug("[DM] updated user highscore: "+oldScore+"->"+ newScore);
+
+                    break;
+                }
+
             }
+            localStorage.setItem("highscores", JSON.stringify(highscores));
         }
+
         return true;
     };
 
@@ -208,22 +228,27 @@
             return false;
         }
         var scores = {};
-        var userLength = userList.length;
 
-        for(var i = 0; i < userLength; i++){
-            var user = userList[i];
-            if (localStorage.getItem(user.mac) === null)
+            if (localStorage.getItem("highscores") === null)
             {
-                console.debug("No Entry for: "+user);
+                console.debug("No Highscores available, returning empty map");
             } else {
 
-                var entry = localStorage.getItem(user.mac);
-                var oldScore = parseInt(entry);
-                scores[user] = oldScore;
+                var highscores = JSON.parse(localStorage.getItem("highscores"));
+                console.debug("user highscores: "+highscores.length);
 
-                console.debug("found user highscore: "+user.mac+ ": "+ oldScore);
+                for (var i = 0; i < highscores.length; i++){
+                    var oldScore = highscores[i];
+                    var percentage = (oldScore.points / oldScore.totalPoints) * 100;
+                    scores[oldScore.userMac] = percentage;
+                    console.debug("[DM] found user highscore: "+ oldScore+ " : "+ percentage +"%");
+
+                }
+
+
+
             }
-        }
+
         return scores;
     };
     /**
@@ -317,7 +342,7 @@
                 //var latLongPatternCheck = new RegExp("^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$");
                 if (onlyDigitsPattern.test(id)
                     && typeof(name) === "string"
-                    && typeof(lat) === "number" //TODO sh use regexp to check for long/lat
+                    && typeof(lat) === "number" //TODO sh use regexp to check for long/lat parseFloat typeof === NaN
                     && typeof(long) === "number"
                     && typeof(countryCode) === "string"
                     && onlyDigitsPattern.test(population)

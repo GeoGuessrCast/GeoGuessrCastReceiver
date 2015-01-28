@@ -97,10 +97,11 @@
             var user = userList[i];
             if (user.lastAnswerGiven != null) {
                 user.pointsInCurrentGame += user.lastAnswerGiven.points;
+                dataManager.persistHighScoreList(user.mac,user.lastAnswerGiven.points,data.constants.maxPointsPerAnswer);
+
             }
         }
         userManager.sortUsersByScore();
-        dataManager.persistHighScoreList(userManager.getUserList());
         renderManager.refreshBottomScoreboard();
         var jsonData = {"event_type":"round_ended", "ended": true};
         eventManager.broadcast(data.channelName.game, jsonData);
