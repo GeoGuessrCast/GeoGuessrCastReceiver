@@ -42,6 +42,23 @@
             return name + '(' + countryCode + '|' + long + '|' + lat + '|pop:' + population + ')';
         }
     };
+
+    var minPopWeigthsPerCountry = {
+        'DE': 0.5,
+        'IT': 1.0,
+        'RU': 1.8
+                        //TODO more factors...
+    }
+
+    castReceiver.applyPopulationFact = function(countryCode, minPopProfile) {
+        if (!minPopWeigthsPerCountry.hasOwnProperty(countryCode)) {
+            return minPopProfile;
+        } else {
+            return minPopWeigthsPerCountry[countryCode] * minPopProfile;
+        }
+    }
+
+
     /**
      *
      * @param ftLayer
