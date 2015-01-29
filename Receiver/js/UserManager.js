@@ -31,6 +31,10 @@
         + Math.floor(Math.random()*89+10).toString()
         + Math.floor(Math.random()*89+10).toString()
         + Math.floor(Math.random()*89+10).toString();
+
+        this.toString = function() {
+            return name;
+        }
     };
 
     /**

@@ -1,11 +1,51 @@
 (function(rm){
 
+    var userMarkers = []; //Google Map Marker
+    var userLines = []; //Google Map polyLine
+
     var currentTimerPosition = 0;
     var numberSteps = 20;
     var percentPerStep = 5;
     var diffusePartPercet = 3;
     rm.consoleOutPutHidden = false;
 
+
+
+    rm.placeUserMarkerOnMap = function(user, position){
+        var marker = new google.maps.Marker({
+            position: position,
+            map: gameModeManager.getMap(),
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 4,
+                strokeColor: '#ffffff',
+                strokeWeight: 1,
+                strokeOpacity: 1.0,
+                fillColor: user.color,
+                fillOpacity: 1
+            }
+        });
+        userMarkers.push(marker);
+        var line = new google.maps.Polyline({
+            path: [gameRoundManager.goalGeoObject.position, position],
+            map: gameModeManager.getMap(),
+            strokeColor: user.color,
+            strokeWeight: 1,
+            strokeOpacity: 1.0
+        });
+        userLines.push(line);
+    };
+
+    rm.clearMarkers = function(){
+        userMarkers.map(function (marker) {
+            marker.setMap(null);
+        });
+        userMarkers = [];
+        userLines.map(function (line) {
+            line.setMap(null);
+        });
+        userLines = [];
+    };
 
 
     rm.playTimerAnimationWithRoundDisplay = function(animationDurationSec, currentRound, maxRounds) {
@@ -261,7 +301,7 @@
 
             bottomScoreboard
                 .append('<span><div><span class="userStates" id="userState_' + userMacCleaned + '">' + userAnswerCity + '</span></div><span class="'
-                + userCssClass + ' noLinebreak userName">' + user.name + ': </span><span class="score">' + user.pointsInCurrentGame
+                + userCssClass + ' noLinebreak userName" style="color:' + user.color + '">' + user.name + ': </span><span class="score">' + user.pointsInCurrentGame
                 + '</span></span>');
 
             var userStateDiv = $('#userState_'+userMacCleaned);

@@ -32,6 +32,7 @@
         print("\n======= Round " + gameModeManager.currentRound + " =======");
 
         //var countryCode = dataManager.getRandomCountryCode();
+        renderManager.clearMarkers();
         var userList = userManager.getUserList();
         for(var i = 0; i < userList.length; i++){
             userList[i].lastAnswerGiven = null;
@@ -71,23 +72,6 @@
 
 
 
-    grm.choseAnswer = function(userMac, answer){
-        if (gameRoundManager.currentGameState != data.gameState.guessing) {
-            return;
-        }
-        var cleanedAnswerString = answer.replace(/([^a-zäöü\s]+)/gi, ' ');
-        cleanedAnswerString = cleanedAnswerString.substring(0, data.constants.maxAnswerLength);
-        var user = userManager.getUserByMac(userMac);
-        print("[GRM] " + user.name + " picked " + cleanedAnswerString);
-        if (gameModeManager.currentGameModeProfile.multipleChoiceMode) {
-            _calculateAnswer(user, cleanedAnswerString);
-        } else {
-            _calculateAnswerWithGeocoder(user, cleanedAnswerString);
-        }
-    };
-
-
-
     grm.endRound = function(){
         gameRoundManager.currentGameState = data.gameState.evaluating;
         print('-> Round ' + gameModeManager.currentRound +  ' ended.' );
@@ -98,7 +82,9 @@
             if (user.lastAnswerGiven != null) {
                 user.pointsInCurrentGame += user.lastAnswerGiven.points;
                 dataManager.persistHighScoreList(user.mac,user.lastAnswerGiven.points,data.constants.maxPointsPerAnswer);
-
+                if (user.lastAnswerGiven.geoObject != null) {
+                    renderManager.placeUserMarkerOnMap(user, user.lastAnswerGiven.geoObject.position);
+                }
             }
         }
         userManager.sortUsersByScore();
@@ -106,7 +92,6 @@
         var jsonData = {"event_type":"round_ended", "ended": true};
         eventManager.broadcast(data.channelName.game, jsonData);
         gameRoundManager.nextRound();
-        //renderManager.displayUserAnswer(user.mac, answer.guess, answer.points/data.constants.maxPointsPerAnswer);
     };
 
 
@@ -121,27 +106,6 @@
             print('[GRM] killed roundTimerAnim: ' + gameRoundManager.roundTimerAnim);
         }
     };
-
-
-    function _placeMarkerOnMap(pos,player,color){
-
-        var pinColor = color.split("#")[1];
-        var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor);
-
-
-        var marker = new google.maps.Marker({
-            position: pos,
-            //map: map,
-            icon: pinImage,
-            title: "Player: "+player,
-            animation: google.maps.Animation.DROP
-        });
-
-        marker.setMap(gameModeManager.getMap());
-        gameModeManager.getMarkers().push(marker);
-
-        return marker;
-    }
 
 
 
@@ -169,40 +133,32 @@
 
 
 
-    function _calculateAnswer(user, answer){
-        var points;
-        if (answer == gameRoundManager.goalGeoObject.name) {
-            points = data.constants.maxPointsPerAnswer;
-            print("[GRM] " + user.name + " got " + points + " points for the RIGTH answer.");
-        } else {
-            points = 0;
-            print("[GRM] " + user.name + " got " + points + " points for the WRONG answer.");
+    grm.choseAnswer = function(userMac, answer){
+        if (gameRoundManager.currentGameState != data.gameState.guessing) {
+            return;
         }
-        user.lastAnswerGiven = new grm.Answer(answer,0,null,points);
-        renderManager.refreshBottomScoreboard();
-    }
+        var cleanedAnswerString = answer.replace(/([^a-zäöü\s]+)/gi, ' ');
+        cleanedAnswerString = cleanedAnswerString.substring(0, data.constants.maxAnswerLength);
+        var user = userManager.getUserByMac(userMac);
 
+        var locationType = "locality"; //TODO river etc
+        var geoObject = null;
 
-
-
-    function _calculateAnswerWithGeocoder(user, answer){
-        // get Geolocation
         gameModeManager.getGeocoder().geocode({
-            address: answer,
+            address: cleanedAnswerString,
             region: gameRoundManager.goalGeoObject.countryCode
-
         }, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
-                var pos = results[0].geometry.location;
                 //console.debug(results[0]);
                 var isValidLocality = false;
                 for (var a=0; a<results[0].types.length; a++) {
-                    if (results[0].types[a] == "locality") {
+                    if (results[0].types[a] == locationType) {
                         isValidLocality = true;
                         break;
                     }
                 }
                 if (isValidLocality) {
+                    var pos = results[0].geometry.location;
                     var countryCode = null;
                     for (var i=0; i<results[0].address_components.length; i++) {
                         for (var b=0;b<results[0].address_components[i].types.length;b++) {
@@ -212,26 +168,44 @@
                             }
                         }
                     }
-                    // get Distance to right answer (if not the same)
-                    var distInKm = _getDistance(pos,gameRoundManager.goalGeoObject.position)/1000;
-                    // Create new GeoObject for given answer
-                    var guessedGeoObject = new dataManager.GeoObject(user.mac, answer, pos.k, pos.B, countryCode, 0, 0, null);
-                    // Create new Answer Object
-                    var points = Math.floor(Math.max(0,Math.min(data.constants.maxPointsPerAnswer,(data.constants.maxDistanceErrorKm+100-distInKm)/100)));
-                    distInKm = Math.floor(distInKm);
-                    user.lastAnswerGiven = new grm.Answer(answer,distInKm,guessedGeoObject,points);
-                    renderManager.refreshBottomScoreboard();
-                    print("[GRM] " + user.name + " got " + points + " points for " + guessedGeoObject.name + ' (' + countryCode + ', '+distInKm+'km)');
+                    geoObject = new dataManager.GeoObject(0, cleanedAnswerString, pos.k, pos.B, countryCode, 0, 0, null);
                 } else {
-                    print('[GRM] no valid locality for: '+answer);
+                    print('[GRM] no valid '+locationType+' for: '+cleanedAnswerString);
                 }
             } else {
-                print('[GRM] could not be geocoded: '+answer+" (" + status +')');
-
+                print('[GRM] could not be geocoded: '+cleanedAnswerString+" (" + status +')');
             }
+            _evaluateAnswer(user, cleanedAnswerString, geoObject);
         });
+    };
 
+
+    function _evaluateAnswer(user, cleanedAnswerString, answerGeoObject){
+        var points = 0;
+        var distInKm = 100000000;
+        if (answerGeoObject != null) {
+            distInKm = _getDistance(answerGeoObject.position, gameRoundManager.goalGeoObject.position) / 1000;
+        }
+        if (gameModeManager.currentGameModeProfile.multipleChoiceMode) {
+            if (cleanedAnswerString == gameRoundManager.goalGeoObject.name) {
+                points = data.constants.maxPointsPerAnswer;
+                print("[GRM] " + user.name + " got " + points + " points for the RIGHT answer (" + cleanedAnswerString + ")");
+            } else {
+                print("[GRM] " + user.name + " got " + points + " points for the WRONG answer (" + cleanedAnswerString + ")");
+            }
+        } else {
+            if (answerGeoObject != null) {
+                points = Math.floor(Math.max(0,Math.min(data.constants.maxPointsPerAnswer,(data.constants.maxDistanceErrorKm+100-distInKm)/100)));
+                print("[GRM] " + user.name + " got " + points + " points for " + cleanedAnswerString + ' (' + answerGeoObject.countryCode + ', '+Math.floor(distInKm)+'km)');
+            } else {
+                //TODO send message to android app: geo-obj not found - retype your answer
+            }
+        }
+        user.lastAnswerGiven = new grm.Answer(cleanedAnswerString,distInKm,answerGeoObject,points);
+        renderManager.refreshBottomScoreboard();
     }
+
+
 
 
     function _placeGoalMarker(position){
@@ -246,17 +220,22 @@
 
             gameModeManager.goalMarker = new google.maps.Marker({
                 position: position,
-                map: gameModeManager.getMap(),
+                //map: gameModeManager.getMap(),
                 icon: {
                     path: google.maps.SymbolPath.CIRCLE,
-                    scale: 4,
-                    strokeColor: '#B42D2D'
+                    scale: 5,
+                    strokeColor: '#B42D2D',
+                    strokeWeight: 3,
+                    strokeOpacity: 1.0,
+                    fillColor: '#ffffff',
+                    fillOpacity: 0.4
                 }
             });
 
         } else {
             gameModeManager.goalMarker.setPosition(position);
         }
+        gameModeManager.goalMarker.setMap(gameModeManager.getMap());
     }
 
 
