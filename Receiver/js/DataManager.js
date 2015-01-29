@@ -1,9 +1,17 @@
 (function(castReceiver){
-    /** @type Array.<GeoObject> */
-    //var geoObjects = [];
+
+
     //Fusion Table ID:
     var ftTableIdCity = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
     var locationColumn = "col4"; // TODO Column Names
+    var userHighscoreTable = "1eUC797_4AgjDAn0IRdGcNVdll245lnJaSCXe0YPz"
+    var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
+    //Google API Key
+    var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
+    var randomCountryCode = ["DE","GB","FR","US","ES","RU","IT"]; // and many more.... TODO
+    var clientID = '309924748076-rjhri6p3mqng1iej0agdllo4ijvrcgje.apps.googleusercontent.com';
+    var scopes = 'https://www.googleapis.com/auth/fusiontables';
+    var accessToken = '?access_token=nGh0RYqr85xlpQacEnGVVMYr';
     /**
      *
      * @param name
@@ -31,7 +39,7 @@
         /** @type {number} */
         this.elevation  = elevation;
         /** @type {marker} */
-        this.marker = marker; //TODO: create new marker here already ?
+        this.marker = marker;
         /**
          *
          * @type {google.maps.LatLng}
@@ -66,27 +74,19 @@
         }
     }
 
-
-    /**
-     *
-     * @param ftLayer
-     * @param geoObjects
-     * @param choiceGeoObjects
-     * @constructor
-     */
-    castReceiver.QueryResults = function (ftLayer, choices, choicesNearby) {
-        this.ftLayer = ftLayer;
-        /** @type Array.<GeoObject> */
-        this.choices = choices;
-        /** @type Array.<GeoObject> */
-        this.choicesNearby = choicesNearby;
-
-    };
-
-    var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
-    //Google API Key
-    var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
-    var randomCountryCode = ["DE","GB","FR","US","ES","RU","IT"]; // and many more....
+    // Run OAuth 2.0 authorization.
+    function _auth(immediate) {
+        gapi.auth.authorize({
+            client_id: "nGh0RYqr85xlpQacEnGVVMYr",
+            scope: "https://www.googleapis.com/auth/fusiontables",
+            embedded: true,
+            immediate: immediate
+        }, handleAuthResult);
+    }
+    // Handle the results of the OAuth 2.0 flow.
+    function handleAuthResult(authResult) {
+        console.debug("Auth: "+authResult);
+    }
 
     castReceiver.getGeoObjects = function(geoObjType, countryCode, count, population) {
         if (countryCode == null){
@@ -95,7 +95,7 @@
 
             console.debug("[DM] - Country Code not set, random Country is selected: "+countryCode);
         }
-        var where = "col12 \x3e\x3d "+population+" and col8 contains ignoring case \x27"+countryCode+"\x27";
+        var where = "population >= '"+population+"' and countryCode='"+countryCode+"'";
 
         //var ftLayer = _createFusionTableLayer(ftTableId,locationColumn, where, x, 1);
 
@@ -103,8 +103,8 @@
 
         var geoObjects = getRandomSubsetOfArray(queryGeoObjects, count);
 
+        //_auth(true);
 
-        //var queryResults = new dataManager.QueryResults(null,geoObjects,choiceGeoObjects);
 
         //return query results object
         return geoObjects;
@@ -146,7 +146,7 @@
 
         var lat = goalGeoObject.latitude;
         var long = goalGeoObject.longitude;
-        var where = "col12 \x3e\x3d "+minPopulation+" and col8 contains ignoring case \x27"+goalGeoObject.countryCode+"\x27";
+        var where = "population='"+minPopulation+"' and countryCode='"+goalGeoObject.countryCode+"'";
 
         //where = where + " AND ST_INTERSECTS(col12, CIRCLE(LATLNG("+lat+","+long+"),"+maxRadius+"))"
 
@@ -159,7 +159,8 @@
             var tries = 0;
             while (geoObjects.length < minPoolSize && tries <= 6) {
                 minPopulation = minPopulation - (minPopulation * 0.10);
-                where = "col12 \x3e\x3d "+minPopulation+" and col8 contains ignoring case \x27"+goalGeoObject.countryCode+"\x27";
+                where = "population='"+minPopulation+"' and countryCode='"+goalGeoObject.countryCode+"'";
+
                 geoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, minPoolSize, orderBy);
                 console.debug("[DM] citiesNearby: had to reduce population to satisify minPopulation to"+ minPopulation+ " , it returned now "+ (geoObjects.length == minPoolSize)+ " objects, try: "+tries);
                 tries++; // try maximum prevents flooding of gmaps api and therefor rate limit timeout
@@ -222,7 +223,7 @@
         return true;
     };
 
-    castReceiver.getHighScoreList = function(userList) {
+    castReceiver.getHighScoreList = function() {
         if (!window.localStorage) {
             console.error("ChromeCast does not support local stoarge.")
             return false;
@@ -251,35 +252,7 @@
 
         return scores;
     };
-    /**
-     *
-     * @param locationColumn
-     * @param ftTableId
-     * @param where
-     * @param offset
-     * @param limit
-     * @returns {google.maps.FusionTablesLayer}
-     * @private
-     */
-    function _createFusionTableLayer(locationColumn,ftTableId,where,offset,limit) {
 
-        var layer = new google.maps.FusionTablesLayer({
-            query: {
-                select: locationColumn,
-                from: ftTableId,
-                where: where,
-                offset: offset,
-                limit: limit
-            },
-            options: {
-                styleId: 1,
-                templateId: 1
-            }
-
-        });
-
-        return layer;
-    }
 
     /**
      *
@@ -299,7 +272,6 @@
         if (orderBy != null){
             query = query + " "+ orderBy;
         }
-
         if (offset != 0){
             query = query + " OFFSET " + offset;
         }
@@ -319,6 +291,30 @@
         });
 
         return geoObjects;
+    }
+    castReceiver.insertFusionTableQuery = function(ftTableId, userData) {
+        // Builds a Fusion Tables SQL query and hands the result to  dataHandler
+        // write your SQL as normal, then encode it
+        var query = "INSERT INTO " + ftTableId + " (UserID, Scores) VALUES (";
+        var values = "";
+        var valueEnd = ")";
+        for (var userid in userData){
+            values = values + " " + userid + "," + userData[userid];
+        }
+        query = query + values + valueEnd;
+        console.debug("[DM] SQL INSERT Query: "+query);
+        var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
+
+        jQuery.ajax({
+            url: queryurl,
+            method:"POST",
+            success: function(data) {
+                console.log("Insert successfull");
+            },
+            async:false
+        });
+
+        return true;
     }
     /**
      * gets the data from the sql query with the address
