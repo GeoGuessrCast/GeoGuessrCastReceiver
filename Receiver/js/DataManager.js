@@ -93,7 +93,7 @@
             count = minPoolSize;
         }
         if (countryCode == null){
-
+            randomCountryCode = this.getAllCountryCodes();
             countryCode = getRandomSubsetOfArray(randomCountryCode,1);
 
             console.debug("[DM] - Country Code not set, random Country is selected: "+countryCode);
@@ -101,15 +101,17 @@
         var where = "population >= '"+minPopulation+"' and countryCode='"+countryCode+"'";
 
         // Get all Objects for the requested query, not limited for more diversity
-        var queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, 0, null);
-
+        var result = _createFusionTableQuery(ftTableIdCity,"*", where, 0, 0, null,null);
+        var queryGeoObjects  = _createGeoObjects(result);
         if (queryGeoObjects.length < minPoolSize) {
             var tries = 0;
             while (queryGeoObjects.length < minPoolSize && tries <= 6) {
                 minPopulation = minPopulation - (minPopulation * 0.10);
                 where = "population >= '"+minPopulation+"' and countryCode='"+countryCode+"'";
-                var orderBy = "population";
-                queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, minPoolSize, orderBy);
+                var orderBy = "population DESC";
+                var result = _createFusionTableQuery(ftTableIdCity,"*", where, 0, minPoolSize, orderBy,null);
+                queryGeoObjects  = _createGeoObjects(result);
+
                 console.debug("[DM] getGeoObjects: had to reduce population to satisify minPopulation to"+ minPopulation+ " , it returned now "+ (queryGeoObjects.length >= minPoolSize)+ " objects, try: "+tries);
                 tries++; // try maximum prevents flooding of gmaps api and therefor rate limit timeout
             }
@@ -152,6 +154,8 @@
     }
 
     castReceiver.getRandomCountryCode = function(){
+        randomCountryCode = this.getAllCountryCodes();
+
         return getRandomSubsetOfArray(randomCountryCode,1);
     }
 
@@ -168,15 +172,16 @@
 
         var orderBy = "ST_DISTANCE(col4,  LATLNG("+ lat+","+long+"))";
 
-        var geoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, minPoolSize, orderBy);
-
+        var result = _createFusionTableQuery(ftTableIdCity,"*", where, 0, minPoolSize, orderBy, null);
+        var geoObjects  = _createGeoObjects(result);
         if (geoObjects.length < minPoolSize) {
             var tries = 0;
             while (geoObjects.length < minPoolSize && tries <= 6) {
                 minPopulation = minPopulation - (minPopulation * 0.10);
                 where = "population >= '"+minPopulation+"' and countryCode='"+goalGeoObject.countryCode+"'";
 
-                geoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, minPoolSize, orderBy);
+                result = _createFusionTableQuery(ftTableIdCity,"*", where, 0, minPoolSize, orderBy, null);
+                geoObjects  = _createGeoObjects(result);
                 console.debug("[DM] citiesNearby: had to reduce population to satisify minPopulation to"+ minPopulation+ " , it returned now "+ (geoObjects.length == minPoolSize)+ " objects, try: "+tries);
                 tries++; // try maximum prevents flooding of gmaps api and therefor rate limit timeout
             }
@@ -201,6 +206,29 @@
         return cityNames;
     };
 
+    castReceiver.getAllCountryCodes = function(){
+        var codes = [];
+        // Get all Objects for the requested query, not limited for more diversity
+        var select = "countryCode , COUNT() as numberOfCities, SUM(population) AS populationSum , MINIMUM(longitude) AS countryMinLong, MAXIMUM(longitude) AS countryMaxLong ";
+        var countryCodes = _createFusionTableQuery(ftTableIdCity,select, null, 0, 0, null,"countryCode");
+
+        if (typeof(countryCodes.rows) != 'undefined') {
+            var resultLength = countryCodes.rows.length;
+            for (var i = 0; i < resultLength; i++) {
+                var code = countryCodes.rows[i][0];
+                var nrOfCities = parseInt(countryCodes.rows[i][1]);
+                var population = parseInt(countryCodes.rows[i][2]);
+                if (nrOfCities >= 10 && population >= 2000000){ //TODO tweak this!
+                    codes.push(code);
+                } else {
+                    //console.debug("Country not qualified: "+code);
+                }
+            }
+        }
+
+        console.log("[DM] Got "+ codes.length +" country codes.");
+        return codes;
+    };
 
     castReceiver.persistHighScoreList = function(userMac, userPoints, maxPoints) {
         if (!window.localStorage) {
@@ -279,13 +307,18 @@
      * @returns {*}
      * @private
      */
-    function _createFusionTableQuery(ftTableId, where, offset, limit, orderBy) {
+    function _createFusionTableQuery(ftTableId,select, where, offset, limit, orderBy, groupBy) {
         // Builds a Fusion Tables SQL query and hands the result to  dataHandler
         // write your SQL as normal, then encode it
-        var query = "SELECT * FROM " + ftTableId + " WHERE " + where;
-
+        var query = "SELECT "+select+" FROM " + ftTableId ;
+        if (where != null){
+            query = query + " WHERE " + where;
+        }
         if (orderBy != null){
             query = query + " ORDER BY "+ orderBy;
+        }
+        if (groupBy != null){
+            query = query + " GROUP BY "+ groupBy;
         }
         if (offset != 0){
             query = query + " OFFSET " + offset;
@@ -296,16 +329,16 @@
         console.debug("[DM] SQL Query: "+query);
         var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
 
-        var geoObjects = null;
+        var result = null;
         jQuery.ajax({
             url: queryurl,
             success: function(data) {
-               geoObjects = _createGeoObjects(data);
+              result = data;
             },
             async:false
         });
 
-        return geoObjects;
+        return result;
     }
     castReceiver.insertFusionTableQuery = function(ftTableId, userData) {
         // Builds a Fusion Tables SQL query and hands the result to  dataHandler
@@ -353,8 +386,8 @@
                 //var latLongPatternCheck = new RegExp("^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$");
                 if (onlyDigitsPattern.test(id)
                     && typeof(name) === "string"
-                    && typeof(lat) === "number" //TODO sh use regexp to check for long/lat parseFloat typeof === NaN
-                    && typeof(long) === "number"
+                    && typeof(parseFloat(lat)) === "number"
+                    && typeof(parseFloat(long)) === "number"
                     && typeof(countryCode) === "string"
                     && onlyDigitsPattern.test(population)
                     && onlyDigitsPattern.test(elevation)) {
