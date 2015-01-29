@@ -43,7 +43,7 @@
         var geoObjects = dataManager.getGeoObjects(
             gameModeManager.currentGameModeProfile.geoObjType, gameModeManager.currentGameModeProfile.limitedCountry,
             gameModeManager.currentGameModeProfile.multipleChoiceMode ? data.constants.numberOfChoices : 1,
-            gameModeManager.currentGameModeProfile.minPopulationDefault);
+            gameModeManager.currentGameModeProfile.minPopulationDefault, 10);
 
         gameRoundManager.goalGeoObject = geoObjects[0];
         var goalPos = new google.maps.LatLng(gameRoundManager.goalGeoObject.latitude, gameRoundManager.goalGeoObject.longitude);

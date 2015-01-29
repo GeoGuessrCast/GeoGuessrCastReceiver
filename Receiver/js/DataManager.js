@@ -88,18 +88,33 @@
         console.debug("Auth: "+authResult);
     }
 
-    castReceiver.getGeoObjects = function(geoObjType, countryCode, count, population) {
+    castReceiver.getGeoObjects = function(geoObjType, countryCode, count, minPopulation, minPoolSize) {
+        if (count > minPoolSize){
+            count = minPoolSize;
+        }
         if (countryCode == null){
 
             countryCode = getRandomSubsetOfArray(randomCountryCode,1);
 
             console.debug("[DM] - Country Code not set, random Country is selected: "+countryCode);
         }
-        var where = "population >= '"+population+"' and countryCode='"+countryCode+"'";
+        var where = "population >= '"+minPopulation+"' and countryCode='"+countryCode+"'";
 
-        //var ftLayer = _createFusionTableLayer(ftTableId,locationColumn, where, x, 1);
-
+        // Get all Objects for the requested query, not limited for more diversity
         var queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, 0, null);
+
+        if (queryGeoObjects.length < minPoolSize) {
+            var tries = 0;
+            while (queryGeoObjects.length < minPoolSize && tries <= 6) {
+                minPopulation = minPopulation - (minPopulation * 0.10);
+                where = "population >= '"+minPopulation+"' and countryCode='"+countryCode+"'";
+                var orderBy = "population";
+                queryGeoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, minPoolSize, orderBy);
+                console.debug("[DM] getGeoObjects: had to reduce population to satisify minPopulation to"+ minPopulation+ " , it returned now "+ (queryGeoObjects.length >= minPoolSize)+ " objects, try: "+tries);
+                tries++; // try maximum prevents flooding of gmaps api and therefor rate limit timeout
+            }
+
+        }
 
         var geoObjects = getRandomSubsetOfArray(queryGeoObjects, count);
 
@@ -151,7 +166,7 @@
         //where = where + " AND ST_INTERSECTS(col12, CIRCLE(LATLNG("+lat+","+long+"),"+maxRadius+"))"
 
 
-        var orderBy = " ORDER BY ST_DISTANCE(col4,  LATLNG("+ lat+","+long+"))";
+        var orderBy = "ST_DISTANCE(col4,  LATLNG("+ lat+","+long+"))";
 
         var geoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, minPoolSize, orderBy);
 
@@ -159,7 +174,7 @@
             var tries = 0;
             while (geoObjects.length < minPoolSize && tries <= 6) {
                 minPopulation = minPopulation - (minPopulation * 0.10);
-                where = "population='"+minPopulation+"' and countryCode='"+goalGeoObject.countryCode+"'";
+                where = "population >= '"+minPopulation+"' and countryCode='"+goalGeoObject.countryCode+"'";
 
                 geoObjects = _createFusionTableQuery(ftTableIdCity, where, 0, minPoolSize, orderBy);
                 console.debug("[DM] citiesNearby: had to reduce population to satisify minPopulation to"+ minPopulation+ " , it returned now "+ (geoObjects.length == minPoolSize)+ " objects, try: "+tries);
@@ -270,7 +285,7 @@
         var query = "SELECT * FROM " + ftTableId + " WHERE " + where;
 
         if (orderBy != null){
-            query = query + " "+ orderBy;
+            query = query + " ORDER BY "+ orderBy;
         }
         if (offset != 0){
             query = query + " OFFSET " + offset;
