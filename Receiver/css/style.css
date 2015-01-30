@@ -123,12 +123,14 @@ h3 {
     text-align: left;
 }
 .admin {
-    background-image: url(../images/userAdmin.png);
+    background-image: url(../images/user.svg);
     background-repeat: no-repeat;
     background-size: contain;
-    padding-left: 4vh;}
+    padding-left: 4vh;
+    text-decoration: underline;
+}
 .user {
-    background-image: url(../images/user.png);
+    background-image: url(../images/user.svg);
     background-repeat: no-repeat;
     background-size: contain;
     padding-left: 4vh;

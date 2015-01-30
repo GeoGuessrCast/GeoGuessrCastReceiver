@@ -25,17 +25,31 @@
         this.lastAnswerGiven = null;
         /** @type {boolean} */
         this.admin = admin;
-        /** @type {string} **/
-        //this.color = '#' + Math.floor(Math.random()*16777215).toString(16);
-        this.color = '#'
-        + Math.floor(Math.random()*89+10).toString()
-        + Math.floor(Math.random()*89+10).toString()
-        + Math.floor(Math.random()*89+10).toString();
 
-        this.toString = function() {
-            return name;
-        }
+        this.id = _getFreeUserId();
+
+        /** @type {string} **/
+        this.getColor = function() {
+            var huePercent = this.id / userManager.getNumberOfUsers();
+            return 'hsl(' + huePercent*360 + ', 100%, 30%)';
+        };
+
     };
+    um.User.prototype.toString = function() {
+        return name;
+    };
+
+    function _getFreeUserId(){
+        var takenIds = [];
+        for (var i = 0; i < userList.length; i++) {
+            takenIds.push(userList[i].id);
+        }
+        for (var id = 0; id<=userList.length; id++) {
+            if (!takenIds.contains(id)) {
+                return id;
+            }
+        }
+    }
 
     /**
      * get the array of current {User}s
@@ -129,6 +143,14 @@
      */
     um.getUserList = function(){
         return _getUserList();
+    };
+
+
+    /**
+     * @returns Number
+     */
+    um.getNumberOfUsers = function(){
+        return userList.length;
     };
 
     /**

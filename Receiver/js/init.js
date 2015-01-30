@@ -3,6 +3,11 @@
 
 function initialize() {
 
+    //adding contains function to arrays
+    Array.prototype.contains = function(obj) {
+        return this.indexOf(obj) > -1;
+    };
+
 
     if (typeof(cast) !== 'undefined') {
         cast.receiver.logger.setLevelValue(1000); //= ERROR
