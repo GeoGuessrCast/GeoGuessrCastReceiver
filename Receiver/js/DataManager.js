@@ -266,14 +266,14 @@
                 });
                 var minLongitude = country[0].longitude;
                 var maxLongitude = country[country.length - 1].longitude;
-                console.debug(country[0].countryCode + " Long: Min: " + minLongitude + " Max: " + maxLongitude);
+                //console.debug(country[0].countryCode + " Long: Min: " + minLongitude + " Max: " + maxLongitude);
 
                 country.sort(function (a, b) {
                     return a.latitude - b.latitude;
                 });
                 var minLatitude = country[0].latitude;
                 var maxLatitude = country[country.length - 1].latitude;
-                console.debug(country[0].countryCode + " Lat: Min: " + minLatitude + " Max: " + maxLatitude);
+                //console.debug(country[0].countryCode + " Lat: Min: " + minLatitude + " Max: " + maxLatitude);
                 var ne = new google.maps.LatLng(maxLatitude,maxLongitude);
                 var sw = new google.maps.LatLng(minLatitude,minLongitude);
                 var bounds = new google.maps.LatLngBounds(sw,ne);
@@ -292,7 +292,7 @@
         return countrySizes;
     };
 
-    function getBoundsZoomLevel(bounds, mapDim) {
+    function _getBoundsZoomLevel(bounds, mapDim) {
         // http://stackoverflow.com/questions/6048975/google-maps-v3-how-to-calculate-the-zoom-level-for-a-given-bounds
         var WORLD_DIM = { height: 256, width: 256 };
         var ZOOM_MAX = 21;
@@ -327,11 +327,11 @@
     }
     castReceiver.getZoomLevelForCountry = function(countryCode){
         var $mapDiv = $('#map-canvas');
-        var mapDim = { height: $mapDiv.height(), width: $mapDiv.width() };
+        var mapDim = { height: $mapDiv.height() - ($mapDiv.height() * 0.1), width: $mapDiv.width() };
         var countríes = this.getAllCountrySizes();
         var country = countríes[countryCode];
         console.debug("Bounds: "+ country.bounds+ " MapDIM: H:"+mapDim.height + " W:" +mapDim.width);
-        var zoom = getBoundsZoomLevel(country.bounds,mapDim);
+        var zoom = _getBoundsZoomLevel(country.bounds,mapDim);
 
         return zoom;
     }
@@ -502,7 +502,7 @@
                     geo.push(geoObject);
                 } else {
 
-                    console.debug("[DM] error validating geoObjRow for: " + name);
+                    //console.debug("[DM] error validating geoObjRow for: " + name);
                 }
 
             }
