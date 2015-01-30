@@ -33,6 +33,10 @@ public class User {
         return mInstance;
     }
 
+    public static void resetInstance(){
+        mInstance = null;
+    }
+
     public String toJSONString(){
         JSONObject userData = new JSONObject();
         try {

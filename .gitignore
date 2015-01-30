@@ -83,7 +83,8 @@ AndroidSender/CastCompanionLibrary/.settings/
 AndroidSender/CastCompanionLibrary/*.iml
 AndroidSender/CastCompanionLibrary/.idea
 
-
+# CountryPicker
+AndroidSender/countryPicker/*
 
 # .DS_Store for Mac
 .DS_Store

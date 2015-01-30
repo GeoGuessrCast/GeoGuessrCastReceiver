@@ -90,6 +90,7 @@
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="mediarouter-v7-21.0.3" level="project" />
     <orderEntry type="module" module-name="CastCompanionLibrary" exported="" />
+    <orderEntry type="module" module-name="countryPicker" exported="" />
   </component>
 </module>
 
