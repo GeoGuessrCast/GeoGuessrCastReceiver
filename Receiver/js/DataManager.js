@@ -436,6 +436,7 @@
         var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
 
         var result = null;
+        console.log('### DOING QUERY ....');
         jQuery.ajax({
             url: queryurl,
             success: function(data) {
@@ -443,6 +444,8 @@
             },
             async:false
         });
+        console.log('### ...GOT RESULTS: ' + result.rows.length);
+
 
         return result;
     }

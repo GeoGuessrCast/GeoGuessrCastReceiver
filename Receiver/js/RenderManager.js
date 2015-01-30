@@ -301,16 +301,20 @@
 
             bottomScoreboard
                 .append('<span><div><span class="userStates" id="userState_' + userMacCleaned + '">' + userAnswerCity + '</span></div><span class="'
-                + userCssClass + ' noLinebreak userName" style="color:' + user.getColor() + '">' + user.name + ': </span><span class="score">' + user.pointsInCurrentGame
+                + userCssClass + ' noLinebreak userName" id="userName_' + userMacCleaned + '">' + user.name + ':</span> <span class="score">' + user.pointsInCurrentGame
                 + '</span></span>');
 
             var userStateDiv = $('#userState_'+userMacCleaned);
+            var userNameContainer = $('#userName_'+userMacCleaned);
 
             userStateDiv.css('color', color);
             userStateDiv.removeClass('waitingIcon');
             userStateDiv.removeClass('readyIcon');
             userStateDiv.removeClass('noIcon');
             userStateDiv.addClass(iconCssClass);
+
+            userNameContainer.css('color', user.getColor());
+            userNameContainer.css('background-image', 'url(images/user.svg)');
         }
     };
 

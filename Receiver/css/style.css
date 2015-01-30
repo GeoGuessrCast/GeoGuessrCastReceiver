@@ -123,18 +123,12 @@ h3 {
     text-align: left;
 }
 .admin {
-    background-image: url(../images/user.svg);
-    background-repeat: no-repeat;
-    background-size: contain;
-    padding-left: 4vh;
     text-decoration: underline;
 }
 .user {
-    background-image: url(../images/user.svg);
-    background-repeat: no-repeat;
-    background-size: contain;
-    padding-left: 4vh;
+    text-decoration: none;
 }
+
 
 #midScreenMessage {
     position: absolute;
@@ -200,6 +194,9 @@ h3 {
 }
 
 .userName {
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding-left: 4vh;
     font-weight: bold;
 }
 
