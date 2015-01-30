@@ -33,14 +33,6 @@ public class User {
         return mInstance;
     }
 
-    public static User newInstance(String userName, String userMac){
-        if(mInstance == null)
-        {
-            mInstance = new User(userName, userMac);
-        }
-        return mInstance;
-    }
-
     public String toJSONString(){
         JSONObject userData = new JSONObject();
         try {

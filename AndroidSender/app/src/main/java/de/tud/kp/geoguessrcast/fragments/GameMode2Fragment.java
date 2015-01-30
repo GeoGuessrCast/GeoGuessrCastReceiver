@@ -40,7 +40,7 @@ public class GameMode2Fragment extends Fragment  {
     private static final String ROUND_NUMBER = "currentRound";
     private static final String TIME_ROUND = "timeRound";
     private static final String CHOICES = "choices";
-    GameActivity mActivity;
+    private GameActivity mActivity;
     private int currentRound;
     private int timeRound;
     private String[] cityChoices;

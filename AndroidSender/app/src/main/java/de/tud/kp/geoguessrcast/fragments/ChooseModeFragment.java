@@ -6,6 +6,7 @@ package de.tud.kp.geoguessrcast.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,19 +92,25 @@ public class ChooseModeFragment extends Fragment {
         mGameProfileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                GameProfile gameProfile = (GameProfile) parent.getItemAtPosition(position);
 
-                //TODO: EventTransitionManager:  add SendMessage for channels. adding try catch.
-                try {
-                    GameMessage gameMessage = new GameMessage();
-                    gameMessage.setEvent_type("setGameProfile");
-                    gameMessage.setGameProfile(gameProfile);
-                    sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.adminChannel));
+                if(position==parent.getCount()-1){
+                    mActivity.startFragment(CustomizeProfileFragment.newInstance());
                 }
-                catch (Exception e){
+                else{
+                    GameProfile gameProfile = (GameProfile) parent.getItemAtPosition(position);
 
+                    //TODO: EventTransitionManager:  add SendMessage for channels. adding try catch.
+                    try {
+                        GameMessage gameMessage = new GameMessage();
+                        gameMessage.setEvent_type("setGameProfile");
+                        gameMessage.setGameProfile(gameProfile);
+                        sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.adminChannel));
+                    }
+                    catch (Exception e){
+
+                    }
+                    mActivity.startFragment(new WaitGameFragment());
                 }
-                mActivity.startFragment(new WaitGameFragment());
             }
         });
 

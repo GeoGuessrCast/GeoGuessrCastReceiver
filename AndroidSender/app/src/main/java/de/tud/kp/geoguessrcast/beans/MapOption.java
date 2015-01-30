@@ -6,6 +6,9 @@ package de.tud.kp.geoguessrcast.beans;
 public class MapOption {
     private String mapType;
     private boolean borders;
+    private boolean roads;
+    private boolean showCityNames;
+    private boolean showRiverNames;
     private boolean showCountryNames;
 
     public String getMapType() {
@@ -30,5 +33,29 @@ public class MapOption {
 
     public void setShowCountryNames(boolean showCountryNames) {
         this.showCountryNames = showCountryNames;
+    }
+
+    public boolean isRoads() {
+        return roads;
+    }
+
+    public void setRoads(boolean roads) {
+        this.roads = roads;
+    }
+
+    public boolean isShowCityNames() {
+        return showCityNames;
+    }
+
+    public void setShowCityNames(boolean showCityNames) {
+        this.showCityNames = showCityNames;
+    }
+
+    public boolean isShowRiverNames() {
+        return showRiverNames;
+    }
+
+    public void setShowRiverNames(boolean showRiverNames) {
+        this.showRiverNames = showRiverNames;
     }
 }

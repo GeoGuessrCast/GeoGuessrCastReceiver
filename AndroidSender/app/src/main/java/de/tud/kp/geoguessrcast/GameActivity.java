@@ -138,6 +138,7 @@ public class GameActivity extends ActionBarActivity {
                 }
             }
         };
+
         //register CastConsumerImpl to CastManager
         sCastManager.addDataCastConsumer(sCastManagerConsumer);
 
@@ -187,6 +188,10 @@ public class GameActivity extends ActionBarActivity {
     @Override
     public void onDestroy() {
         sCastManager.removeDataCastConsumer(sCastManagerConsumer);
+
+        //TODO: clear User admin
+        //TODO: GameManager - restartGame - resetAll!!!
+        mUser = null;
         super.onDestroy();
     }
 

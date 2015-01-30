@@ -11,6 +11,7 @@ public class GameProfile {
     private int minPopulationDefault;
     private int timePerRoundSec;
     private MapOption mapOption;
+    private boolean pointingMode;
 
     public String getProfileName() {
         return profileName;
@@ -66,5 +67,13 @@ public class GameProfile {
 
     public void setTimePerRoundSec(int timePerRoundSec) {
         this.timePerRoundSec = timePerRoundSec;
+    }
+
+    public boolean isPointingMode() {
+        return pointingMode;
+    }
+
+    public void setPointingMode(boolean pointingMode) {
+        this.pointingMode = pointingMode;
     }
 }
