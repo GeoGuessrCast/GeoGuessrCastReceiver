@@ -21,6 +21,7 @@
         /** @type {number} */
         this.points = points;
 
+
         this.toString = function() {
             return "[Answer] guessedName: " + this.guessedName + ", geoObject: " + this.geoObject + ", dist: " + this.distanceToGoalKm + ", points: " + this.points;
         };
@@ -75,6 +76,10 @@
     grm.endRound = function(){
         gameRoundManager.currentGameState = data.gameState.evaluating;
         print('-> Round ' + gameModeManager.currentRound +  ' ended.' );
+
+        var jsonData = {"event_type":"round_ended", "ended": true};
+        eventManager.broadcast(data.channelName.game, jsonData);
+
         renderManager.showMidScreenMessage('Answer: ' + gameRoundManager.goalGeoObject.name, gameRoundManager.roundEvaluationTimeSec-3 );
         var userList = userManager.getUserList();
         for(var i = 0; i < userList.length; i++){
@@ -86,11 +91,17 @@
                     renderManager.placeUserMarkerOnMap(user, user.lastAnswerGiven.geoObject.position);
                 }
             }
+            var jsonData = {
+                "event_type":"answer_feedback",
+                "correctAnswer": gameRoundManager.goalGeoObject.name,
+                "userAnswer": user.lastAnswerGiven?user.lastAnswerGiven.guessedName:null,
+                "answerDistance": user.lastAnswerGiven?user.lastAnswerGiven.distanceToGoalKm:null,
+                "pointsEarned": user.lastAnswerGiven?user.lastAnswerGiven.points:null
+            };
+            eventManager.send(user.senderId, data.channelName.game, jsonData);
         }
         userManager.sortUsersByScore();
         renderManager.refreshBottomScoreboard();
-        var jsonData = {"event_type":"round_ended", "ended": true};
-        eventManager.broadcast(data.channelName.game, jsonData);
         gameRoundManager.nextRound();
     };
 
