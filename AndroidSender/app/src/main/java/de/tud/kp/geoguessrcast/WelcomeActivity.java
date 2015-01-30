@@ -30,6 +30,7 @@ import de.tud.kp.geoguessrcast.utilities.Utility;
 
 public class WelcomeActivity extends ActionBarActivity {
 
+    public static final String TAG = WelcomeActivity.class.getSimpleName();
     private static DataCastManager sCastManager;
     private static DataCastConsumerImpl sCastManagerConsumer;
     private Context mContext;
@@ -147,9 +148,12 @@ public class WelcomeActivity extends ActionBarActivity {
                         WelcomeActivity.this.startActivity(intent);
                     }
                     else{
+//                        mUser.setAdmin(false);
                         Intent intent = new Intent(WelcomeActivity.this, GameActivity.class);
                         WelcomeActivity.this.startActivity(intent);
                     }
+
+                    Log.d(TAG, "onMessageReceived from UserChannel: " + message);
                 }
             }
         };
@@ -207,6 +211,7 @@ public class WelcomeActivity extends ActionBarActivity {
     @Override
     public void onDestroy(){
         sCastManager.disconnect();
+        User.resetInstance();
         super.onPause();
     }
 

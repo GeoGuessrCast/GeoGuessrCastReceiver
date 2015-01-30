@@ -88,7 +88,7 @@ public class GameActivity extends ActionBarActivity {
             @Override
             public void onDisconnected(){
                 //TODO: GameManager - restartGame - resetAll!!!
-                mUser = null;
+                User.resetInstance();
                 ((Activity)mContext).finish();
             }
             @Override
@@ -97,7 +97,7 @@ public class GameActivity extends ActionBarActivity {
                     GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
                     if(gameMessage.getEvent_type().equals("restart")){
                         //TODO: GameManager - restartGame - resetAll!!!
-                        mUser = null;
+                        User.resetInstance();
                         //TODO: GameManager-initStartPage...
                         ((Activity)mContext).finish();
                     }
@@ -124,7 +124,7 @@ public class GameActivity extends ActionBarActivity {
                         if(gameMessage.isEnded()==true){
                             //clearFragmentBackStack();
                             //TODO: GameManager - restartGame - resetAll!!!
-                            mUser = null;
+                            User.resetInstance();
                             //TODO: GameManager-initStartPage...
                             ((Activity)mContext).finish();
                             //TODO make a method called hideOptionMenu
@@ -161,6 +161,8 @@ public class GameActivity extends ActionBarActivity {
             super.onBackPressed();
             clearFragmentBackStack();
             //close the app completely! so that the connection is disabled.
+            //if the user exit the game manually, then the connection will be closed
+            sCastManager.disconnect();
             this.finish();
         }
         doubleBackToExitPressedOnce = true;
@@ -191,7 +193,7 @@ public class GameActivity extends ActionBarActivity {
 
         //TODO: clear User admin
         //TODO: GameManager - restartGame - resetAll!!!
-        mUser = null;
+        User.resetInstance();
         super.onDestroy();
     }
 

@@ -9,11 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.countrypicker.CountryPicker;
+import com.countrypicker.CountryPickerListener;
 import com.google.gson.Gson;
 import com.google.sample.castcompanionlibrary.cast.DataCastManager;
 
@@ -56,8 +59,26 @@ public class CustomizeProfileFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mActivity = (GameActivity) getActivity();
         sCastManager = mActivity.getCastManager();
+        final GameProfile gameProfile = new GameProfile();
 
         final Switch limitedCountry = (Switch) mActivity.findViewById(R.id.limited_country);
+        limitedCountry.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    final CountryPicker picker = CountryPicker.newInstance("Select Country");
+                    picker.show(mActivity.getSupportFragmentManager(), "COUNTRY_PICKER");
+
+                    picker.setListener(new CountryPickerListener() {
+                        @Override
+                        public void onSelectCountry(String name, String code) {
+                            gameProfile.setLimitedCountry(code);
+                            picker.dismiss();
+                        }
+                    });
+                }
+            }
+        });
         final Switch multipleChoice = (Switch) mActivity.findViewById(R.id.multiple_choice_mode);
         final Switch pointingMode = (Switch) mActivity.findViewById(R.id.pointing_mode);
         final SeekBar minPopulation = (SeekBar) mActivity.findViewById(R.id.min_population);
@@ -75,12 +96,11 @@ public class CustomizeProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //Build MapOption Object
-                GameProfile gameProfile = new GameProfile();
                 gameProfile.setProfileName("Custom Profile");
                 gameProfile.setId(5);
 
                 //TODO: country choose!!!
-                gameProfile.setLimitedCountry(null);
+                //gameProfile.setLimitedCountry(null);
                 gameProfile.setMultipleChoiceMode(multipleChoice.isChecked());
                 gameProfile.setPointingMode(pointingMode.isChecked());
                 gameProfile.setMinPopulationDefault(minPopulation.getProgress());
