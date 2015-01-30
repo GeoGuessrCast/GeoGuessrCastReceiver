@@ -21,7 +21,7 @@
                 strokeColor: '#ffffff',
                 strokeWeight: 1,
                 strokeOpacity: 1.0,
-                fillColor: user.color,
+                fillColor: user.getColor(),
                 fillOpacity: 1
             }
         });
@@ -29,7 +29,7 @@
         var line = new google.maps.Polyline({
             path: [gameRoundManager.goalGeoObject.position, position],
             map: gameModeManager.getMap(),
-            strokeColor: user.color,
+            strokeColor: user.getColor(),
             strokeWeight: 1,
             strokeOpacity: 1.0
         });
@@ -254,7 +254,7 @@
             } else {
                 userCssClass = 'user';
             }
-            //$('#mainMenuUserList').find('ul').append('<li style="color:' + userList[i].color + '" class="' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
+            //$('#mainMenuUserList').find('ul').append('<li style="color:' + userList[i].getColor() + '" class="' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
             mainMenuUserList.find('ul').append('<li class="noLinebreak ' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
         }
     };
@@ -301,7 +301,7 @@
 
             bottomScoreboard
                 .append('<span><div><span class="userStates" id="userState_' + userMacCleaned + '">' + userAnswerCity + '</span></div><span class="'
-                + userCssClass + ' noLinebreak userName" style="color:' + user.color + '">' + user.name + ': </span><span class="score">' + user.pointsInCurrentGame
+                + userCssClass + ' noLinebreak userName" style="color:' + user.getColor() + '">' + user.name + ': </span><span class="score">' + user.pointsInCurrentGame
                 + '</span></span>');
 
             var userStateDiv = $('#userState_'+userMacCleaned);
