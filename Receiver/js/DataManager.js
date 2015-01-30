@@ -8,7 +8,7 @@
     var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
     //Google API Key
     var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
-    var randomCountryCode = ["DE","GB","FR","US","ES","RU","IT"]; // and many more.... TODO
+    var randomCountryCode = [];
     var clientID = '309924748076-rjhri6p3mqng1iej0agdllo4ijvrcgje.apps.googleusercontent.com';
     var scopes = 'https://www.googleapis.com/auth/fusiontables';
     var accessToken = '?access_token=nGh0RYqr85xlpQacEnGVVMYr';
@@ -90,11 +90,10 @@
 
     castReceiver.getGeoObjects = function(geoObjType, countryCode, count, minPopulation, minPoolSize) {
         if (count > minPoolSize){
-            count = minPoolSize;
+            minPoolSize = count;
         }
         if (countryCode == null){
-            randomCountryCode = this.getAllCountryCodes();
-            countryCode = getRandomSubsetOfArray(randomCountryCode,1);
+            countryCode = this.getRandomCountryCode();
 
             console.debug("[DM] - Country Code not set, random Country is selected: "+countryCode);
         }
@@ -104,17 +103,13 @@
         var result = _createFusionTableQuery(ftTableIdCity,"*", where, 0, 0, null,null);
         var queryGeoObjects  = _createGeoObjects(result);
         if (queryGeoObjects.length < minPoolSize) {
-            var tries = 0;
-            while (queryGeoObjects.length < minPoolSize && tries <= 6) {
-                minPopulation = minPopulation - (minPopulation * 0.10);
-                where = "population >= '"+minPopulation+"' and countryCode='"+countryCode+"'";
+                where = "countryCode='"+countryCode+"'";
                 var orderBy = "population DESC";
                 var result = _createFusionTableQuery(ftTableIdCity,"*", where, 0, minPoolSize, orderBy,null);
                 queryGeoObjects  = _createGeoObjects(result);
 
-                console.debug("[DM] getGeoObjects: had to reduce population to satisify minPopulation to"+ minPopulation+ " , it returned now "+ (queryGeoObjects.length >= minPoolSize)+ " objects, try: "+tries);
-                tries++; // try maximum prevents flooding of gmaps api and therefor rate limit timeout
-            }
+                console.debug("[DM] getGeoObjects: had to reduce population to satisify minPopulation to"+ minPopulation+ " , it returned now "+ (queryGeoObjects.length >= minPoolSize)+ " objects");
+
 
         }
 
@@ -154,8 +149,10 @@
     }
 
     castReceiver.getRandomCountryCode = function(){
-        randomCountryCode = this.getAllCountryCodes();
-
+        if (randomCountryCode.length == 0) {
+            console.debug("[DM] Fetching Country Codes");
+            randomCountryCode = this.getAllCountryCodes();
+        }
         return getRandomSubsetOfArray(randomCountryCode,1);
     }
 
@@ -229,7 +226,61 @@
         console.log("[DM] Got "+ codes.length +" country codes.");
         return codes;
     };
+    function _groupBy( array , f )
+    {
+        var groups = {};
+        array.forEach( function( o )
+        {
+            var group = JSON.stringify( f(o) );
+            groups[group] = groups[group] || [];
+            groups[group].push( o );
+        });
+        return Object.keys(groups).map( function( group )
+        {
+            return groups[group];
+        })
+    }
 
+
+    castReceiver.getAllCountrySizes = function(){
+        var codes = [];
+        // Get all Objects for the requested query, not limited for more diversity
+        var select = "countryCode , COUNT() as numberOfCities, SUM(population) AS populationSum , MINIMUM(longitude) AS countryMinLong, MAXIMUM(longitude) AS countryMaxLong ";
+        var countryCodes = _createFusionTableQuery(ftTableIdCity,"*", null, 0, 0, null,null);
+
+        var geoObjects = _createGeoObjects(countryCodes);
+        console.debug("Size: "+geoObjects.length);
+
+        var countrySizes = [];
+
+        var result = _groupBy(geoObjects, function(item)
+        {
+            return [item.countryCode];
+        });
+
+        for (var i = 0; i < result.length; i++){
+            var country = result[i];
+            country.sort(function (a, b) {
+                return a.longitude - b.longitude
+            });
+            var minLongitude = country[0].longitude;
+            var maxLongitude = country[country.length - 1].longitude;
+            console.debug(country[0].countryCode+" Long: Min: "+ minLongitude + " Max: "+ maxLongitude);
+
+            country.sort(function (a, b) {
+                return a.latitude - b.latitude;
+            });
+            var minLatitude = country[0].latitude;
+            var maxLatitude = country[country.length - 1].latitude;
+            console.debug(country[0].countryCode+" Long: Min: "+ minLatitude + " Max: "+ maxLatitude);
+            console.debug(country[0].countryCode+" Dist: Width"+ _getDistance(new google.maps.LatLng(minLatitude, maxLatitude)));
+        }
+
+        return result;
+    };
+    function _getDistance(p1, p2) {
+        return google.maps.geometry.spherical.computeDistanceBetween (p1, p2); // returns the distance in meter
+    }
     castReceiver.persistHighScoreList = function(userMac, userPoints, maxPoints) {
         if (!window.localStorage) {
             console.error("ChromeCast does not support local stoarge.")
