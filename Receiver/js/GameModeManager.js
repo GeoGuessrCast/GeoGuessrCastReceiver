@@ -25,6 +25,7 @@
      * @param {Object} profileObject
      */
     gmm.startGame = function(profileObject){
+        dataManager.getAllCountrySizes();
         gameModeManager.setGameModeProfile(profileObject);
         gameModeManager.resetGame();
         renderManager.applyMapOptions(gameModeManager.currentGameMode, profileObject );

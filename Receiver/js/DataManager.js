@@ -320,7 +320,11 @@
 
         return Math.min(latZoom, lngZoom, ZOOM_MAX);
     }
-
+    castReceiver.getBoundsForCountry = function(countryCode){
+        var countríes = this.getAllCountrySizes();
+        var country = countríes[countryCode];
+        return country.bounds;
+    }
     castReceiver.getZoomLevelForCountry = function(countryCode){
         var $mapDiv = $('#map-canvas');
         var mapDim = { height: $mapDiv.height(), width: $mapDiv.width() };
@@ -331,8 +335,6 @@
 
         return zoom;
     }
-
-
 
     castReceiver.persistHighScoreList = function(userMac, userPoints, maxPoints) {
         if (!window.localStorage) {
