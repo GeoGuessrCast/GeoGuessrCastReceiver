@@ -37,6 +37,8 @@
 
     // ============ GLOBAL EVENTS ============
     castReceiver.event_onReady = function(event) {
+        //Load Country Data if not already local
+        dataManager.getAllCountrySizes();
         renderManager.loadMainMenu();
     };
 
