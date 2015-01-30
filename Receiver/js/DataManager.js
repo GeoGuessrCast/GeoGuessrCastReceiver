@@ -1,5 +1,6 @@
 (function(castReceiver){
 
+    var countrySizes = null;
 
     //Fusion Table ID:
     var ftTableIdCity = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
@@ -243,58 +244,96 @@
 
 
     castReceiver.getAllCountrySizes = function(){
-        var codes = [];
-        // Get all Objects for the requested query, not limited for more diversity
-        var select = "countryCode , COUNT() as numberOfCities, SUM(population) AS populationSum , MINIMUM(longitude) AS countryMinLong, MAXIMUM(longitude) AS countryMaxLong ";
-        var countryCodes = _createFusionTableQuery(ftTableIdCity,"*", null, 0, 0, null,null);
 
-        var geoObjects = _createGeoObjects(countryCodes);
-        console.debug("Size: "+geoObjects.length);
+        if (countrySizes === null) {
+            countrySizes = {};
+            // Get all Objects for the requested query, not limited for more diversity
+            var select = "countryCode , COUNT() as numberOfCities, SUM(population) AS populationSum , MINIMUM(longitude) AS countryMinLong, MAXIMUM(longitude) AS countryMaxLong ";
+            var countryCodes = _createFusionTableQuery(ftTableIdCity, "*", null, 0, 0, null, null);
 
-        var countrySizes = {};
+            var geoObjects = _createGeoObjects(countryCodes);
+            console.debug("Size: " + geoObjects.length);
 
-        var result = _groupBy(geoObjects, function(item)
-        {
-            return [item.countryCode];
-        });
 
-        for (var i = 0; i < result.length; i++){
-            var country = result[i];
-            country.sort(function (a, b) {
-                return a.longitude - b.longitude
+            var result = _groupBy(geoObjects, function (item) {
+                return [item.countryCode];
             });
-            var minLongitude = country[0].longitude;
-            var maxLongitude = country[country.length - 1].longitude;
-            console.debug(country[0].countryCode+" Long: Min: "+ minLongitude + " Max: "+ maxLongitude);
 
-            country.sort(function (a, b) {
-                return a.latitude - b.latitude;
-            });
-            var minLatitude = country[0].latitude;
-            var maxLatitude = country[country.length - 1].latitude;
-            console.debug(country[0].countryCode+" Lat: Min: "+ minLatitude + " Max: "+ maxLatitude);
-            countrySizes[country[0].countryCode] = {
-                minLat : minLatitude,
-                maxLat : maxLatitude,
-                minLong: minLongitude,
-                maxLong: maxLongitude
-            };
+            for (var i = 0; i < result.length; i++) {
+                var country = result[i];
+                country.sort(function (a, b) {
+                    return a.longitude - b.longitude
+                });
+                var minLongitude = country[0].longitude;
+                var maxLongitude = country[country.length - 1].longitude;
+                console.debug(country[0].countryCode + " Long: Min: " + minLongitude + " Max: " + maxLongitude);
 
-            //console.debug(country[0].countryCode+" Dist: Width"+ );
+                country.sort(function (a, b) {
+                    return a.latitude - b.latitude;
+                });
+                var minLatitude = country[0].latitude;
+                var maxLatitude = country[country.length - 1].latitude;
+                console.debug(country[0].countryCode + " Lat: Min: " + minLatitude + " Max: " + maxLatitude);
+                var ne = new google.maps.LatLng(maxLatitude,maxLongitude);
+                var sw = new google.maps.LatLng(minLatitude,minLongitude);
+                var bounds = new google.maps.LatLngBounds(sw,ne);
+
+                countrySizes[country[0].countryCode] = {
+                    minLat: minLatitude,
+                    maxLat: maxLatitude,
+                    minLong: minLongitude,
+                    maxLong: maxLongitude,
+                    bounds: bounds
+                };
+
+                //console.debug(country[0].countryCode+" Dist: Width"+ );
+            }
         }
         return countrySizes;
     };
-    function _getDistance(p1, p2) {
-        var R = 6378137; // Earth’s mean radius in meter
-         var dLat = rad(p2.lat() - p1.lat());
-         var dLong = rad(p2.lng() - p1.lng());
-         var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-         Math.cos(rad(p1.lat())) * Math.cos(rad(p2.lat())) *
-         Math.sin(dLong / 2) * Math.sin(dLong / 2);
-         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-         var d = R * c;
-        return d; // returns the distance in meter
+
+    function getBoundsZoomLevel(bounds, mapDim) {
+        // http://stackoverflow.com/questions/6048975/google-maps-v3-how-to-calculate-the-zoom-level-for-a-given-bounds
+        var WORLD_DIM = { height: 256, width: 256 };
+        var ZOOM_MAX = 21;
+
+        function latRad(lat) {
+            var sin = Math.sin(lat * Math.PI / 180);
+            var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+            return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+        }
+
+        function zoom(mapPx, worldPx, fraction) {
+            return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+        }
+
+        var ne = bounds.getNorthEast();
+        var sw = bounds.getSouthWest();
+
+        var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
+
+        var lngDiff = ne.lng() - sw.lng();
+        var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+        var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
+        var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
+
+        return Math.min(latZoom, lngZoom, ZOOM_MAX);
     }
+
+    castReceiver.getZoomLevelForCountry = function(countryCode){
+        var $mapDiv = $('#map-canvas');
+        var mapDim = { height: $mapDiv.height(), width: $mapDiv.width() };
+        var countríes = this.getAllCountrySizes();
+        var country = countríes[countryCode];
+        console.debug("Bounds: "+ country.bounds+ " MapDIM: H:"+mapDim.height + " W:" +mapDim.width);
+        var zoom = getBoundsZoomLevel(country.bounds,mapDim);
+
+        return zoom;
+    }
+
+
+
     castReceiver.persistHighScoreList = function(userMac, userPoints, maxPoints) {
         if (!window.localStorage) {
             console.error("ChromeCast does not support local stoarge.")
