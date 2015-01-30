@@ -49,9 +49,12 @@
         gameRoundManager.goalGeoObject = geoObjects[0];
         var goalPos = new google.maps.LatLng(gameRoundManager.goalGeoObject.latitude, gameRoundManager.goalGeoObject.longitude);
         _placeGoalMarker(goalPos);
+        var zoom = dataManager.getZoomLevelForCountry(gameRoundManager.goalGeoObject.countryCode);
+        var bounds = dataManager.getBoundsForCountry(gameRoundManager.goalGeoObject.countryCode);
+        //gameModeManager.getMap().setCenter(goalPos);
+        gameModeManager.getMap().fitBounds(bounds);
 
-        gameModeManager.getMap().setCenter(goalPos);
-        gameModeManager.getMap().setZoom(6);
+        gameModeManager.getMap().setZoom(zoom);
 
 
         var geoNameChoices = dataManager.getCityNameArray(geoObjects);
