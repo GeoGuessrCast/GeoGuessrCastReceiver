@@ -327,7 +327,7 @@
     }
     castReceiver.getZoomLevelForCountry = function(countryCode){
         var $mapDiv = $('#map-canvas');
-        var mapDim = { height: $mapDiv.height() - ($mapDiv.height() * 0.1), width: $mapDiv.width() };
+        var mapDim = { height: $mapDiv.height() - ($mapDiv.height() * 0.2), width: $mapDiv.width() };
         var countríes = this.getAllCountrySizes();
         var country = countríes[countryCode];
         console.debug("Bounds: "+ country.bounds+ " MapDIM: H:"+mapDim.height + " W:" +mapDim.width);
