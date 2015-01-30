@@ -251,7 +251,7 @@
         var geoObjects = _createGeoObjects(countryCodes);
         console.debug("Size: "+geoObjects.length);
 
-        var countrySizes = [];
+        var countrySizes = {};
 
         var result = _groupBy(geoObjects, function(item)
         {
@@ -272,14 +272,28 @@
             });
             var minLatitude = country[0].latitude;
             var maxLatitude = country[country.length - 1].latitude;
-            console.debug(country[0].countryCode+" Long: Min: "+ minLatitude + " Max: "+ maxLatitude);
-            console.debug(country[0].countryCode+" Dist: Width"+ _getDistance(new google.maps.LatLng(minLatitude, maxLatitude)));
-        }
+            console.debug(country[0].countryCode+" Lat: Min: "+ minLatitude + " Max: "+ maxLatitude);
+            countrySizes[country[0].countryCode] = {
+                minLat : minLatitude,
+                maxLat : maxLatitude,
+                minLong: minLongitude,
+                maxLong: maxLongitude
+            };
 
-        return result;
+            //console.debug(country[0].countryCode+" Dist: Width"+ );
+        }
+        return countrySizes;
     };
     function _getDistance(p1, p2) {
-        return google.maps.geometry.spherical.computeDistanceBetween (p1, p2); // returns the distance in meter
+        var R = 6378137; // Earth’s mean radius in meter
+         var dLat = rad(p2.lat() - p1.lat());
+         var dLong = rad(p2.lng() - p1.lng());
+         var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+         Math.cos(rad(p1.lat())) * Math.cos(rad(p2.lat())) *
+         Math.sin(dLong / 2) * Math.sin(dLong / 2);
+         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+         var d = R * c;
+        return d; // returns the distance in meter
     }
     castReceiver.persistHighScoreList = function(userMac, userPoints, maxPoints) {
         if (!window.localStorage) {
