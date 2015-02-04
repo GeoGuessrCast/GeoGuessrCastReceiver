@@ -109,9 +109,6 @@
                 var result = _createFusionTableQuery(ftTableIdCity,"*", where, 0, minPoolSize, orderBy,null);
                 queryGeoObjects  = _createGeoObjects(result);
 
-                console.debug("[DM] getGeoObjects: had to reduce population to satisify minPopulation to"+ minPopulation+ " , it returned now "+ (queryGeoObjects.length >= minPoolSize)+ " objects");
-
-
         }
 
         var geoObjects = getRandomSubsetOfArray(queryGeoObjects, count);
