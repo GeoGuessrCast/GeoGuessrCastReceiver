@@ -17,7 +17,8 @@
             map: gameModeManager.getMap(),
             icon: {
                 path: google.maps.SymbolPath.CIRCLE,
-                scale: 4,
+                //path: 'M533 1254 c-139 -50 -213 -221 -169 -394 18 -74 64 -168 107 -219 34 -41 38 -88 12 -120 -10 -11 -55 -36 -99 -55 -198 -83 -284 -166 -284 -272 0 -42 4 -51 40 -85 74 -71 217 -99 500 -99 286 0 432 29 503 101 38 38 39 41 35 98 -3 45 -11 68 -32 96 -39 50 -144 118 -251 160 -49 20 -96 44 -102 53 -20 25 -15 76 11 113 90 125 121 211 121 334 0 73 -5 100 -24 143 -29 64 -94 124 -158 146 -57 20 -154 19 -210 0z',
+                scale: 5,
                 strokeColor: '#ffffff',
                 strokeWeight: 1,
                 strokeOpacity: 1.0,
@@ -249,14 +250,29 @@
         var mainMenuUserList = $('#mainMenuUserList');
         mainMenuUserList.find('ul').html('');
         for(var i = 0; i < userLength; i++){
+            var user = userList[i];
+            var userMacCleaned = user.mac.replace(/([^a-z0-9]+)/gi, '_');
+
             if (userList[i].admin) {
                 userCssClass = 'admin';
             } else {
                 userCssClass = 'user';
             }
-            //$('#mainMenuUserList').find('ul').append('<li style="color:' + userList[i].getColor() + '" class="' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
-            mainMenuUserList.find('ul').append('<li class="noLinebreak ' + userCssClass + '" id="'+userList[i].mac+'">'+userList[i].name+'</li>');
+            mainMenuUserList.find('ul').append('<li class="noLinebreak userName ' + userCssClass + '" id="userName_'
+                + userMacCleaned + '">' + user.name + '</li>');
+            var userNameContainer = $('#userName_'+userMacCleaned);
+            userNameContainer.css('color', user.getColor());
+            userNameContainer.css('background-image', 'url(data:image/svg+xml;base64,' + renderManager.createUserIconBase64(user) + ')');
+
         }
+    };
+
+    rm.createUserIconBase64 = function(user) {
+        var userSvg = '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128.000000 128.000000" preserveAspectRatio="xMidYMid meet">'
+            + '<g transform="translate(0.0,128.0) scale(0.1,-0.1)" fill="' + user.getColor() + '" stroke="none">'
+            + '<path d="M533 1254 c-139 -50 -213 -221 -169 -394 18 -74 64 -168 107 -219 34 -41 38 -88 12 -120 -10 -11 -55 -36 -99 -55 -198 -83 -284 -166 -284 -272 0 -42 4 -51 40 -85 74 -71 217 -99 500 -99 286 0 432 29 503 101 38 38 39 41 35 98 -3 45 -11 68 -32 96 -39 50 -144 118 -251 160 -49 20 -96 44 -102 53 -20 25 -15 76 11 113 90 125 121 211 121 334 0 73 -5 100 -24 143 -29 64 -94 124 -158 146 -57 20 -154 19 -210 0z"/>'
+            + '</g></svg>';
+        return window.btoa(userSvg);
     };
 
 
@@ -314,7 +330,7 @@
             userStateDiv.addClass(iconCssClass);
 
             userNameContainer.css('color', user.getColor());
-            userNameContainer.css('background-image', 'url(images/user.svg)');
+            userNameContainer.css('background-image', 'url(data:image/svg+xml;base64,' + renderManager.createUserIconBase64(user) + ')');
         }
     };
 

@@ -68,7 +68,7 @@
             fakeUser('5555',"Falk",'555');
             fakeUser('6666',"Kaijun",'666');
             fakeUser('7777',"Stefan",'777');
-            fakeUser('8888',"Martin",'888');
+            fakeUser('8888',"Somebody",'888');
         }
         function userFakeAnswer(string,senderID,userMac){
             eventManager.event_onUserMessage({senderId:senderID, data:{event_type: 'gameRound_answerChosen', answer: string , userMac: userMac}});

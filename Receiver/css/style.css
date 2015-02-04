@@ -197,12 +197,11 @@ h3 {
     background-repeat: no-repeat;
     background-size: contain;
     padding-left: 4vh;
-    font-weight: bold;
 }
 
 .score {
     font-weight: bold;
-    color: #000c7c;
+    color: #000000;
 }
 
 
