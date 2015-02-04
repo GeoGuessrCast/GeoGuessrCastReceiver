@@ -1,6 +1,7 @@
-(function(castReceiver){
+(function(dm){
 
     var countrySizes = null;
+    var asyncCountrySizeFetchIsRunning = false;
 
     //Fusion Table ID:
     var ftTableIdCity = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
@@ -24,7 +25,7 @@
      * @param marker
      * @constructor
      */
-    castReceiver.GeoObject = function(id, name, lat, long, countryCode, population, elevation, marker){
+    dm.GeoObject = function(id, name, lat, long, countryCode, population, elevation, marker){
         /** @type {number} */
         this.id = id;
         /** @type {string} */
@@ -51,7 +52,7 @@
             return name + '(' + countryCode + '|' + long + '|' + lat + '|pop:' + population + ')';
         }
     };
-    castReceiver.Highscore = function(userMac,points,totalPoints){
+    dm.Highscore = function(userMac,points,totalPoints){
         this.userMac = userMac;
         this.points = points;
         this.totalPoints = totalPoints;
@@ -67,7 +68,7 @@
                         //TODO more factors...
     }
 
-    castReceiver.applyPopulationFact = function(countryCode, minPopProfile) {
+    dm.applyPopulationFact = function(countryCode, minPopProfile) {
         if (!minPopWeigthsPerCountry.hasOwnProperty(countryCode)) {
             return minPopProfile;
         } else {
@@ -89,7 +90,7 @@
         console.debug("Auth: "+authResult);
     }
 
-    castReceiver.getGeoObjects = function(geoObjType, countryCode, count, minPopulation, minPoolSize) {
+    dm.getGeoObjects = function(geoObjType, countryCode, count, minPopulation, minPoolSize) {
         if (count > minPoolSize){
             minPoolSize = count;
         }
@@ -101,12 +102,12 @@
         var where = "population >= '"+minPopulation+"' and countryCode='"+countryCode+"'";
 
         // Get all Objects for the requested query, not limited for more diversity
-        var result = _createFusionTableQuery(ftTableIdCity,"*", where, 0, 0, null,null);
+        var result = _createFusionTableQuery(ftTableIdCity,"*", where, 0, 0, null,null,null);
         var queryGeoObjects  = _createGeoObjects(result);
         if (queryGeoObjects.length < minPoolSize) {
                 where = "countryCode='"+countryCode+"'";
                 var orderBy = "population DESC";
-                var result = _createFusionTableQuery(ftTableIdCity,"*", where, 0, minPoolSize, orderBy,null);
+                var result = _createFusionTableQuery(ftTableIdCity,"*", where, 0, minPoolSize, orderBy,null,null);
                 queryGeoObjects  = _createGeoObjects(result);
 
         }
@@ -146,7 +147,7 @@
         return randomObjects;
     }
 
-    castReceiver.getRandomCountryCode = function(){
+    dm.getRandomCountryCode = function(){
         if (countryCodes.length == 0) {
             console.debug("[DM] Fetching Country Codes");
             countryCodes = this.getAllCountryCodes();
@@ -159,7 +160,7 @@
      * @param {Array} geoObjects
      * @return {Array}{String}
      */
-    castReceiver.getCityNameArray = function (geoObjects) {
+    dm.getCityNameArray = function (geoObjects) {
         var cityNames = new Array();
         geoObjects.map(function (geoObject) {
             cityNames.push(geoObject.name);
@@ -167,12 +168,12 @@
         return cityNames;
     };
 
-    castReceiver.getAllCountryCodes = function(){
+    dm.getAllCountryCodes = function(){
         var codes = [];
         // Get all Objects for the requested query, not limited for more diversity
         if (localStorage.getItem("countryCodes") === null) {
             var select = "countryCode , COUNT() as numberOfCities, SUM(population) AS populationSum , MINIMUM(longitude) AS countryMinLong, MAXIMUM(longitude) AS countryMaxLong ";
-            var countryCodes = _createFusionTableQuery(ftTableIdCity, select, null, 0, 0, null, "countryCode");
+            var countryCodes = _createFusionTableQuery(ftTableIdCity, select, null, 0, 0, null, "countryCode",null);
 
             if (typeof(countryCodes.rows) != 'undefined') {
                 var resultLength = countryCodes.rows.length;
@@ -209,57 +210,66 @@
         })
     }
 
+    dm.calcCountrySizes = function(countryCodes){
 
-    castReceiver.getAllCountrySizes = function(){
+        var geoObjects = _createGeoObjects(countryCodes);
+
+        var result = _groupBy(geoObjects, function (item) {
+            return [item.countryCode];
+        });
+
+        countrySizes = {};
+        for (var i = 0; i < result.length; i++) {
+            var country = result[i];
+            country.sort(function (a, b) {
+                return a.longitude - b.longitude
+            });
+            var minLongitude = country[0].longitude;
+            var maxLongitude = country[country.length - 1].longitude;
+            //console.debug(country[0].countryCode + " Long: Min: " + minLongitude + " Max: " + maxLongitude);
+
+            country.sort(function (a, b) {
+                return a.latitude - b.latitude;
+            });
+            var minLatitude = country[0].latitude;
+            var maxLatitude = country[country.length - 1].latitude;
+            //console.debug(country[0].countryCode + " Lat: Min: " + minLatitude + " Max: " + maxLatitude);
+
+
+            countrySizes[country[0].countryCode] = {
+                minLat: minLatitude,
+                maxLat: maxLatitude,
+                minLong: minLongitude,
+                maxLong: maxLongitude
+            };
+            //console.debug(country[0].countryCode+" Dist: Width"+ );
+        }
+        localStorage.setItem("countryMeasures", JSON.stringify(countrySizes));
+        print("[DM] done with async fetching...");
+        asyncCountrySizeFetchIsRunning = false;
+    }
+
+    dm.countrySizesAvailable = function(){
+        return countrySizes != null;
+    }
+
+    dm.getAllCountrySizes = function(){
+
+        if (asyncCountrySizeFetchIsRunning) {
+            return null;
+        }
 
         if (countrySizes === null) {
-            countrySizes = {};
-            console.debug("[DM] Fetching country sizes");
             if (localStorage.getItem("countryMeasures") === null) {
                 // Get all Objects for the requested query, not limited for more diversity
-                var countryCodes = _createFusionTableQuery(ftTableIdCity, "*", null, 0, 0, null, null);
+                asyncCountrySizeFetchIsRunning = true;
+                print("[DM] fetching country sizes async...");
+                _createFusionTableQuery(ftTableIdCity, "*", null, 0, 0, null, null, dataManager.calcCountrySizes);
 
-                var geoObjects = _createGeoObjects(countryCodes);
-
-                console.debug("Size: " + geoObjects.length);
-
-
-                var result = _groupBy(geoObjects, function (item) {
-                    return [item.countryCode];
-                });
-
-                for (var i = 0; i < result.length; i++) {
-                    var country = result[i];
-                    country.sort(function (a, b) {
-                        return a.longitude - b.longitude
-                    });
-                    var minLongitude = country[0].longitude;
-                    var maxLongitude = country[country.length - 1].longitude;
-                    //console.debug(country[0].countryCode + " Long: Min: " + minLongitude + " Max: " + maxLongitude);
-
-                    country.sort(function (a, b) {
-                        return a.latitude - b.latitude;
-                    });
-                    var minLatitude = country[0].latitude;
-                    var maxLatitude = country[country.length - 1].latitude;
-                    //console.debug(country[0].countryCode + " Lat: Min: " + minLatitude + " Max: " + maxLatitude);
-
-
-                    countrySizes[country[0].countryCode] = {
-                        minLat: minLatitude,
-                        maxLat: maxLatitude,
-                        minLong: minLongitude,
-                        maxLong: maxLongitude
-                    };
-                    //console.debug(country[0].countryCode+" Dist: Width"+ );
-                }
-
-                localStorage.setItem("countryMeasures", JSON.stringify(countrySizes));
             } else {
                 countrySizes = JSON.parse(localStorage.getItem("countryMeasures"));
             }
         }
-        console.debug("[DM] -- done");
 
         return countrySizes;
     };
@@ -292,8 +302,11 @@
 
         return Math.min(latZoom, lngZoom, ZOOM_MAX);
     };
-    castReceiver.getBoundsForCountry = function(countryCode){
+    dm.getBoundsForCountry = function(countryCode){
         var countries = this.getAllCountrySizes();
+        if (countries == null) {
+            return null;
+        }
         var country = countries[countryCode];
         var ne = new google.maps.LatLng(country.maxLat, country.maxLong);
         var sw = new google.maps.LatLng(country.minLat, country.minLong);
@@ -301,10 +314,13 @@
         return bounds;
     };
 
-    castReceiver.getZoomLevelForCountry = function(countryCode){
+    dm.getZoomLevelForCountry = function(countryCode){
         var $mapDiv = $('#map-canvas');
         var mapDim = { height: $mapDiv.height() - ($mapDiv.height() * 0.2), width: $mapDiv.width() };
         var countries = this.getAllCountrySizes();
+        if (countries == null) {
+            return null;
+        }
         var country = countries[countryCode];
         var ne = new google.maps.LatLng(country.maxLat, country.maxLong);
         var sw = new google.maps.LatLng(country.minLat, country.minLong);
@@ -314,7 +330,7 @@
 
         return zoom;
     };
-    castReceiver.persistHighScoreList = function(userMac, userPoints, maxPoints) {
+    dm.persistHighScoreList = function(userMac, userPoints, maxPoints) {
         if (!window.localStorage) {
             console.error("ChromeCast does not support local stoarge.")
             return false;
@@ -355,7 +371,7 @@
         return true;
     };
 
-    castReceiver.getHighScoreList = function() {
+    dm.getHighScoreList = function() {
         if (!window.localStorage) {
             console.error("ChromeCast does not support local stoarge.")
             return false;
@@ -396,7 +412,7 @@
      * @returns {*}
      * @private
      */
-    function _createFusionTableQuery(ftTableId,select, where, offset, limit, orderBy, groupBy) {
+    function _createFusionTableQuery(ftTableId,select, where, offset, limit, orderBy, groupBy, optionalAsyncCallback) {
         // Builds a Fusion Tables SQL query and hands the result to  dataHandler
         // write your SQL as normal, then encode it
         var query = "SELECT "+select+" FROM " + ftTableId ;
@@ -419,19 +435,30 @@
         var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
 
         var result = null;
-        jQuery.ajax({
-            url: queryurl,
-            success: function(data) {
-              result = data;
-            },
-            async:false
-        });
+        if (optionalAsyncCallback != null) {
+            jQuery.ajax({
+                url: queryurl,
+                success: function(data) {
+                    optionalAsyncCallback(data);
+                },
+                async:true
+            });
+
+        } else {
+            jQuery.ajax({
+                url: queryurl,
+                success: function(data) {
+                    result = data;
+                },
+                async:false
+            });
+        }
 
 
 
         return result;
     }
-    castReceiver.insertFusionTableQuery = function(ftTableId, userData) {
+    dm.insertFusionTableQuery = function(ftTableId, userData) {
         // Builds a Fusion Tables SQL query and hands the result to  dataHandler
         // write your SQL as normal, then encode it
         var query = "INSERT INTO " + ftTableId + " (UserID, Scores) VALUES (";
