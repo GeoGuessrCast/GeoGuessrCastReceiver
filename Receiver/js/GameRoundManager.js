@@ -108,6 +108,7 @@
                 "answerDistance": user.lastAnswerGiven?user.lastAnswerGiven.distanceToGoalKm:null,
                 "pointsEarned": user.lastAnswerGiven?user.lastAnswerGiven.points:null
             };
+            console.log(jsonData)
             eventManager.send(user.senderId, data.channelName.user, jsonData);
         }
         userManager.sortUsersByScore();
