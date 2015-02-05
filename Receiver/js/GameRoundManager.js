@@ -48,7 +48,7 @@
         renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6 );
 
         var geoObjects = dataManager.getGeoObjects(
-            gameModeManager.currentGameModeProfile.geoObjType, gameModeManager.currentGameModeProfile.limitedCountry,
+            gameModeManager.currentGameMode.geoObjType, gameModeManager.currentGameModeProfile.limitedCountry,
             gameModeManager.currentGameModeProfile.multipleChoiceMode ? data.constants.numberOfChoices : 1,
             gameModeManager.currentGameModeProfile.minPopulationDefault, 10);
 

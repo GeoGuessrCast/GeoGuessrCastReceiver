@@ -12,7 +12,7 @@ function sqlTest() {
     queryStr.push("SELECT countryCode, COUNT() as numberOfCities, SUM(population) AS populationSum," +
     " MINIMUM(longitude) AS countryMinLong, MAXIMUM(longitude) AS countryMaxLong "); //ERROR_503:    , MINIMUM(latitude) AS countryMinLat, MAXIMUM(latitude) AS countryMaxLat
     queryStr.push(" FROM " + fusionTableId);
-    //queryStr.push(" WHERE countryCode='DE'"); // <- JUST FOR CONSOLE TESTING
+    queryStr.push(" WHERE SUM(population) > 50000"); // <- JUST FOR CONSOLE TESTING
     queryStr.push(" GROUP BY countryCode");
 
 
