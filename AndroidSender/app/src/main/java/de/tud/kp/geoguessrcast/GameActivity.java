@@ -168,7 +168,6 @@ public class GameActivity extends ActionBarActivity {
         //register CastConsumerImpl to CastManager
         sCastManager.addDataCastConsumer(sCastManagerConsumer);
 
-
         //Start Game
         if(mUser.isAdmin()){
             startFragment(new ChooseModeFragment());
@@ -216,7 +215,6 @@ public class GameActivity extends ActionBarActivity {
     @Override
     public void onDestroy() {
         sCastManager.removeDataCastConsumer(sCastManagerConsumer);
-
         //TODO: clear User admin
         //TODO: GameManager - restartGame - resetAll!!!
         //User.resetInstance();
@@ -309,7 +307,6 @@ public class GameActivity extends ActionBarActivity {
     }
 
     private void initProfileBar(){
-
         //init profile bar
         ImageView profileAvatar = (ImageView) findViewById(R.id.profile_avatar);
         Drawable avatarDrawable = getResources().getDrawable(R.drawable.ic_account_circle_white_48dp);
