@@ -131,12 +131,11 @@
             userManager.updateUser(event.data.userMac, trimmedName, event.senderId);
         }
         //inform the Sender if the user is game leader
-
         var jsonData;
         if (userManager.isUserAdmin(event.data.userMac)) {
-            jsonData = {event_type:data.eventType.isAdmin, admin:true, user_color: user.getColor(), gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
+            jsonData = {event_type:data.eventType.isAdmin, admin:true, user_color: tinycolor(user.getColor()).toHexString(), gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
         } else {
-            jsonData = {event_type:data.eventType.isAdmin, admin:false, user_color: user.getColor()};
+            jsonData = {event_type:data.eventType.isAdmin, admin:false, user_color: tinycolor(user.getColor()).toHexString()};
         }
         eventManager.send(event.senderId, data.channelName.user, jsonData);
 
