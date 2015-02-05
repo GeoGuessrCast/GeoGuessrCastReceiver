@@ -6,6 +6,8 @@ package de.tud.kp.geoguessrcast.beans;
 public class GameMode {
     private String gameModeName;
     private int id;
+    private int geoObjType;
+    private String iconCssClass;
 
     public String getGameModeName() {
         return gameModeName;
@@ -31,14 +33,11 @@ public class GameMode {
         this.geoObjType = geoObjType;
     }
 
-    public String getIconUrl() {
-        return iconUrl;
+    public String getIconCssClass() {
+        return iconCssClass;
     }
 
-    public void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
+    public void setIconCssClass(String iconCssClass) {
+        this.iconCssClass = iconCssClass;
     }
-
-    private int geoObjType;
-    private String iconUrl;
 }

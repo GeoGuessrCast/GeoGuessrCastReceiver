@@ -8,10 +8,14 @@ public class GameProfile {
     private int id;
     private String limitedCountry;
     private boolean multipleChoiceMode;
+    private boolean pointingMode;
+    private int minTotalCities;
+    private int minCountryPopulation;
     private int minPopulationDefault;
+    private double scoreWeightFactor;
     private int timePerRoundSec;
     private MapOption mapOption;
-    private boolean pointingMode;
+
 
     public String getProfileName() {
         return profileName;
@@ -75,5 +79,29 @@ public class GameProfile {
 
     public void setPointingMode(boolean pointingMode) {
         this.pointingMode = pointingMode;
+    }
+
+    public int getMinTotalCities() {
+        return minTotalCities;
+    }
+
+    public void setMinTotalCities(int minTotalCities) {
+        this.minTotalCities = minTotalCities;
+    }
+
+    public int getMinCountryPopulation() {
+        return minCountryPopulation;
+    }
+
+    public void setMinCountryPopulation(int minCountryPopulation) {
+        this.minCountryPopulation = minCountryPopulation;
+    }
+
+    public double getScoreWeightFactor() {
+        return scoreWeightFactor;
+    }
+
+    public void setScoreWeightFactor(double scoreWeightFactor) {
+        this.scoreWeightFactor = scoreWeightFactor;
     }
 }

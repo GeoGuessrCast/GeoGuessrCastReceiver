@@ -14,6 +14,7 @@ import de.tud.kp.geoguessrcast.R;
 public class WaitGameFragment extends Fragment{
 
     public WaitGameFragment() {
+
     }
 
     @Override
