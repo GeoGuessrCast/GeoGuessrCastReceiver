@@ -188,6 +188,7 @@
                 if (isValidLocality) {
                     var pos = results[0].geometry.location;
                     var countryCode = null;
+                    //finding country code if present:
                     for (var i=0; i<results[0].address_components.length; i++) {
                         for (var b=0;b<results[0].address_components[i].types.length;b++) {
                             if (results[0].address_components[i].types[b] == "country") {
@@ -210,20 +211,20 @@
 
     function _evaluateAnswer(user, cleanedAnswerString, answerGeoObject){
         var points = 0;
-        var distInKm = 100000000;
+        var distInKm = 10000000000;
         if (answerGeoObject != null) {
             distInKm = _getDistance(answerGeoObject.position, gameRoundManager.goalGeoObject.position) / 1000;
         }
         if (gameModeManager.currentGameModeProfile.multipleChoiceMode) {
             if (cleanedAnswerString == gameRoundManager.goalGeoObject.name) {
-                points = data.constants.maxPointsPerAnswer;
+                points = data.constants.maxPointsPerAnswer * gameModeManager.currentGameModeProfile.scoreWeightFactor;
                 print("[GRM] " + user.name + " got " + points + " points for the RIGHT answer (" + cleanedAnswerString + ")");
             } else {
                 print("[GRM] " + user.name + " got " + points + " points for the WRONG answer (" + cleanedAnswerString + ")");
             }
         } else {
             if (answerGeoObject != null) {
-                points = Math.floor(Math.max(0,Math.min(data.constants.maxPointsPerAnswer,(data.constants.maxDistanceErrorKm+100-distInKm)/100)));
+                points = Math.floor(Math.max(0,Math.min(data.constants.maxPointsPerAnswer,(data.constants.maxDistanceErrorKm+100-distInKm)/100))) * gameModeManager.currentGameModeProfile.scoreWeightFactor;
                 print("[GRM] " + user.name + " got " + points + " points for " + cleanedAnswerString + ' (' + answerGeoObject.countryCode + ', '+Math.floor(distInKm)+'km)');
             } else {
                 //TODO send message to android app: geo-obj not found - retype your answer

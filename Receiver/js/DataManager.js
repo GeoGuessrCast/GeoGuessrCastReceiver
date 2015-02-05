@@ -57,7 +57,7 @@
         this.name = name;
         this.points = points;
         this.totalPoints = totalPoints;
-        this.pointsPercent = points/totalPoints*100;
+        this.pointsPercent = Math.round(points/totalPoints*100);
 
         this.toString = function() {
             return '[ '+userMac+' Name: '+name+' ('+ points +'/'+totalPoints+ ')]';

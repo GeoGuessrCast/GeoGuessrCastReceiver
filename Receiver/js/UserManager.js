@@ -11,8 +11,8 @@
         '#00838F',  //Cyan
         '#2E7D32',   //Green
         '#F9A825',   //Yellow
-        '#4E342E',    //Brown
-        '#424242',      //Grey
+        '#5E342E',    //Brown
+        '#223232',      //Grey
         '#000000',     //Black
         '#AD1457'    //Pink
     ];

@@ -8,6 +8,7 @@
     gmm.currentRound = 1;
 
     gmm.currentGameMode = null;
+    gmm.originalGameModeProfile = null;
     gmm.currentGameModeProfile = null;
 
 
@@ -16,6 +17,15 @@
     };
 
     gmm.setGameModeProfile = function(gameModeProfileObject){
+        if (gameModeManager.originalGameModeProfile == null) {
+            gameModeManager.originalGameModeProfile = data.gameModeProfile[gameModeProfileObject.id];
+        }
+        //ensure that gameModeProfileObject has ALL needed keys:
+        for (var key in gameModeManager.originalGameModeProfile) {
+            if (gameModeManager.originalGameModeProfile.hasOwnProperty(key) && !gameModeProfileObject.hasOwnProperty(key)) {
+                gameModeProfileObject[key] = gameModeManager.originalGameModeProfile[key];
+            }
+        }
         gameModeManager.currentGameModeProfile = gameModeProfileObject;
     };
 

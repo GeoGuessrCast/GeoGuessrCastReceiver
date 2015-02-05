@@ -102,8 +102,8 @@ data = {
             multipleChoiceMode: true,
             pointingMode: false,
             minTotalCities: 10,
-            minCountryPopulation: 2000000,
-            minPopulationDefault: 200000,
+            minCountryPopulation: 3600000,
+            minPopulationDefault: 800000,
             scoreWeightFactor: 1.0,
             timePerRoundSec: 15,
             mapOption: {
@@ -124,8 +124,8 @@ data = {
             multipleChoiceMode: true,
             pointingMode: false,
             minTotalCities: 10,
-            minCountryPopulation: 4000000,
-            minPopulationDefault: 100000,
+            minCountryPopulation: 0,
+            minPopulationDefault: 500000, // applyPopulationFact DE=0.5 !
             scoreWeightFactor: 0.7,
             timePerRoundSec: 15,
             mapOption: {
@@ -146,8 +146,8 @@ data = {
             multipleChoiceMode: false,
             pointingMode: true,
             minTotalCities: 10,
-            minCountryPopulation: 4000000,
-            minPopulationDefault: 250000,
+            minCountryPopulation: 6000000,
+            minPopulationDefault: 1000000,
             scoreWeightFactor: 1.0,
             timePerRoundSec: 23,
             mapOption: {
@@ -168,10 +168,10 @@ data = {
             multipleChoiceMode: false,
             pointingMode: false,
             minTotalCities: 1,
-            minCountryPopulation: 100000,
+            minCountryPopulation: 3000000,
             minPopulationDefault: 250000,
             scoreWeightFactor: 1.8,
-            timePerRoundSec: 36,
+            timePerRoundSec: 30,
             mapOption: {
                 mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
                 borders: true,
