@@ -245,6 +245,10 @@
         renderManager.loadHighScoreList(dataManager.getHighScoreList(data.constants.userMaxScoreTresholdForHighScoreList), 'Global HighScore');
     };
 
+    rm.loadCurrentGameHighScoreList = function(){
+        renderManager.loadHighScoreList(dataManager.createHighScoreListFromCurentUsers(data.constants.userMaxScoreTresholdForHighScoreList), 'Current Game HighScore');
+    };
+
     rm.loadHighScoreList = function(highScoreList, heading){
         gameRoundManager.cancelGame();
         renderManager.applyGameMenuMapstyle();
@@ -254,7 +258,7 @@
             $('#highScoreHeading').html(heading);
             $('#innerHighScoreHeading').html(heading);
 
-            console.log(highScoreList);
+            //console.log(highScoreList);
             if (highScoreList == null) return;
 
             var highScoreContainer = $('#highScoreList');
@@ -338,7 +342,7 @@
                     userAnswerCity = '(no answer)';
                 } else {
                     userAnswerCity = userAnswer.guessedName;
-                    var answerWorthFact = userAnswer.points/data.constants.maxPointsPerAnswer; // 0=worst answer, 1=best
+                    var answerWorthFact = userAnswer.points/gameRoundManager.getMaxPointsPerAnswer(); // 0=worst answer, 1=best
                     var red = Math.floor((1-answerWorthFact)*160);
                     var green = Math.floor(answerWorthFact*160);
                     color = 'rgb(' + red + ',' + green + ',0)';

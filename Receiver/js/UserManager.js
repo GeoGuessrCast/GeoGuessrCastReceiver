@@ -34,6 +34,8 @@
         this.mac = mac;
         /** @type {number} */
         this.pointsInCurrentGame = 0;
+        /** @type {number} */
+        this.maxPointsInCurrentGame = 0;
         /** @type {Answer} */
         this.lastAnswerGiven = null;
         /** @type {boolean} */

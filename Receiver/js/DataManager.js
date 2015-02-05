@@ -50,7 +50,7 @@
 
         this.toString = function() {
             return name + '(' + countryCode + '|' + long + '|' + lat + '|pop:' + population + ')';
-        }
+        };
     };
     dm.Highscore = function(userMac,name,points,totalPoints){
         this.userMac = userMac;
@@ -69,7 +69,7 @@
         'US': 0.8,
         'FR': 0.8
                         //TODO more factors...
-    }
+    };
 
     dm.applyPopulationFact = function(countryCode, minPopProfile) {
         if (!minPopWeigthsPerCountry.hasOwnProperty(countryCode)) {
@@ -77,7 +77,7 @@
         } else {
             return minPopWeigthsPerCountry[countryCode] * minPopProfile;
         }
-    }
+    };
 
     // Run OAuth 2.0 authorization.
     function _auth(immediate) {
@@ -227,7 +227,7 @@
             //return this.getRandomCountryCode(10,1000000); //Fallback
         }
         return getRandomSubsetOfArray(returnCountryCodes,1);
-    }
+    };
 
         /**
      * Returns a Array with all names of geoObjects
@@ -271,8 +271,7 @@
         console.log("[DM] Got country codes.");
         return codes;
     };
-    function _groupBy( array , f )
-    {
+    function _groupBy( array , f ) {
         var groups = {};
         array.forEach( function( o )
         {
@@ -284,7 +283,7 @@
         {
             return groups[group];
         })
-    }
+    };
 
     dm.calcCountrySizes = function(countryCodes){
 
@@ -323,11 +322,11 @@
         localStorage.setItem("countryMeasures", JSON.stringify(countrySizes));
         print("[DM] done with async fetching...");
         asyncCountrySizeFetchIsRunning = false;
-    }
+    };
 
     dm.countrySizesAvailable = function(){
         return countrySizes != null;
-    }
+    };
 
     dm.getAllCountrySizes = function(){
 
@@ -457,20 +456,35 @@
 
         var highScoreFilteredAndSorted = [];
 
-            if (localStorage.getItem("highscores") === null)
-            {
-                console.debug("No Highscores available, returning empty array");
-            } else {
+        if (localStorage.getItem("highscores") === null)
+        {
+            console.debug("No Highscores available, returning empty array");
+        } else {
 
-                var highscores = JSON.parse(localStorage.getItem("highscores"));
-                console.debug("user highscores: "+highscores.length);
+            var highscores = JSON.parse(localStorage.getItem("highscores"));
+            console.debug("user highscores: "+highscores.length);
 
-                for (var i = 0; i < highscores.length; i++){
-                    if (highscores[i].totalPoints >= minTotalPoints){
-                        highScoreFilteredAndSorted.push(highscores[i]);
-                    }
+            for (var i = 0; i < highscores.length; i++){
+                if (highscores[i].totalPoints >= minTotalPoints){
+                    highScoreFilteredAndSorted.push(highscores[i]);
                 }
             }
+        }
+        highScoreFilteredAndSorted.sort(function(a, b) {
+            return b.pointsPercent - a.pointsPercent;
+        });
+        return highScoreFilteredAndSorted;
+    };
+
+    dm.createHighScoreListFromCurentUsers = function(minTotalPoints) {
+        var highScoreFilteredAndSorted = [];
+        var userList = userManager.getUserList();
+            for (var i = 0; i < userList.length; i++){
+                if (userList[i].maxPointsInCurrentGame >= minTotalPoints){
+                    highScoreFilteredAndSorted.push(new this.Highscore(userList[i].mac, userList[i].name ,userList[i].pointsInCurrentGame, userList[i].maxPointsInCurrentGame));
+                }
+            }
+
         highScoreFilteredAndSorted.sort(function(a, b) {
             return b.pointsPercent - a.pointsPercent;
         });
@@ -557,7 +571,7 @@
         });
 
         return true;
-    }
+    };
     /**
      * gets the data from the sql query with the address
      * @param response

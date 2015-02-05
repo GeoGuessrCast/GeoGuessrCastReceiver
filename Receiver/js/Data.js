@@ -9,10 +9,10 @@ data = {
         midScreenMessageFadeOutTimeMs: 800,
         maxDistanceErrorKm: 1000,
         numberOfChoices: 5,
-        maxPointsPerAnswer: 10,
+        maxPointsPerAnswer: 10, // use gameRoundManager.getMaxPointsPerAnswer() !
         maxNameLength: 15,
         maxAnswerLength: 25,
-        userMaxScoreTresholdForHighScoreList: 40
+        userMaxScoreTresholdForHighScoreList: 35
     },
 
     geoObjType : {   //example: dataManager.getGeoObj(geoObjType.city, getRandomCountryCode(), 5)

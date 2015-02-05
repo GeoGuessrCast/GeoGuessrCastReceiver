@@ -9,6 +9,13 @@
     grm.goalMarker = null; // Target GeoObject
     grm.currentGameState = data.gameState.ended;
 
+    grm.getMaxPointsPerAnswer = function() {
+        if (gameModeManager.currentGameModeProfile == null) {
+            return data.constants.maxPointsPerAnswer;
+        } else {
+            return data.constants.maxPointsPerAnswer * gameModeManager.currentGameModeProfile.scoreWeightFactor;
+        }
+    };
 
 
     grm.Answer = function(guessedName, distanceToGoalKm, geoObject, points) {
@@ -98,14 +105,15 @@
         var userList = userManager.getUserList();
         for(var i = 0; i < userList.length; i++){
             var user = userList[i];
-            if (user.lastAnswerGiven != null) {
+            user.maxPointsInCurrentGame += gameRoundManager.getMaxPointsPerAnswer();
+            if (user.lastAnswerGiven != null) { // ATTENTION - IF NO ANSWER GIVEN lastAnswerGiven = null !
                 user.pointsInCurrentGame += user.lastAnswerGiven.points;
-                dataManager.persistHighScoreList(user.mac,user.name,user.lastAnswerGiven.points,data.constants.maxPointsPerAnswer);
+                dataManager.persistHighScoreList(user.mac,user.name,user.lastAnswerGiven.points, gameRoundManager.getMaxPointsPerAnswer());
                 if (user.lastAnswerGiven.geoObject != null) {
                     renderManager.placeUserMarkerOnMap(user, user.lastAnswerGiven.geoObject.position);
                 }
             } else {
-                dataManager.persistHighScoreList(user.mac,user.name,0,data.constants.maxPointsPerAnswer);
+                dataManager.persistHighScoreList(user.mac,user.name,0, gameRoundManager.getMaxPointsPerAnswer());
             }
             var jsonData = {
                 "event_type":"round_ended",
@@ -144,8 +152,10 @@
             print('[GRM] maxRounds reached: ' + gameModeManager.maxRounds);
             var jsonData = {"ended": true, "event_type":"game_ended"};
             eventManager.broadcast(data.channelName.game, jsonData);
-            executionManager.execDelayed(gameRoundManager.roundEvaluationTimeSec*1000, renderManager.loadMainMenu);
-            // todo fm show final scoreboard
+            // show roundHighscore >> globalHighscore >> mainMenu
+            executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec)*1000, renderManager.loadCurrentGameHighScoreList);
+            executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+15)*1000, renderManager.loadGlobalHighScoreList);
+            executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+30)*1000, renderManager.loadMainMenu);
         } else {
             // next round...
             gameModeManager.currentRound = gameModeManager.currentRound + 1;
@@ -217,7 +227,7 @@
         }
         if (gameModeManager.currentGameModeProfile.multipleChoiceMode) {
             if (cleanedAnswerString == gameRoundManager.goalGeoObject.name) {
-                points = data.constants.maxPointsPerAnswer * gameModeManager.currentGameModeProfile.scoreWeightFactor;
+                points = gameRoundManager.getMaxPointsPerAnswer();
                 print("[GRM] " + user.name + " got " + points + " points for the RIGHT answer (" + cleanedAnswerString + ")");
             } else {
                 print("[GRM] " + user.name + " got " + points + " points for the WRONG answer (" + cleanedAnswerString + ")");
