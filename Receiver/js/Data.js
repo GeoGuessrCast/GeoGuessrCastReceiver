@@ -75,6 +75,8 @@ data = {
             limitedCountry: null,
             multipleChoiceMode: false,
             pointingMode: false,
+            minTotalCities: 10,
+            minCountryPopulation: 4000000,
             minPopulationDefault: 500000,
             timePerRoundSec: 30,
             mapOption: {
@@ -94,6 +96,8 @@ data = {
             limitedCountry: null,
             multipleChoiceMode: true,
             pointingMode: false,
+            minTotalCities: 10,
+            minCountryPopulation: 2000000,
             minPopulationDefault: 200000,
             timePerRoundSec: 15,
             mapOption: {
@@ -113,6 +117,8 @@ data = {
             limitedCountry: 'DE',
             multipleChoiceMode: true,
             pointingMode: false,
+            minTotalCities: 10,
+            minCountryPopulation: 4000000,
             minPopulationDefault: 100000,
             timePerRoundSec: 15,
             mapOption: {
@@ -132,6 +138,8 @@ data = {
             limitedCountry: null,
             multipleChoiceMode: false,
             pointingMode: true,
+            minTotalCities: 10,
+            minCountryPopulation: 4000000,
             minPopulationDefault: 250000,
             timePerRoundSec: 23,
             mapOption: {
@@ -151,6 +159,8 @@ data = {
             limitedCountry: null,
             multipleChoiceMode: false,
             pointingMode: false,
+            minTotalCities: 1,
+            minCountryPopulation: 100000,
             minPopulationDefault: 250000,
             timePerRoundSec: 36,
             mapOption: {
