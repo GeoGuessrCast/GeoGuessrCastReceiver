@@ -38,7 +38,14 @@
         gameRoundManager.currentGameState = data.gameState.guessing;
         print("\n======= Round " + gameModeManager.currentRound + " =======");
 
-        //var countryCode = dataManager.getRandomCountryCode();
+        if (gameModeManager.currentGameModeProfile.limitedCountry == null) {
+            var countryCode = dataManager.getRandomCountryCode(10, 2000000); //TODO: add to option GameProfile
+        } else {
+            var countryCode = gameModeManager.currentGameModeProfile.limitedCountry;
+        }
+        var minPopProfile = gameModeManager.currentGameModeProfile.minPopulationDefault;
+        var minPopCountry = dataManager.applyPopulationFact(countryCode, minPopProfile);
+
         renderManager.clearMarkers();
         var userList = userManager.getUserList();
         for(var i = 0; i < userList.length; i++){
@@ -48,9 +55,9 @@
         renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6 );
 
         var geoObjects = dataManager.getGeoObjects(
-            gameModeManager.currentGameMode.geoObjType, gameModeManager.currentGameModeProfile.limitedCountry,
-            gameModeManager.currentGameModeProfile.multipleChoiceMode ? data.constants.numberOfChoices : 1,
-            gameModeManager.currentGameModeProfile.minPopulationDefault, 10);
+            gameModeManager.currentGameMode.geoObjType, countryCode ,
+            gameModeManager.currentGameModeProfile.multipleChoiceMode ? data.constants.numberOfChoices : 1, minPopCountry
+            , 10);
 
         gameRoundManager.goalGeoObject = geoObjects[0];
         var goalPos = new google.maps.LatLng(gameRoundManager.goalGeoObject.latitude, gameRoundManager.goalGeoObject.longitude);
