@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
@@ -29,7 +30,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.cast.CastDevice;
@@ -40,9 +44,8 @@ import com.google.sample.castcompanionlibrary.cast.callbacks.DataCastConsumerImp
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.awt.Color;
 import de.tud.kp.geoguessrcast.beans.User;
-import de.tud.kp.geoguessrcast.beans.eventJsonBeans.GameMessage;
+import de.tud.kp.geoguessrcast.beans.GameMessage;
 import de.tud.kp.geoguessrcast.fragments.ChooseModeFragment;
 import de.tud.kp.geoguessrcast.fragments.GameMode1Fragment;
 import de.tud.kp.geoguessrcast.fragments.GameMode2Fragment;
@@ -79,19 +82,11 @@ public class GameActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         mContext = this;
 
-        //init profile bar
-        ImageView profileAvatar = (ImageView) findViewById(R.id.profile_avatar);
-        float[] myIntArray =  {0,1f,0.3f};
+        mUser = User.getInstance();
 
-        Drawable myIcon = getResources().getDrawable(R.drawable.ic_account_circle_white_48dp);
-        myIcon.setColorFilter(Color.HSVToColor(myIntArray), PorterDuff.Mode.MULTIPLY);
-
-        System.out.println(Color.HSVToColor(myIntArray));
-        System.out.println(Color.RED);
-        profileAvatar.setImageDrawable(myIcon);
+        initProfileBar();
 
         //Setup CastManager
-        mUser = User.getInstance();
         try{
             sCastManager = DataCastManager.getInstance();
         }
@@ -122,17 +117,19 @@ public class GameActivity extends ActionBarActivity {
                     GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
                     if(gameMessage.getEvent_type().equals("startGame")){
                         if(gameMessage.isStarted()){
+                            int roundNumber = gameMessage.getRoundNumber();
+                            int timeRound = gameMessage.getTimerRound();
+                            int maxRounds = gameMessage.getMaxRounds();
+                            updateRoundOfProfileBar(roundNumber, maxRounds);
+                            initPointInfoOfProfileBar();
                             if(!gameMessage.isMultipleChoiceMode()){
-                                int roundNumber = gameMessage.getRoundNumber();
-                                int timeRound = gameMessage.getTimerRound();
                                 startFragment(GameMode1Fragment.newInstance(roundNumber, timeRound));
                             }
                             else{
-                                int roundNumber = gameMessage.getRoundNumber();
-                                int timeRound = gameMessage.getTimerRound();
                                 String[] choices = gameMessage.getChoices();
                                 startFragment(GameMode2Fragment.newInstance(roundNumber, timeRound, choices));
                             }
+
                         }
                     }
                     else if(gameMessage.getEvent_type().equals("game_ended")){
@@ -147,6 +144,14 @@ public class GameActivity extends ActionBarActivity {
                         }
                     }
                     Log.d(TAG, "onMessageReceived from GameChannel: " + message);
+                }
+                else if (namespace.equals(getString(R.string.userChannel))){
+                    GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
+                    if(gameMessage.getEvent_type().equals("answer_feedback")){
+                        int pointsEarned = gameMessage.getPointsEarned();
+                        updatePointOfProfileBar(pointsEarned);
+                    }
+                    Log.d(TAG, "onMessageReceived from UserChannel: " + message);
                 }
                 else{
                     return;
@@ -296,4 +301,58 @@ public class GameActivity extends ActionBarActivity {
         }
         return sCastManager;
     }
+
+    private void initProfileBar(){
+
+        //init profile bar
+        ImageView profileAvatar = (ImageView) findViewById(R.id.profile_avatar);
+        Drawable avatarDrawable = getResources().getDrawable(R.drawable.ic_account_circle_white_48dp);
+        String avatarColorString = mUser.getColor();
+        avatarDrawable.setColorFilter(Color.parseColor(avatarColorString), PorterDuff.Mode.MULTIPLY);
+        profileAvatar.setImageDrawable(avatarDrawable);
+
+        //init profile name;
+        TextView profileUsername = (TextView) findViewById(R.id.profile_username);
+        profileUsername.setText(mUser.getUserName());
+
+        //hide profile round info;
+        LinearLayout profileRoundInfo = (LinearLayout) findViewById(R.id.profile_round_info);
+        profileRoundInfo.setVisibility(View.GONE);
+
+        //hide profile point info
+        LinearLayout profilePointInfo = (LinearLayout) findViewById(R.id.profile_point_info);
+        TextView profileMaxRound = (TextView) findViewById(R.id.profile_points);
+        profileMaxRound.setText(Integer.toString(0));
+        profilePointInfo.setVisibility(View.INVISIBLE);
+    }
+
+    private void updateRoundOfProfileBar(int currentRound, int maxRound){
+        LinearLayout profileRoundInfo = (LinearLayout) findViewById(R.id.profile_round_info);
+        TextView profileCurrentRound = (TextView) findViewById(R.id.profile_current_round);
+        TextView profileMaxRound = (TextView) findViewById(R.id.profile_max_round);
+        if(profileRoundInfo.getVisibility()==View.GONE||profileRoundInfo.getVisibility()== View.INVISIBLE){
+            profileRoundInfo.setVisibility(View.VISIBLE);
+        }
+        profileCurrentRound.setText(Integer.toString(currentRound));
+        profileMaxRound.setText(Integer.toString(maxRound));
+
+    }
+
+    private void updatePointOfProfileBar(int addedPoint){
+        TextView profilePoints = (TextView) findViewById(R.id.profile_points);
+        int currentPoints = Integer.parseInt(profilePoints.getText().toString());
+        int newPoints = currentPoints + addedPoint;
+        //TODO animation probably? digital increasing
+        profilePoints.setText(Integer.toString(newPoints));
+    }
+
+    private void initPointInfoOfProfileBar(){
+        LinearLayout profilePointInfo = (LinearLayout) findViewById(R.id.profile_point_info);
+        TextView profileMaxRound = (TextView) findViewById(R.id.profile_points);
+        if(profilePointInfo.getVisibility()==View.GONE||profilePointInfo.getVisibility()== View.INVISIBLE){
+            profilePointInfo.setVisibility(View.VISIBLE);
+            profileMaxRound.setText(Integer.toString(0));
+        }
+    }
+
 }

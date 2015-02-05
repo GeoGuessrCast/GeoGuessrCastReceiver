@@ -16,7 +16,7 @@ public class User {
     private String userMac = "";
     private boolean isAdmin = false;
     private String event_type = "createUser";
-    private Color hslColor;
+    private String color;
 
     public User() {
     }
@@ -74,11 +74,11 @@ public class User {
         this.isAdmin = isAdmin;
     }
 
-    public Color getHslColor() {
-        return hslColor;
+    public String getColor() {
+        return color;
     }
 
-    public void setHslColor(String hslColor) {
-
+    public void setColor(String color) {
+        this.color = color;
     }
 }

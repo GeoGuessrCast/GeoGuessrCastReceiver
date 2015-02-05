@@ -15,6 +15,7 @@ public class GameMessage {
     String[] choices;
     boolean ended;
     int roundNumber;
+    int maxRounds;
     boolean multipleChoiceMode;
     boolean admin;
     GameMode[] gameModes;
@@ -23,6 +24,12 @@ public class GameMessage {
     GameProfile gameProfile;
     String answer;
     String userMac;
+    String user_color;
+
+    String correctAnswer;
+    String userAnswer;
+    int answerDistance;
+    int pointsEarned;
 
     public GameMessage(){
     }
@@ -152,5 +159,54 @@ public class GameMessage {
 
     public void setUserMac(String userMac) {
         this.userMac = userMac;
+    }
+
+    public String getUser_color() {
+        return user_color;
+    }
+
+    public void setUser_color(String user_color) {
+        this.user_color = user_color;
+    }
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
+
+    public String getUserAnswer() {
+        return userAnswer;
+    }
+
+    public void setUserAnswer(String userAnswer) {
+        this.userAnswer = userAnswer;
+    }
+
+    public int getAnswerDistance() {
+        return answerDistance;
+    }
+
+    public void setAnswerDistance(int answerDistance) {
+        this.answerDistance = answerDistance;
+    }
+
+    public int getPointsEarned() {
+        return pointsEarned;
+    }
+
+    public void setPointsEarned(int pointsEarned) {
+        this.pointsEarned = pointsEarned;
+    }
+//
+
+    public int getMaxRounds() {
+        return maxRounds;
+    }
+
+    public void setMaxRounds(int maxRounds) {
+        this.maxRounds = maxRounds;
     }
 }

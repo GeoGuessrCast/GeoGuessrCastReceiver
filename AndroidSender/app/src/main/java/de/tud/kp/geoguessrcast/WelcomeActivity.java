@@ -141,6 +141,7 @@ public class WelcomeActivity extends ActionBarActivity {
                 GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
                 if (namespace.equals(getString(R.string.userChannel))){
                     if(gameMessage.getEvent_type().equals("isAdmin")){
+                        mUser.setColor(gameMessage.getUser_color());
                         if(gameMessage.isAdmin()==true){
                             mUser.setAdmin(true);
                             GameSetting gameSetting = GameSetting.getInstance();
