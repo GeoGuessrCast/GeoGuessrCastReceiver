@@ -117,14 +117,13 @@
         var hasUser = userManager.hasUserMac(event.data.userMac);
         var trimmedName = event.data.userName.replace(/([^a-z0-9_.\s]+)/gi, ' ');
         trimmedName = trimmedName.substring(0, data.constants.maxNameLength);
-        var user;
         if (!hasUser) {
             //add new User
             var isAdmin = false;
             if (userManager.getUserList().length === 0) {
                 isAdmin = true;
             }
-            user = new userManager.User(event.senderId, trimmedName, event.data.userMac, isAdmin);
+            var user = new userManager.User(event.senderId, trimmedName, event.data.userMac, isAdmin);
             userManager.addUser(user);
         } else {
             // update name and senderId
@@ -133,8 +132,10 @@
         //inform the Sender if the user is game leader
         var jsonData;
         if (userManager.isUserAdmin(event.data.userMac)) {
+            var user = um.getUserByMac(event.data.userMac);
             jsonData = {event_type:data.eventType.isAdmin, admin:true, user_color: tinycolor(user.getColor()).toHexString(), gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
         } else {
+            var user = um.getUserByMac(event.data.userMac);
             jsonData = {event_type:data.eventType.isAdmin, admin:false, user_color: tinycolor(user.getColor()).toHexString()};
         }
         eventManager.send(event.senderId, data.channelName.user, jsonData);

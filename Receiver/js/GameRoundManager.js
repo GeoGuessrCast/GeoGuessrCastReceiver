@@ -72,6 +72,7 @@
             "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode ,
             "started": true,
             "roundNumber": gameModeManager.currentRound,
+            "maxRounds": gameModeManager.maxRounds,
             "timerRound" : gameModeManager.currentGameModeProfile.timePerRoundSec,
             "choices" : geoNameChoices};
         eventManager.broadcast(data.channelName.game, jsonData);
