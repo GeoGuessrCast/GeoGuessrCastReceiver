@@ -57,6 +57,7 @@
         this.name = name;
         this.points = points;
         this.totalPoints = totalPoints;
+        this.pointsPercent = points/totalPoints*100;
 
         this.toString = function() {
             return '[ '+userMac+' Name: '+name+' ('+ points +'/'+totalPoints+ ')]';
@@ -452,46 +453,29 @@
             console.error("ChromeCast does not support local stoarge.")
             return false;
         }
-        var scores = {};
+
+        var highScoreFilteredAndSorted = [];
 
             if (localStorage.getItem("highscores") === null)
             {
-                console.debug("No Highscores available, returning empty map");
+                console.debug("No Highscores available, returning empty array");
             } else {
 
                 var highscores = JSON.parse(localStorage.getItem("highscores"));
                 console.debug("user highscores: "+highscores.length);
 
                 for (var i = 0; i < highscores.length; i++){
-                    var oldScore = highscores[i];
-                    if (oldScore.totalPoints >= minTotalPoints){
-                    var percentage = (oldScore.points / oldScore.totalPoints) * 100;
-                    scores[oldScore.name] = percentage;
-                    console.debug("[DM] found user highscore: "+ oldScore.name+ " : "+ percentage +"%");
+                    if (highscores[i].totalPoints >= minTotalPoints){
+                        highScoreFilteredAndSorted.push(highscores[i]);
                     }
-
                 }
-
-
-
             }
-
-        return dataManager.sortHighScoreList(scores);
+        highScoreFilteredAndSorted.sort(function(a, b) {
+            return b.pointsPercent - a.pointsPercent;
+        });
+        return highScoreFilteredAndSorted;
     };
 
-    dm.sortHighScoreList = function (highScoreMapping) {
-        var sortable = [];
-        for (var key in highScoreMapping)
-            if (highScoreMapping.hasOwnProperty(key)) {
-                sortable.push([key, highScoreMapping[key]])
-            }
-        sortable.sort(function(a, b) {return b[1] - a[1]});
-        var sortedMapping = {};
-        for (var i = 0; i < sortable.length; i++) {
-            sortedMapping[sortable[i][0]] = sortable[i][1];
-        }
-        return sortedMapping;
-    };
 
     /**
      *

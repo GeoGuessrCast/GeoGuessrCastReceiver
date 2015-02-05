@@ -259,12 +259,10 @@
 
             var highScoreContainer = $('#highScoreList');
             //highScoreContainer.html('');
-            for(var key in highScoreList){
-                if (highScoreList.hasOwnProperty(key)) {
-                    highScoreContainer.append('<tr style="color: hsl(150, ' + highScoreList[key] + '%, 30%)"><td class="noLinebreak userName leftColumn">'
-                    + key + '</td><td class="noLinebreak rigthColumn">'
-                    + highScoreList[key] + ' %</td></tr>');
-                }
+            for(var i = 0; i<highScoreList.length; i++){
+                    highScoreContainer.append('<tr style="color: hsl(150, ' + highScoreList[i].pointsPercent + '%, 30%)"><td class="noLinebreak userName leftColumn">'
+                    + highScoreList[i].name + '</td><td class="noLinebreak rigthColumn">'
+                    + highScoreList[i].pointsPercent + ' %</td></tr>');
             }
 
 
