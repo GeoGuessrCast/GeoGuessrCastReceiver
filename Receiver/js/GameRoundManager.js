@@ -100,7 +100,7 @@
             var user = userList[i];
             if (user.lastAnswerGiven != null) {
                 user.pointsInCurrentGame += user.lastAnswerGiven.points;
-                dataManager.persistHighScoreList(user.mac,user.lastAnswerGiven.points,data.constants.maxPointsPerAnswer);
+                dataManager.persistHighScoreList(user.mac,user.name,user.lastAnswerGiven.points,data.constants.maxPointsPerAnswer);
                 if (user.lastAnswerGiven.geoObject != null) {
                     renderManager.placeUserMarkerOnMap(user, user.lastAnswerGiven.geoObject.position);
                 }

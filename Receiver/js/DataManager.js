@@ -52,13 +52,14 @@
             return name + '(' + countryCode + '|' + long + '|' + lat + '|pop:' + population + ')';
         }
     };
-    dm.Highscore = function(userMac,points,totalPoints){
+    dm.Highscore = function(userMac,name,points,totalPoints){
         this.userMac = userMac;
+        this.name = name;
         this.points = points;
         this.totalPoints = totalPoints;
 
         this.toString = function() {
-            return '[ '+userMac+' ('+ points +'/'+totalPoints+ ')]';
+            return '[ '+userMac+' Name: '+name+' ('+ points +'/'+totalPoints+ ')]';
         }
     };
     var minPopWeigthsPerCountry = {
@@ -405,7 +406,7 @@
 
         return zoom;
     };
-    dm.persistHighScoreList = function(userMac, userPoints, maxPoints) {
+    dm.persistHighScoreList = function(userMac, username, userPoints, maxPoints) {
         if (!window.localStorage) {
             console.error("ChromeCast does not support local stoarge.")
             return false;
@@ -415,7 +416,7 @@
         if (localStorage.getItem("highscores") === null)
         {
 
-            highscores.push(new this.Highscore(userMac,userPoints, maxPoints));
+            highscores.push(new this.Highscore(userMac, username,userPoints, maxPoints));
 
             localStorage.setItem("highscores",JSON.stringify(highscores));
             console.debug("[DM] Saved new user highscore: "+highscores);
@@ -427,7 +428,7 @@
             for (var i = 0; i < highscores.length; i++){
                 var oldScore = highscores[i];
                 if(oldScore.userMac === userMac){
-                    var newScore = new this.Highscore(userMac,oldScore.points + userPoints, oldScore.totalPoints + maxPoints);
+                    var newScore = new this.Highscore(userMac,username,oldScore.points + userPoints, oldScore.totalPoints + maxPoints);
                     highscores[i] = newScore;
                     console.debug("[DM] updated user highscore: "+oldScore+"->"+ newScore);
                     isNewUser = false;
@@ -435,7 +436,7 @@
                 }
             }
             if (isNewUser){
-                var newScore = new this.Highscore(userMac,userPoints, maxPoints);
+                var newScore = new this.Highscore(userMac, username ,userPoints, maxPoints);
                 highscores[i] = newScore;
                 console.debug("[DM] Saved new user highscore: "+oldScore+"->"+ newScore);
 
@@ -446,7 +447,7 @@
         return true;
     };
 
-    dm.getHighScoreList = function() {
+    dm.getHighScoreList = function(minTotalPoints) {
         if (!window.localStorage) {
             console.error("ChromeCast does not support local stoarge.")
             return false;
@@ -463,9 +464,11 @@
 
                 for (var i = 0; i < highscores.length; i++){
                     var oldScore = highscores[i];
+                    if (oldScore.totalPoints >= minTotalPoints){
                     var percentage = (oldScore.points / oldScore.totalPoints) * 100;
-                    scores[oldScore.userMac] = percentage;
-                    console.debug("[DM] found user highscore: "+ oldScore+ " : "+ percentage +"%");
+                    scores[oldScore.name] = percentage;
+                    console.debug("[DM] found user highscore: "+ oldScore.name+ " : "+ percentage +"%");
+                    }
 
                 }
 
