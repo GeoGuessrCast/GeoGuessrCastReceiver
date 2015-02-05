@@ -241,15 +241,28 @@
         $('.headers').addClass(selectedGameModeObject.iconCssClass);
     };
 
-    rm.loadHighScoreList = function(highScoreList){
+    rm.loadHighScoreList = function(highScoreList, heading){
         gameRoundManager.cancelGame();
         renderManager.applyGameMenuMapstyle();
 
         $('#gameOverlay').load('templates/HighScore.html', function (content) {
             $(this).html(content);
-            $('#highScoreHeading').html('HighScore');
-            $('#innerHighScoreHeading').html('Last Round\'s HighScore');
+            $('#highScoreHeading').html(heading);
+            $('#innerHighScoreHeading').html(heading);
+
             console.log(highScoreList);
+            if (highScoreList == null) return;
+
+            var highScoreContainer = $('#highScoreList');
+            //highScoreContainer.html('');
+            for(var key in highScoreList){
+                if (highScoreList.hasOwnProperty(key)) {
+                    highScoreContainer.append('<tr style="color: hsl(150, ' + highScoreList[key] + '%, 30%)"><td class="noLinebreak userName leftColumn">'
+                    + key + '</td><td class="noLinebreak rigthColumn">'
+                    + highScoreList[key] + ' %</td></tr>');
+                }
+            }
+
 
         });
     };

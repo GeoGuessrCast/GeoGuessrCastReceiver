@@ -476,9 +476,22 @@
 
             }
 
-        return scores;
+        return dataManager.sortHighScoreList(scores);
     };
 
+    dm.sortHighScoreList = function (highScoreMapping) {
+        var sortable = [];
+        for (var key in highScoreMapping)
+            if (highScoreMapping.hasOwnProperty(key)) {
+                sortable.push([key, highScoreMapping[key]])
+            }
+        sortable.sort(function(a, b) {return b[1] - a[1]});
+        var sortedMapping = {};
+        for (var i = 0; i < sortable.length; i++) {
+            sortedMapping[sortable[i][0]] = sortable[i][1];
+        }
+        return sortedMapping;
+    };
 
     /**
      *
