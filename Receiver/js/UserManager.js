@@ -4,8 +4,17 @@
     /** @type Array.<User> */
     var userList = [];
     var staticUserColors = [
-        'hsl(0, 100%, 30%)', //TODO more colors
-        'hsl(20, 100%, 30%)'
+        //TODO more colors
+        'hsl(0, 100%, 30%)',
+        'hsl(40, 100%, 30%)',
+        'hsl(80, 100%, 30%)',
+        'hsl(120, 100%, 30%)',
+        'hsl(160, 100%, 30%)',
+        'hsl(200, 100%, 30%)',
+        'hsl(240, 100%, 30%)',
+        'hsl(280, 100%, 30%)',
+        'hsl(320, 100%, 30%)',
+        'hsl(360, 100%, 30%)'
     ];
 
     /**
@@ -34,7 +43,7 @@
 
         /** @type {string} **/
         this.getColor = function() {
-            return this.getUniformDistributedHslColor();
+            return this.getStaticColor();
         };
 
         this.getUniformDistributedHslColor = function() {
@@ -108,13 +117,14 @@
         var hasUser = userManager.hasUserMac(event.data.userMac);
         var trimmedName = event.data.userName.replace(/([^a-z0-9_.\s]+)/gi, ' ');
         trimmedName = trimmedName.substring(0, data.constants.maxNameLength);
+        var user;
         if (!hasUser) {
             //add new User
             var isAdmin = false;
             if (userManager.getUserList().length === 0) {
                 isAdmin = true;
             }
-            var user = new userManager.User(event.senderId, trimmedName, event.data.userMac, isAdmin);
+            user = new userManager.User(event.senderId, trimmedName, event.data.userMac, isAdmin);
             userManager.addUser(user);
         } else {
             // update name and senderId
@@ -124,9 +134,9 @@
 
         var jsonData;
         if (userManager.isUserAdmin(event.data.userMac)) {
-            jsonData = {event_type:data.eventType.isAdmin, admin:true,  gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
+            jsonData = {event_type:data.eventType.isAdmin, admin:true, user_color: user.getColor(), gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
         } else {
-            jsonData = {event_type:data.eventType.isAdmin, admin:false};
+            jsonData = {event_type:data.eventType.isAdmin, admin:false, user_color: user.getColor()};
         }
         eventManager.send(event.senderId, data.channelName.user, jsonData);
 
