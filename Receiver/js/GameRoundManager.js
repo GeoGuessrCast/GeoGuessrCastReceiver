@@ -29,6 +29,12 @@
 
 
     grm.startRound = function(){
+        if (!dataManager.countrySizesAvailable()) {
+            print('[GRM] startRound - still waiting for async countrySize query');
+            setTimeout(gameRoundManager.startRound, 1000);
+            return;
+        }
+
         gameRoundManager.currentGameState = data.gameState.guessing;
         print("\n======= Round " + gameModeManager.currentRound + " =======");
 

@@ -3,6 +3,10 @@
     // init
     /** @type Array.<User> */
     var userList = [];
+    var staticUserColors = [
+        'hsl(0, 100%, 30%)', //TODO more colors
+        'hsl(20, 100%, 30%)'
+    ];
 
     /**
      * Type User
@@ -30,8 +34,16 @@
 
         /** @type {string} **/
         this.getColor = function() {
+            return this.getUniformDistributedHslColor();
+        };
+
+        this.getUniformDistributedHslColor = function() {
             var huePercent = this.id / userManager.getNumberOfUsers();
             return 'hsl(' + huePercent*360 + ', 100%, 30%)';
+        };
+
+        this.getStaticColor = function() {
+            return staticUserColors[this.id % staticUserColors.length];
         };
 
     };
