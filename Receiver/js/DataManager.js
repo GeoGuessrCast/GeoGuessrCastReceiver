@@ -99,18 +99,19 @@
 
             console.debug("[DM] - Country Code not set, random Country is selected: "+countryCode);
         }
-        var where = "population >= '"+minPopulation+"' and countryCode='"+countryCode+"'";
+        //geoObjType = data.geoObjType.country; //TODO: geoObjType is undefined
+        var queryGeoObjects = [];
+        if (geoObjType === data.geoObjType.city) {
+            queryGeoObjects = _getGeoObjectsForCityObjects(minPopulation, countryCode, ftTableIdCity, minPoolSize);
 
-        // Get all Objects for the requested query, not limited for more diversity
-        var result = _createFusionTableQuery(ftTableIdCity,"*", where, 0, 0, null,null,null);
-        var queryGeoObjects  = _createGeoObjects(result);
-        if (queryGeoObjects.length < minPoolSize) {
-                where = "countryCode='"+countryCode+"'";
-                var orderBy = "population DESC";
-                var result = _createFusionTableQuery(ftTableIdCity,"*", where, 0, minPoolSize, orderBy,null,null);
-                queryGeoObjects  = _createGeoObjects(result);
-
+        } else if (geoObjType == data.geoObjType.country) {
+            queryGeoObjects = _getGeoObjectsForCountryObjects(minPopulation,ftTableIdCity,minPoolSize);
+        } else {
+            console.log("[DM] GeoObject request not implemented.")
         }
+
+
+
 
         var geoObjects = getRandomSubsetOfArray(queryGeoObjects, count);
 
@@ -120,6 +121,64 @@
         //return query results object
         return geoObjects;
     };
+
+    function _getGeoObjectsForCityObjects(minPopulation, countryCode, ftTableIdCity, minPoolSize) {
+        var where = "population >= '" + minPopulation + "' and countryCode='" + countryCode + "'";
+
+        // Get all Objects for the requested query, not limited for more diversity
+        var result = _createFusionTableQuery(ftTableIdCity, "*", where, 0, 0, null, null,null);
+        var queryGeoObjects = _createGeoObjects(result);
+        if (queryGeoObjects.length < minPoolSize) {
+            where = "countryCode='" + countryCode + "'";
+            var orderBy = "population DESC";
+            var result = _createFusionTableQuery(ftTableIdCity, "*", where, 0, minPoolSize, orderBy, null,null);
+            queryGeoObjects = _createGeoObjects(result);
+            console.debug("[DM] getGeoObjects: had to ignore population to satisify minPopulation to , it returned now " + (queryGeoObjects.length >= minPoolSize) + " objects");
+        }
+        return queryGeoObjects;
+    }
+
+    function _createGeoObjectsForCountries(targetCountries, minPopulation) {
+        var countryGeoObjects = [];
+
+        if (typeof(targetCountries.rows) != 'undefined') {
+            var resultLength = targetCountries.rows.length;
+            for (var i = 0; i < resultLength; i++) {
+                var code = targetCountries.rows[i][0];
+                var population = parseInt(targetCountries.rows[i][1]);
+                if (typeof(code) === "string"
+                    && population >= minPopulation) {
+                    var geoObject = new dataManager.GeoObject(i, "Country", 0, 0, code, population, 0, null);
+                    console.debug("[DM] geoObject: " + geoObject.toString());
+                    countryGeoObjects.push(geoObject);
+                } else {
+                    console.debug("Country not qualified: " + code);
+                }
+            }
+        }
+        return countryGeoObjects;
+    }
+
+    function _getGeoObjectsForCountryObjects(minPopulation, ftTableIdCity, minPoolSize) {
+        var countryGeoObjects = [];
+
+        // Get all Objects for the requested query, not limited for more diversity
+        var select = "countryCode, SUM(population) AS populationSum";
+        var targetCountries = _createFusionTableQuery(ftTableIdCity, select, null, 0, 0, null, "countryCode",null);
+
+        countryGeoObjects = _createGeoObjectsForCountries(targetCountries, minPopulation);
+        console.log("[DM] Got "+ countryGeoObjects.length +" the query matching criterias.");
+        if (countryGeoObjects.length < minPoolSize) {
+         var orderBy = "populationSum DESC";
+         var result = _createFusionTableQuery(ftTableIdCity, select, null, 0, minPoolSize, orderBy, "countryCode",null);
+         countryGeoObjects = _createGeoObjectsForCountries(result, 0);
+
+            console.debug("[DM] getCityGeoObjects: had to ignore population to satisify minPopulation to , it returned now " + (countryGeoObjects.length >= minPoolSize) + " objects");
+         }
+        return countryGeoObjects;
+    }
+
+
     /**
      * Returns a random subsample of the Array
      * @param startArray
@@ -266,10 +325,12 @@
                 print("[DM] fetching country sizes async...");
                 _createFusionTableQuery(ftTableIdCity, "*", null, 0, 0, null, null, dataManager.calcCountrySizes);
 
+                localStorage.setItem("countryMeasures", JSON.stringify(countrySizes));
             } else {
                 countrySizes = JSON.parse(localStorage.getItem("countryMeasures"));
             }
         }
+        console.debug("[DM] -- done");
 
         return countrySizes;
     };
