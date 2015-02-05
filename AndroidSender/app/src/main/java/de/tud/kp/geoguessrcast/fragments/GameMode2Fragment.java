@@ -115,6 +115,7 @@ public class GameMode2Fragment extends Fragment  {
                 //set  color of selected button
                 for(int i=0; i<parent.getCount(); i++){
                     resetItemEffect(parent.getChildAt(i));
+                    System.out.println(i);
                 }
                 renderItemSelectedEffect(view);
 
@@ -134,10 +135,6 @@ public class GameMode2Fragment extends Fragment  {
 
         final ProgressBar countDownProgressBar = (ProgressBar) mActivity.findViewById(R.id.countDownProgressBar);
         final TextView countDownTimeTextView = (TextView) mActivity.findViewById(R.id.countDownTime);
-        final TextView roundNumberTextView = (TextView) mActivity.findViewById(R.id.roundNumber);
-
-        //init show of round number
-        roundNumberTextView.setText(String.valueOf(currentRound));
 
         //init timer
         mTimer = new TimerWithVibration(timeRound, 5, mActivity) {

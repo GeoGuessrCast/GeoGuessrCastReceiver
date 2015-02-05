@@ -15,25 +15,6 @@
         android:layout_marginBottom="90dp"
         android:gravity="center">
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:id="@+id/roundInfo">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="Round: "
-                android:textSize="@dimen/abc_text_size_display_1_material"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:id="@+id/roundNumber"
-                android:textSize="@dimen/abc_text_size_display_1_material"/>
-        </LinearLayout>
-
         <RelativeLayout
             android:id="@+id/layoutProgressBar"
             android:layout_width="120dp"

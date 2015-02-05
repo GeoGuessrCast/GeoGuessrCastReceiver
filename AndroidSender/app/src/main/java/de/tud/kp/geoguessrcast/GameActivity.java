@@ -132,6 +132,12 @@ public class GameActivity extends ActionBarActivity {
 
                         }
                     }
+                    else if(gameMessage.getEvent_type().equals("round_ended")) {
+                        if (gameMessage.isEnded() == true) {
+                            int pointsEarned = gameMessage.getPointsEarned();
+                            updatePointOfProfileBar(pointsEarned);
+                        }
+                    }
                     else if(gameMessage.getEvent_type().equals("game_ended")){
                         if(gameMessage.isEnded()==true){
                             //clearFragmentBackStack();
