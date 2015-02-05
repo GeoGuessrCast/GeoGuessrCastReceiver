@@ -21,7 +21,8 @@ public class GameMessage {
     GameMode gameMode;
     GameProfile[] gameProfiles;
     GameProfile gameProfile;
-
+    String answer;
+    String userMac;
 
     public GameMessage(){
     }
@@ -135,5 +136,21 @@ public class GameMessage {
 
     public void setGameProfile(GameProfile gameProfile) {
         this.gameProfile = gameProfile;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public String getUserMac() {
+        return userMac;
+    }
+
+    public void setUserMac(String userMac) {
+        this.userMac = userMac;
     }
 }

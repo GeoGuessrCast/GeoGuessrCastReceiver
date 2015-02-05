@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.cast.ApplicationMetadata;
 import com.google.android.gms.cast.CastDevice;
 import com.google.gson.Gson;
@@ -40,7 +41,6 @@ public class WelcomeActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         mContext = this;
@@ -54,7 +54,7 @@ public class WelcomeActivity extends ActionBarActivity {
         sCastManager.addMediaRouterButton(mediaRouteButton);
 
         final EditText usernameEditText = (EditText) findViewById(R.id.playername);
-        final Button startGameBtn = (Button) findViewById(R.id.start_game);
+        final FloatingActionButton startGameBtn = (FloatingActionButton) findViewById(R.id.start_game);
 
         //check if username stored
         //show default Username in editText
@@ -65,6 +65,7 @@ public class WelcomeActivity extends ActionBarActivity {
         else{
             usernameEditText.setText(DeviceInfo.getDeviceUsername(mContext));
         }
+
         //set cursor at the end of text
         usernameEditText.setSelection(usernameEditText.getText().length());
         //set enter key event listener
@@ -111,14 +112,14 @@ public class WelcomeActivity extends ActionBarActivity {
             @Override
             public void onDeviceSelected(CastDevice device) {
 
-                startGameBtn.setText("Connecting");
+                startGameBtn.setIcon(R.drawable.ic_refresh_white_48dp);
                 startGameBtn.setEnabled(false);
             }
 
             @Override
             public void onApplicationConnected(ApplicationMetadata appMetadata, String applicationStatus,
                                                String sessionId, boolean wasLaunched) {
-                startGameBtn.setText("Los!");
+                startGameBtn.setIcon(R.drawable.ic_play_arrow_white_48dp);
                 startGameBtn.setEnabled(true);
 
                 //TODO: GameManager - StartGame
@@ -205,6 +206,17 @@ public class WelcomeActivity extends ActionBarActivity {
     @Override
     public void onResume(){
         sCastManager.addDataCastConsumer(sCastManagerConsumer);
+
+//        TODO: initStartBtnState()
+        final FloatingActionButton startGameBtn = (FloatingActionButton) findViewById(R.id.start_game);
+        if(sCastManager.isConnected()){
+            startGameBtn.setIcon(R.drawable.ic_play_arrow_white_48dp);
+        }
+        else{
+            startGameBtn.setIcon(R.drawable.ic_cast_white_48dp);
+        }
+        startGameBtn.setEnabled(true);
+
         super.onResume();
     }
 
