@@ -99,7 +99,7 @@
 
             console.debug("[DM] - Country Code not set, random Country is selected: "+countryCode);
         }
-        //geoObjType = data.geoObjType.country; //TODO: geoObjType is undefined
+
         var queryGeoObjects = [];
         if (geoObjType === data.geoObjType.city) {
             queryGeoObjects = _getGeoObjectsForCityObjects(minPopulation, countryCode, ftTableIdCity, minPoolSize);
@@ -148,7 +148,7 @@
                 var population = parseInt(targetCountries.rows[i][1]);
                 if (typeof(code) === "string"
                     && population >= minPopulation) {
-                    var geoObject = new dataManager.GeoObject(i, "Country", 0, 0, code, population, 0, null);
+                    var geoObject = new dataManager.GeoObject(i, code, 0, 0, code, population, 0, null);
                     console.debug("[DM] geoObject: " + geoObject.toString());
                     countryGeoObjects.push(geoObject);
                 } else {
