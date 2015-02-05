@@ -104,6 +104,8 @@
                 if (user.lastAnswerGiven.geoObject != null) {
                     renderManager.placeUserMarkerOnMap(user, user.lastAnswerGiven.geoObject.position);
                 }
+            } else {
+                dataManager.persistHighScoreList(user.mac,user.name,0,data.constants.maxPointsPerAnswer);
             }
             var jsonData = {
                 "event_type":"round_ended",

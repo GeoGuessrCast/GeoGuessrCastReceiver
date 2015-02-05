@@ -78,6 +78,7 @@ data = {
             minTotalCities: 10,
             minCountryPopulation: 4000000,
             minPopulationDefault: 500000,
+            scoreWeightFactor: 1.3,
             timePerRoundSec: 30,
             mapOption: {
                 mapType : google.maps.MapTypeId.ROADMAP, // ROADMAP || HYBRID || TERRAIN
@@ -99,6 +100,7 @@ data = {
             minTotalCities: 10,
             minCountryPopulation: 2000000,
             minPopulationDefault: 200000,
+            scoreWeightFactor: 1.0,
             timePerRoundSec: 15,
             mapOption: {
                 mapType : google.maps.MapTypeId.HYBRID, // ROADMAP || HYBRID || TERRAIN
@@ -120,6 +122,7 @@ data = {
             minTotalCities: 10,
             minCountryPopulation: 4000000,
             minPopulationDefault: 100000,
+            scoreWeightFactor: 0.7,
             timePerRoundSec: 15,
             mapOption: {
                 mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
@@ -141,6 +144,7 @@ data = {
             minTotalCities: 10,
             minCountryPopulation: 4000000,
             minPopulationDefault: 250000,
+            scoreWeightFactor: 1.0,
             timePerRoundSec: 23,
             mapOption: {
                 mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
@@ -162,6 +166,7 @@ data = {
             minTotalCities: 1,
             minCountryPopulation: 100000,
             minPopulationDefault: 250000,
+            scoreWeightFactor: 1.8,
             timePerRoundSec: 36,
             mapOption: {
                 mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
