@@ -5,6 +5,7 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/background"
     tools:context="de.tud.kp.geoguessrcast.GameActivity" >
     <LinearLayout
@@ -21,9 +22,10 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:id="@+id/gameModes">
+            android:id="@+id/gameProfiles">
 
-            <ListView android:id="@+id/game_modes_list"
+
+            <ListView android:id="@+id/game_profiles_list"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:focusable="true" />
@@ -33,7 +35,7 @@
     </LinearLayout>
 
     <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/choose_mode_btn"
+        android:id="@+id/choose_profile_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         fab:fab_icon="@drawable/ic_play_arrow_white_48dp"

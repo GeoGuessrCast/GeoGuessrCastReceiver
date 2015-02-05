@@ -15,13 +15,21 @@ public class GameMessage {
     String[] choices;
     boolean ended;
     int roundNumber;
+    int maxRounds;
     boolean multipleChoiceMode;
     boolean admin;
     GameMode[] gameModes;
     GameMode gameMode;
     GameProfile[] gameProfiles;
     GameProfile gameProfile;
+    String answer;
+    String userMac;
+    String user_color;
 
+    String correctAnswer;
+    String userAnswer;
+    double answerDistance;
+    int pointsEarned;
 
     public GameMessage(){
     }
@@ -135,5 +143,70 @@ public class GameMessage {
 
     public void setGameProfile(GameProfile gameProfile) {
         this.gameProfile = gameProfile;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public String getUserMac() {
+        return userMac;
+    }
+
+    public void setUserMac(String userMac) {
+        this.userMac = userMac;
+    }
+
+    public String getUser_color() {
+        return user_color;
+    }
+
+    public void setUser_color(String user_color) {
+        this.user_color = user_color;
+    }
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
+
+    public String getUserAnswer() {
+        return userAnswer;
+    }
+
+    public void setUserAnswer(String userAnswer) {
+        this.userAnswer = userAnswer;
+    }
+
+    public double getAnswerDistance() {
+        return answerDistance;
+    }
+
+    public void setAnswerDistance(double answerDistance) {
+        this.answerDistance = answerDistance;
+    }
+
+    public int getPointsEarned() {
+        return pointsEarned;
+    }
+
+    public void setPointsEarned(int pointsEarned) {
+        this.pointsEarned = pointsEarned;
+    }
+//
+
+    public int getMaxRounds() {
+        return maxRounds;
+    }
+
+    public void setMaxRounds(int maxRounds) {
+        this.maxRounds = maxRounds;
     }
 }

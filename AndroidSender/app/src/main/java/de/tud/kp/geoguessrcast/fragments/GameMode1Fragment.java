@@ -59,9 +59,6 @@ public class GameMode1Fragment extends Fragment {
         final Button sendCityNameBtn = (Button) mActivity.findViewById(R.id.sendCityName);
         final ProgressBar countDownProgressBar = (ProgressBar) mActivity.findViewById(R.id.countDownProgressBar);
         final TextView countDownTimeTextView = (TextView) mActivity.findViewById(R.id.countDownTime);
-        final TextView roundNumberTextView = (TextView) mActivity.findViewById(R.id.roundNumber);
-
-        roundNumberTextView.setText(String.valueOf(currentRound));
 
         sendCityNameBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
