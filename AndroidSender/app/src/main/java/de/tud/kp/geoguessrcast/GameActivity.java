@@ -142,7 +142,7 @@ public class GameActivity extends ActionBarActivity {
                         if(gameMessage.isEnded()==true){
                             //clearFragmentBackStack();
                             //TODO: GameManager - restartGame - resetAll!!!
-                            User.resetInstance();
+                            //User.resetInstance();
                             //TODO: GameManager-initStartPage...
                             ((Activity)mContext).finish();
                             //TODO make a method called hideOptionMenu
@@ -219,7 +219,7 @@ public class GameActivity extends ActionBarActivity {
 
         //TODO: clear User admin
         //TODO: GameManager - restartGame - resetAll!!!
-        User.resetInstance();
+        //User.resetInstance();
         super.onDestroy();
     }
 
@@ -350,6 +350,7 @@ public class GameActivity extends ActionBarActivity {
         int newPoints = currentPoints + addedPoint;
         //TODO animation probably? digital increasing
         profilePoints.setText(Integer.toString(newPoints));
+        mUser.setPoints(newPoints);
     }
 
     private void initPointInfoOfProfileBar(){
@@ -357,7 +358,7 @@ public class GameActivity extends ActionBarActivity {
         TextView profileMaxRound = (TextView) findViewById(R.id.profile_points);
         if(profilePointInfo.getVisibility()==View.GONE||profilePointInfo.getVisibility()== View.INVISIBLE){
             profilePointInfo.setVisibility(View.VISIBLE);
-            profileMaxRound.setText(Integer.toString(0));
+            profileMaxRound.setText(Integer.toString(mUser.getPoints()));
         }
     }
 

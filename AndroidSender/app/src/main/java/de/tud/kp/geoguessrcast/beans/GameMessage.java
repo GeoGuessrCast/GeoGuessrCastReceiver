@@ -28,7 +28,7 @@ public class GameMessage {
 
     String correctAnswer;
     String userAnswer;
-    int answerDistance;
+    double answerDistance;
     int pointsEarned;
 
     public GameMessage(){
@@ -185,11 +185,11 @@ public class GameMessage {
         this.userAnswer = userAnswer;
     }
 
-    public int getAnswerDistance() {
+    public double getAnswerDistance() {
         return answerDistance;
     }
 
-    public void setAnswerDistance(int answerDistance) {
+    public void setAnswerDistance(double answerDistance) {
         this.answerDistance = answerDistance;
     }
 

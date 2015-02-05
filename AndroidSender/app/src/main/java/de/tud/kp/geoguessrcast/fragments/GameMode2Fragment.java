@@ -94,7 +94,7 @@ public class GameMode2Fragment extends Fragment  {
                         gameMessage.setEvent_type("gameRound_answerChosen");
                         gameMessage.setAnswer(mAnswer);
                         gameMessage.setUserMac(User.getInstance().getUserMac());
-                        sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.adminChannel));
+                        sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.userChannel));
                     }
                     catch (Exception e) {
                     }
@@ -115,7 +115,6 @@ public class GameMode2Fragment extends Fragment  {
                 //set  color of selected button
                 for(int i=0; i<parent.getCount(); i++){
                     resetItemEffect(parent.getChildAt(i));
-                    System.out.println(i);
                 }
                 renderItemSelectedEffect(view);
 

@@ -17,6 +17,7 @@ public class User {
     private boolean isAdmin = false;
     private String event_type = "createUser";
     private String color;
+    private int points=0;
 
     public User() {
     }
@@ -80,5 +81,13 @@ public class User {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 }
