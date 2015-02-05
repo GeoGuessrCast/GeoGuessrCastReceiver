@@ -39,7 +39,7 @@
         print("\n======= Round " + gameModeManager.currentRound + " =======");
 
         if (gameModeManager.currentGameModeProfile.limitedCountry == null) {
-            var countryCode = dataManager.getRandomCountryCode(10, 2000000); //TODO: add to option GameProfile
+            var countryCode = dataManager.getRandomCountryCode(gameModeManager.currentGameModeProfile.minTotalCities, gameModeManager.currentGameModeProfile.minCountryPopulation);
         } else {
             var countryCode = gameModeManager.currentGameModeProfile.limitedCountry;
         }
