@@ -115,6 +115,14 @@ h3 {
     min-width: 45vh;
     padding-bottom: 3vh;
 }
+.centeredMenuHighScore {
+    top: 65%;
+    left: 33%;
+    width: 33%;
+    min-width: 45vh;
+    padding-bottom: 2.9vh;
+    padding-top: 2.6vh;
+}
 .highScoreListFrame {
     top: 15%;
     left: 20%;

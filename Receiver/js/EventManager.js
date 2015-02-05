@@ -70,6 +70,11 @@
         if(eventData.event_type === data.eventType.submitAnswer) {
             gameRoundManager.choseAnswer(event.data.userMac, event.data.answer);
         }
+
+        if(eventData.event_type === data.eventType.requestHighScoreList) {
+            var jsondData = {event_type: 'returnHighScoreList', highScoreList: dataManager.getHighScoreList(data.constants.userMaxScoreTresholdForHighScoreList)};
+            eventManager.send(event.senderId, data.channelName.user, jsondData);
+        }
     };
     /**
      * on message on admin message bus
@@ -79,15 +84,11 @@
         var eventData = event.data;
 
         if(eventData.event_type === data.eventType.setGameMode){
-            //eventData.gameModeNumber; ...deprecated
-            //renderManager.loadGameProfileMenu(data.gameMode[0]);  //TODO get gameMode from event data (as object)
-            renderManager.loadGameProfileMenu(eventData.gameMode);  //TODO Done: to be tested:  get gameMode from event data (as object)
+            renderManager.loadGameProfileMenu(eventData.gameMode);
         }
 
         if(eventData.event_type === data.eventType.setGameProfile){
-            //TODO get gameModeProfile from event data
-            //gameModeManager.startGame(data.gameModeProfile[1]);  //TODO get gameProfile as object
-            gameModeManager.startGame(eventData.gameProfile);  //TODO Done: to be tested: get gameProfile as object
+            gameModeManager.startGame(eventData.gameProfile);
 
         }
 
@@ -97,6 +98,14 @@
 
         if(eventData.event_type === data.eventType.restart){
             eventManager.restart();
+        }
+
+        if(eventData.event_type === data.eventType.loadHighScore){
+            renderManager.loadGlobalHighScoreList();
+        }
+
+        if(eventData.event_type === data.eventType.loadMainMenu){
+            renderManager.loadMainMenu();
         }
 
     };

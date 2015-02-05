@@ -11,7 +11,8 @@ data = {
         numberOfChoices: 5,
         maxPointsPerAnswer: 10,
         maxNameLength: 15,
-        maxAnswerLength: 25
+        maxAnswerLength: 25,
+        userMaxScoreTresholdForHighScoreList: 40
     },
 
     geoObjType : {   //example: dataManager.getGeoObj(geoObjType.city, getRandomCountryCode(), 5)
@@ -41,7 +42,10 @@ data = {
         setGameProfile: 'setGameProfile',
         restart: 'restart',
         startGame: 'startGame',
-        isAdmin: 'isAdmin'
+        isAdmin: 'isAdmin',
+        loadHighScore: 'loadHighScore',
+        loadMainMenu: 'loadMainMenu',
+        requestHighScoreList: 'requestHighScoreList'
 
     },
 

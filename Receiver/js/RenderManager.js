@@ -241,6 +241,10 @@
         $('.headers').addClass(selectedGameModeObject.iconCssClass);
     };
 
+    rm.loadGlobalHighScoreList = function(){
+        renderManager.loadHighScoreList(dataManager.getHighScoreList(data.constants.userMaxScoreTresholdForHighScoreList), 'Global HighScore');
+    };
+
     rm.loadHighScoreList = function(highScoreList, heading){
         gameRoundManager.cancelGame();
         renderManager.applyGameMenuMapstyle();
