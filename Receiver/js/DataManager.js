@@ -65,8 +65,9 @@
     };
     var minPopWeigthsPerCountry = {
         'DE': 0.5,
-        'IT': 1.0,
-        'RU': 1.8
+        'IT': 0.7,
+        'US': 0.8,
+        'FR': 0.8
                         //TODO more factors...
     }
 

@@ -80,8 +80,8 @@ data = {
             multipleChoiceMode: false,
             pointingMode: false,
             minTotalCities: 10,
-            minCountryPopulation: 4000000,
-            minPopulationDefault: 500000,
+            minCountryPopulation: 5000000,
+            minPopulationDefault: 600000,
             scoreWeightFactor: 1.3,
             timePerRoundSec: 30,
             mapOption: {
