@@ -5,16 +5,16 @@
     var userList = [];
     var staticUserColors = [
         //TODO more colors
-        'hsl(4, 90%, 58%)',     //Red
-        'hsl(291, 64%, 42%)',   //Purple
-        'hsl(231, 48%, 48%)',   //Indigo
-        'hsl(187, 100%, 42%)',  //Cyan
-        'hsl(122, 39%, 49%)',   //Green
-        'hsl(54, 100%, 62%)',   //Yellow
-        'hsl(16, 25%, 38%)',    //Brown
-        'hsl(0, 0%, 62%)',      //Grey
-        'hsl(0, 0%, 100%)',     //Black
-        'hsl(340, 82%, 52%)'   //Pink
+        '#C62828',     //Red
+        '#6A1B9A',   //Purple
+        '#283593',   //Indigo
+        '#00838F',  //Cyan
+        '#2E7D32',   //Green
+        '#F9A825',   //Yellow
+        '#4E342E',    //Brown
+        '#424242',      //Grey
+        '#000000',     //Black
+        '#AD1457'    //Pink
     ];
 
     /**
@@ -133,10 +133,10 @@
         var jsonData;
         if (userManager.isUserAdmin(event.data.userMac)) {
             var user = um.getUserByMac(event.data.userMac);
-            jsonData = {event_type:data.eventType.isAdmin, admin:true, user_color: tinycolor(user.getColor()).toHexString(), gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
+            jsonData = {event_type:data.eventType.isAdmin, admin:true, user_color: user.getColor(), gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
         } else {
             var user = um.getUserByMac(event.data.userMac);
-            jsonData = {event_type:data.eventType.isAdmin, admin:false, user_color: tinycolor(user.getColor()).toHexString()};
+            jsonData = {event_type:data.eventType.isAdmin, admin:false, user_color: user.getColor()};
         }
         eventManager.send(event.senderId, data.channelName.user, jsonData);
 
