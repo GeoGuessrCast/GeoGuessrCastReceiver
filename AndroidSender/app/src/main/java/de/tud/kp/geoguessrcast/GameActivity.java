@@ -20,12 +20,16 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.cast.CastDevice;
@@ -36,7 +40,7 @@ import com.google.sample.castcompanionlibrary.cast.callbacks.DataCastConsumerImp
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
+import java.awt.Color;
 import de.tud.kp.geoguessrcast.beans.User;
 import de.tud.kp.geoguessrcast.beans.eventJsonBeans.GameMessage;
 import de.tud.kp.geoguessrcast.fragments.ChooseModeFragment;
@@ -74,6 +78,17 @@ public class GameActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
+
+        //init profile bar
+        ImageView profileAvatar = (ImageView) findViewById(R.id.profile_avatar);
+        float[] myIntArray =  {0,1f,0.3f};
+
+        Drawable myIcon = getResources().getDrawable(R.drawable.ic_account_circle_white_48dp);
+        myIcon.setColorFilter(Color.HSVToColor(myIntArray), PorterDuff.Mode.MULTIPLY);
+
+        System.out.println(Color.HSVToColor(myIntArray));
+        System.out.println(Color.RED);
+        profileAvatar.setImageDrawable(myIcon);
 
         //Setup CastManager
         mUser = User.getInstance();

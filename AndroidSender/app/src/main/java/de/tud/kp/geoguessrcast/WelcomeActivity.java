@@ -140,20 +140,21 @@ public class WelcomeActivity extends ActionBarActivity {
             public void onMessageReceived(CastDevice castDevice, String namespace, String message) {
                 GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
                 if (namespace.equals(getString(R.string.userChannel))){
-                    if(gameMessage.isAdmin()==true){
-                        mUser.setAdmin(true);
-                        GameSetting gameSetting = GameSetting.getInstance();
-                        gameSetting.setGameModes(gameMessage.getGameModes());
-                        gameSetting.setGameProfiles(gameMessage.getGameProfiles());
-                        Intent intent = new Intent(WelcomeActivity.this, GameActivity.class);
-                        WelcomeActivity.this.startActivity(intent);
+                    if(gameMessage.getEvent_type().equals("isAdmin")){
+                        if(gameMessage.isAdmin()==true){
+                            mUser.setAdmin(true);
+                            GameSetting gameSetting = GameSetting.getInstance();
+                            gameSetting.setGameModes(gameMessage.getGameModes());
+                            gameSetting.setGameProfiles(gameMessage.getGameProfiles());
+                            Intent intent = new Intent(WelcomeActivity.this, GameActivity.class);
+                            WelcomeActivity.this.startActivity(intent);
+                        }
+                        else{
+                            mUser.setAdmin(false);
+                            Intent intent = new Intent(WelcomeActivity.this, GameActivity.class);
+                            WelcomeActivity.this.startActivity(intent);
+                        }
                     }
-                    else{
-//                        mUser.setAdmin(false);
-                        Intent intent = new Intent(WelcomeActivity.this, GameActivity.class);
-                        WelcomeActivity.this.startActivity(intent);
-                    }
-
                     Log.d(TAG, "onMessageReceived from UserChannel: " + message);
                 }
             }

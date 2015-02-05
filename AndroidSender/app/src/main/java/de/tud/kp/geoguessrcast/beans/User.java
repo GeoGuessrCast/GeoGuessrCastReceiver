@@ -1,5 +1,7 @@
 package de.tud.kp.geoguessrcast.beans;
 
+import android.graphics.Color;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,6 +16,7 @@ public class User {
     private String userMac = "";
     private boolean isAdmin = false;
     private String event_type = "createUser";
+    private Color hslColor;
 
     public User() {
     }
@@ -69,5 +72,13 @@ public class User {
 
     public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    public Color getHslColor() {
+        return hslColor;
+    }
+
+    public void setHslColor(String hslColor) {
+
     }
 }
