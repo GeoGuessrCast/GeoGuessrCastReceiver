@@ -64,11 +64,20 @@ h3 {
     text-align: left;
 }
 
+.highScoreIcon {
+    background-image: url(../images/star.png);
+}
 .mountainIcon {
     background-image: url(../images/snowyMountain_outline.png);
 }
 .cityIcon {
     background-image: url(../images/city.png);
+}
+.riverIcon {
+    background-image: url(../images/fish.png);   /*TODO find img*/
+}
+.countryIcon {
+    background-image: url(../images/germany.png);   /*TODO find img*/
 }
 .waitingIcon {
     background-image: url(../images/hourglass.png);
@@ -103,6 +112,13 @@ h3 {
     top: 20%;
     left: 33%;
     width: 33%;
+    min-width: 45vh;
+    padding-bottom: 7vh;
+}
+.highScoreListFrame {
+    top: 20%;
+    left: 10%;
+    width: 80%;
     min-width: 45vh;
     padding-bottom: 7vh;
 }

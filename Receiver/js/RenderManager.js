@@ -237,6 +237,21 @@
             }
             renderManager.rebuildUserList();
         });
+        $('#profileMenuHeading').html(selectedGameModeObject.gameModeName);
+        $('.headers').addClass(selectedGameModeObject.iconCssClass);
+    };
+
+    rm.loadHighScoreList = function(highScoreList){
+        gameRoundManager.cancelGame();
+        renderManager.applyGameMenuMapstyle();
+
+        $('#gameOverlay').load('templates/HighScore.html', function (content) {
+            $(this).html(content);
+            $('#highScoreHeading').html('HighScore');
+            $('#innerHighScoreHeading').html('Last Round\'s HighScore');
+            console.log(highScoreList);
+
+        });
     };
 
 

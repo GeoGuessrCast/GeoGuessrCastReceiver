@@ -56,6 +56,9 @@
     function _loadGameUi(){
         $('#gameOverlay').load('templates/GameModeOverlay.html', function (data) {
             $(this).html(data);
+            $('#gameOverlayHeading').html(gameModeManager.currentGameMode.gameModeName);
+            $('.headers').addClass(gameModeManager.currentGameMode.iconCssClass);
+
             renderManager.refreshBottomScoreboard();
         });
     }

@@ -51,19 +51,19 @@ data = {
             gameModeName: 'City Guessing',
             id: 0,
             geoObjType: 0,
-            iconUrl: 'images/city.png'
+            iconCssClass: 'cityIcon'
         },
         {
             gameModeName: 'River Guessing',
             id: 1,
             geoObjType: 1,
-            iconUrl: 'images/city.png'   //TODO find img
+            iconCssClass: 'riverIcon'
         },
         {
             gameModeName: 'Country Guessing',
             id: 2,
             geoObjType: 2,
-            iconUrl: 'images/city.png'   //TODO find img
+            iconCssClass: 'countryIcon'
         }
     ],
 
