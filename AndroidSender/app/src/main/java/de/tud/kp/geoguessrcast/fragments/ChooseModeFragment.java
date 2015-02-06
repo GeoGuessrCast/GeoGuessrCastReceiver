@@ -51,13 +51,10 @@ public class ChooseModeFragment extends Fragment {
     private int mStartMode;
 
 
-
-    public ChooseModeFragment() {
-    }
-
     public static ChooseModeFragment newInstance(int startMode) {
         ChooseModeFragment fragment = new ChooseModeFragment();
         Bundle args = new Bundle();
+        args.putInt(START_MODE, startMode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -82,6 +79,7 @@ public class ChooseModeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mActivity = (GameActivity)getActivity();
         sCastManager = mActivity.getCastManager();
+        System.out.println(mStartMode);
         if(mStartMode==0){
             MaterialDialog tipDialog = new MaterialDialog.Builder(mActivity)
                     .title(R.string.tip)
