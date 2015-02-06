@@ -10,7 +10,7 @@ data = {
         maxDistanceErrorKm: 1000,
         numberOfChoices: 5,
         maxPointsPerAnswer: 10, // use gameRoundManager.getMaxPointsPerAnswer() !
-        maxNameLength: 15,
+        maxNameLength: 25,
         maxAnswerLength: 25,
         userMaxScoreTresholdForHighScoreList: 35
     },
@@ -80,8 +80,8 @@ data = {
             multipleChoiceMode: false,
             pointingMode: false,
             minTotalCities: 10,
-            minCountryPopulation: 5000000,
-            minPopulationDefault: 600000,
+            minCountryPopulation: 10111000,
+            minPopulationDefault: 600111,
             scoreWeightFactor: 1.3,
             timePerRoundSec: 30,
             mapOption: {
@@ -96,60 +96,16 @@ data = {
             }
         },
         {
-            profileName: 'Multiple Choice',
+            profileName: 'Easy (FC)',
             id: 1,
             limitedCountry: null,
-            multipleChoiceMode: true,
-            pointingMode: false,
-            minTotalCities: 10,
-            minCountryPopulation: 3600000,
-            minPopulationDefault: 800000,
-            scoreWeightFactor: 1.0,
-            timePerRoundSec: 15,
-            mapOption: {
-                mapType : google.maps.MapTypeId.HYBRID, // ROADMAP || HYBRID || TERRAIN
-                borders: true,
-                roads: true,
-                showCityNames: true,
-                showRiverNames: true,
-                showCountryNames: true,
-                renderOptions: {
-                }
-            }
-        },
-        {
-            profileName: 'Germany Only (MC)',
-            id: 2,
-            limitedCountry: 'DE',
-            multipleChoiceMode: true,
-            pointingMode: false,
-            minTotalCities: 10,
-            minCountryPopulation: 0,
-            minPopulationDefault: 500000, // applyPopulationFact DE=0.5 !
-            scoreWeightFactor: 0.7,
-            timePerRoundSec: 15,
-            mapOption: {
-                mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
-                borders: true,
-                roads: true,
-                showCityNames: true,
-                showRiverNames: true,
-                showCountryNames: true,
-                renderOptions: {
-                }
-            }
-        },
-        {
-            profileName: 'Location Pointing',
-            id: 3,
-            limitedCountry: null,
             multipleChoiceMode: false,
-            pointingMode: true,
+            pointingMode: false,
             minTotalCities: 10,
-            minCountryPopulation: 6000000,
-            minPopulationDefault: 1000000,
-            scoreWeightFactor: 1.0,
-            timePerRoundSec: 23,
+            minCountryPopulation: 50111000, //germany = 58748310
+            minPopulationDefault: 900111,
+            scoreWeightFactor: 0.7,
+            timePerRoundSec: 30,
             mapOption: {
                 mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
                 borders: true,
@@ -163,14 +119,14 @@ data = {
         },
         {
             profileName: 'Hardcore (FC)',
-            id: 4,
+            id: 2,
             limitedCountry: null,
             multipleChoiceMode: false,
             pointingMode: false,
             minTotalCities: 1,
-            minCountryPopulation: 3000000,
-            minPopulationDefault: 250000,
-            scoreWeightFactor: 1.8,
+            minCountryPopulation: 5111000,
+            minPopulationDefault: 350111,
+            scoreWeightFactor: 2.3,
             timePerRoundSec: 30,
             mapOption: {
                 mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
@@ -188,7 +144,53 @@ data = {
                     borderWeight: 0.4
                 }
             }
+        },
+        {
+            profileName: 'Multiple Choice',
+            id: 3,
+            limitedCountry: null,
+            multipleChoiceMode: true,
+            pointingMode: false,
+            minTotalCities: 10,
+            minCountryPopulation: 10111000,
+            minPopulationDefault: 900111,
+            scoreWeightFactor: 1.0,
+            timePerRoundSec: 18,
+            mapOption: {
+                mapType : google.maps.MapTypeId.HYBRID, // ROADMAP || HYBRID || TERRAIN
+                borders: true,
+                roads: true,
+                showCityNames: true,
+                showRiverNames: true,
+                showCountryNames: true,
+                renderOptions: {
+                }
+            }
+        },
+        {
+            profileName: 'Germany Only (MC)',
+            id: 4,
+            limitedCountry: 'DE',
+            multipleChoiceMode: true,
+            pointingMode: false,
+            minTotalCities: 10,
+            minCountryPopulation: 0,
+            minPopulationDefault: 700000, // applyPopulationFact DE=0.5 !
+            scoreWeightFactor: 0.7,
+            timePerRoundSec: 18,
+            mapOption: {
+                mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
+                borders: true,
+                roads: true,
+                showCityNames: true,
+                showRiverNames: true,
+                showCountryNames: true,
+                renderOptions: {
+                }
+            }
         }
+
+
     ]
 
 

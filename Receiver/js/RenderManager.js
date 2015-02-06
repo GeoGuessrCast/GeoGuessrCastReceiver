@@ -322,6 +322,9 @@
             var iconCssClass = 'noIcon';
             var color = 'rgb(180,180,180)';
             var user = userList[i];
+            var userPoints = Math.round(user.pointsInCurrentGame);
+            var aspectRatioNameCorrection = window.innerWidth / (window.innerHeight * 1.0) - 1.0;
+            var trimmedName = user.name.substring(0, Math.round(120*aspectRatioNameCorrection/userManager.getNumberOfUsers()));
             var userMacCleaned = user.mac.replace(/([^a-z0-9]+)/gi, '_');
             if (user.admin) {
                 userCssClass = 'admin';
@@ -340,8 +343,10 @@
             } else {
                 if (userAnswer == null) {
                     userAnswerCity = '(no answer)';
+                    userAnswerCity = userAnswerCity.substring(0, Math.round(200*aspectRatioNameCorrection/userManager.getNumberOfUsers()));
                 } else {
                     userAnswerCity = userAnswer.guessedName;
+                    userAnswerCity = userAnswerCity.substring(0, Math.round(200*aspectRatioNameCorrection/userManager.getNumberOfUsers()));
                     var answerWorthFact = userAnswer.points/gameRoundManager.getMaxPointsPerAnswer(); // 0=worst answer, 1=best
                     var red = Math.floor((1-answerWorthFact)*160);
                     var green = Math.floor(answerWorthFact*160);
@@ -351,7 +356,7 @@
 
             bottomScoreboard
                 .append('<span><div><span class="userStates" id="userState_' + userMacCleaned + '">' + userAnswerCity + '</span></div><span class="'
-                + userCssClass + ' noLinebreak userName" id="userName_' + userMacCleaned + '">' + user.name + ':</span> <span class="score">' + user.pointsInCurrentGame
+                + userCssClass + ' noLinebreak userName" id="userName_' + userMacCleaned + '">' + trimmedName + ':</span> <span class="score">' + userPoints
                 + '</span></span>');
 
             var userStateDiv = $('#userState_'+userMacCleaned);

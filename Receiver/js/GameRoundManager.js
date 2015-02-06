@@ -45,13 +45,15 @@
         gameRoundManager.currentGameState = data.gameState.guessing;
         print("\n======= Round " + gameModeManager.currentRound + " =======");
 
+        var countryCode = null;
         if (gameModeManager.currentGameModeProfile.limitedCountry == null) {
-            var countryCode = dataManager.getRandomCountryCode(gameModeManager.currentGameModeProfile.minTotalCities, gameModeManager.currentGameModeProfile.minCountryPopulation);
+            countryCode = dataManager.getRandomCountryCode(gameModeManager.currentGameModeProfile.minTotalCities, gameModeManager.currentGameModeProfile.minCountryPopulation);
         } else {
-            var countryCode = gameModeManager.currentGameModeProfile.limitedCountry;
+            countryCode = gameModeManager.currentGameModeProfile.limitedCountry;
         }
         var minPopProfile = gameModeManager.currentGameModeProfile.minPopulationDefault;
         var minPopCountry = dataManager.applyPopulationFact(countryCode, minPopProfile);
+        print('[GRM] country: ' + countryCode + ', minPop: ' + minPopProfile + '->' + minPopCountry );
 
         renderManager.clearMarkers();
         var userList = userManager.getUserList();
