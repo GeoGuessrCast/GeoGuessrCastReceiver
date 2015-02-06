@@ -92,6 +92,7 @@ data = {
                 showRiverNames: true,
                 showCountryNames: true,
                 renderOptions: {
+                    globalGamma: 0.43
                 }
             }
         },
@@ -103,7 +104,7 @@ data = {
             pointingMode: false,
             minTotalCities: 10,
             minCountryPopulation: 50111000, //germany = 58748310
-            minPopulationDefault: 900111,
+            minPopulationDefault: 1600111,
             scoreWeightFactor: 0.7,
             timePerRoundSec: 30,
             mapOption: {
@@ -114,6 +115,9 @@ data = {
                 showRiverNames: true,
                 showCountryNames: true,
                 renderOptions: {
+                    globalGamma: 0.28,
+                    globalSaturation: -35,
+                    waterColor: '#7389AB'
                 }
             }
         },
@@ -186,6 +190,34 @@ data = {
                 showRiverNames: true,
                 showCountryNames: true,
                 renderOptions: {
+                }
+            }
+        },
+        {
+            profileName: 'Custom ...',
+            id: 2,
+            limitedCountry: null,
+            multipleChoiceMode: false,
+            pointingMode: false,
+            minTotalCities: 1,
+            minCountryPopulation: 5111000,
+            minPopulationDefault: 350111,
+            scoreWeightFactor: 2.3,
+            timePerRoundSec: 30,
+            mapOption: {
+                mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
+                borders: true,
+                roads: false,
+                showCityNames: false,
+                showRiverNames: false,
+                showCountryNames: false,
+                renderOptions: {
+                    globalHue: '#ff2b00',
+                    globalGamma: 0.2,
+                    globalSaturation: -99,
+                    waterColor: '#250d0d',
+                    borderColor: '#ffffff',
+                    borderWeight: 0.4
                 }
             }
         }

@@ -155,9 +155,9 @@
             var jsonData = {"ended": true, "event_type":"game_ended"};
             eventManager.broadcast(data.channelName.game, jsonData);
             // show roundHighscore >> globalHighscore >> mainMenu
-            executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec)*1000, renderManager.loadCurrentGameHighScoreList);
-            executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+15)*1000, renderManager.loadGlobalHighScoreList);
-            executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+30)*1000, renderManager.loadMainMenu);
+            executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec-2)*1000, renderManager.loadCurrentGameHighScoreList);
+            executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+10)*1000, renderManager.loadGlobalHighScoreList);
+            executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+20)*1000, renderManager.loadMainMenu);
         } else {
             // next round...
             gameModeManager.currentRound = gameModeManager.currentRound + 1;
