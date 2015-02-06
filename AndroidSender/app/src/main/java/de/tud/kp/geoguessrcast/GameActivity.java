@@ -150,8 +150,18 @@ public class GameActivity extends ActionBarActivity {
 //                            ((Activity)mContext).finish();
                             //TODO make a method called hideOptionMenu
 //                            mOptionMenu.setGroupVisible(R.id.adminMenu, false);
+
+                            //TODO:  EventTransitionMngr: request HighScoreList!!!
+                            try {
+                                GameMessage gameMessageToSend = new GameMessage();
+                                gameMessageToSend.setEvent_type("requestHighScoreList");
+                                sCastManager.sendDataMessage(new Gson().toJson(gameMessageToSend), getString(R.string.userChannel));
+                            }
+                            catch (Exception e) {
+                            }
+
                             if(mUser.isAdmin()){
-                                startFragment(new ChooseModeFragment());
+                                startFragment(ChooseModeFragment.newInstance(1));
                             }
                             else {
                                 startFragment(new WaitGameFragment());
@@ -174,14 +184,11 @@ public class GameActivity extends ActionBarActivity {
                         View view = getLayoutInflater().inflate(R.layout.highscore_listview, null);
                         ListView highscoreListView =  (ListView)view.findViewById(R.id.highscore_entry);
                         highscoreListView.setAdapter(new HighscoreListAdapter(gameMessage.getHighScoreList(), mContext));
-//                        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                         MaterialDialog highscoreDialog = new MaterialDialog.Builder(mContext)
                                 .title(R.string.high_score)
                                 .customView(view, false)
                                 .build();
-                        ListView listView = highscoreDialog.getListView();
-
-
+                        highscoreDialog.setCanceledOnTouchOutside(false);
                         highscoreDialog.show();
                     }
 
@@ -198,7 +205,7 @@ public class GameActivity extends ActionBarActivity {
 
         //Start Game
         if(mUser.isAdmin()){
-            startFragment(new ChooseModeFragment());
+            startFragment(ChooseModeFragment.newInstance(0));
         }
         else{
             startFragment(new WaitGameFragment());
@@ -270,7 +277,9 @@ public class GameActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
+
             case R.id.request_high_score_list:
+                //TODO:  EventTransitionMngr: request HighScoreList!!!
                 try {
                     GameMessage gameMessage = new GameMessage();
                     gameMessage.setEvent_type("requestHighScoreList");
@@ -361,8 +370,8 @@ public class GameActivity extends ActionBarActivity {
 
         //hide profile point info
         LinearLayout profilePointInfo = (LinearLayout) findViewById(R.id.profile_point_info);
-        TextView profileMaxRound = (TextView) findViewById(R.id.profile_points);
-        profileMaxRound.setText(Integer.toString(0));
+        TextView profilePoints = (TextView) findViewById(R.id.profile_points);
+        profilePoints.setText(Integer.toString(0));
         profilePointInfo.setVisibility(View.INVISIBLE);
     }
 

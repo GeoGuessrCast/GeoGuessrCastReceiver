@@ -131,13 +131,15 @@ public class GameMode1Fragment extends Fragment {
 
     //TODO: EventTransitionManager - send ansewer!
     private void sendAnswer(String answer){
-        String cityNameJSON = "{\"event_type\":\"gameRound_answerChosen\" , \"answer\":" + "\"" + answer +  "\""+ ", \"userMac\":\"" + User.getInstance().getUserMac() + "\"}";
-        //TODO: add SendMessage for channels. adding try catch.
-        try {
-            mActivity.getCastManager().sendDataMessage(cityNameJSON, getString(R.string.userChannel));
-        }
-        catch (Exception e){
+        if(!answer.isEmpty()){
+            String cityNameJSON = "{\"event_type\":\"gameRound_answerChosen\" , \"answer\":" + "\"" + answer +  "\""+ ", \"userMac\":\"" + User.getInstance().getUserMac() + "\"}";
+            //TODO: add SendMessage for channels. adding try catch.
+            try {
+                mActivity.getCastManager().sendDataMessage(cityNameJSON, getString(R.string.userChannel));
+            }
+            catch (Exception e){
 
+            }
         }
     }
     public static final GameMode1Fragment newInstance(int currentRound, int timeRound)

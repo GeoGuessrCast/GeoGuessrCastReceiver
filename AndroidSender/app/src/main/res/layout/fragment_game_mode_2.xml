@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:textColor="@color/mainText"
-                android:textSize="50sp" />
+                android:textSize="32sp" />
         </RelativeLayout>﻿
 
         <ListView android:id="@+id/game_mode_2_list"

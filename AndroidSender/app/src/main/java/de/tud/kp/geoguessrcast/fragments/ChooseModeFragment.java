@@ -47,29 +47,55 @@ public class ChooseModeFragment extends Fragment {
 
     private FloatingActionButton chooseModeBtn;
     private GameMode mGameMode;
+    private static final String START_MODE = "startMode";
+    private int mStartMode;
+
+
 
     public ChooseModeFragment() {
+    }
+
+    public static ChooseModeFragment newInstance(int startMode) {
+        ChooseModeFragment fragment = new ChooseModeFragment();
+        Bundle args = new Bundle();
+        args.putInt(START_MODE, startMode);
+        System.out.println(startMode);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mGameModeAdapter = new GameModeAdapter(GameSetting.getInstance().getGameModes(), getActivity());
+        if (getArguments() != null) {
+            mStartMode = getArguments().getInt(START_MODE);
+            System.out.println(mStartMode);
+        }
+
     }
 
     @Override
     public void onAttach(Activity activity){
         super.onAttach(activity);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
         mActivity = (GameActivity)getActivity();
         sCastManager = mActivity.getCastManager();
+        System.out.println(mStartMode);
+        if(mStartMode==0){
+            MaterialDialog tipDialog = new MaterialDialog.Builder(mActivity)
+                    .title(R.string.tip)
+                    .content(R.string.player_confirm_tip)
+                    .positiveText(R.string.choose_mode)
+                    .show();
+            tipDialog.setCanceledOnTouchOutside(false);
+            tipDialog.setCancelable(false);
+        }
 
-        MaterialDialog tipDialog = new MaterialDialog.Builder(mActivity)
-                .title(R.string.tip)
-                .content(R.string.player_confirm_tip)
-                .positiveText(R.string.choose_mode)
-                .show();
-        tipDialog.setCanceledOnTouchOutside(false);
-        tipDialog.setCancelable(false);
     }
 
     @Override
@@ -160,11 +186,7 @@ public class ChooseModeFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
 
-    }
 
     private void showChooseModeBtn(){
         if(chooseModeBtn.getVisibility()==View.INVISIBLE || chooseModeBtn.getVisibility()==View.GONE){
