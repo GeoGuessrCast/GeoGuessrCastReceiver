@@ -36,18 +36,28 @@
                 android:layout_height="fill_parent"
                 android:gravity="center_vertical">
 
+                <LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Limited Country"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/country_code"
+                        android:layout_marginLeft="1dp"/>
+                </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Limited Country"/>
 
                 <Switch
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/limited_country"
                     android:checked="false"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal" />
+
+
             </TableRow>
 
             <TableRow
@@ -97,14 +107,71 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Min Population" />
+                    android:text="Min Total Cities" />
 
                 <SeekBar
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/min_population"
-                    android:max="500000"
-                    android:progress="250000" />
+                    android:id="@+id/min_total_cityes"
+                    android:max="10"
+                    android:progress="5" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center_vertical">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Min Country Population" />
+
+                <SeekBar
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/min_country_population"
+                    android:max="10000000"
+                    android:progress="5000000" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center_vertical">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Min Default Population" />
+
+                <SeekBar
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/min_default_population"
+                    android:max="5000000"
+                    android:progress="2500000" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center_vertical">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Score Weight Factor" />
+
+                <SeekBar
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/score_weight_factor"
+                    android:max="10"
+                    android:progress="5" />
             </TableRow>
 
             <TableRow

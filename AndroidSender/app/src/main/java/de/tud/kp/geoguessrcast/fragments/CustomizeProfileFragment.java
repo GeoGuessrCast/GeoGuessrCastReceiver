@@ -65,6 +65,7 @@ public class CustomizeProfileFragment extends Fragment {
         limitedCountry.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                final TextView countryCodeTv = (TextView) mActivity.findViewById(R.id.country_code);
                 if (isChecked){
                     final CountryPicker picker = CountryPicker.newInstance("Select Country");
                     picker.show(mActivity.getSupportFragmentManager(), "COUNTRY_PICKER");
@@ -73,16 +74,24 @@ public class CustomizeProfileFragment extends Fragment {
                         @Override
                         public void onSelectCountry(String name, String code) {
                             gameProfile.setLimitedCountry(code);
+                            countryCodeTv.setText(": "+code);
                             picker.dismiss();
                         }
                     });
+                }
+                else {
+                    gameProfile.setLimitedCountry(null);
+                    countryCodeTv.setText("");
                 }
             }
         });
         final Switch multipleChoice = (Switch) mActivity.findViewById(R.id.multiple_choice_mode);
         final Switch pointingMode = (Switch) mActivity.findViewById(R.id.pointing_mode);
-        final SeekBar minPopulation = (SeekBar) mActivity.findViewById(R.id.min_population);
+        final SeekBar minTotalCities = (SeekBar) mActivity.findViewById(R.id.min_total_cityes);
+        final SeekBar minCountryPopulation = (SeekBar) mActivity.findViewById(R.id.min_country_population);
+        final SeekBar minDefaultPopulation = (SeekBar) mActivity.findViewById(R.id.min_default_population);
         final SeekBar timePerRound = (SeekBar) mActivity.findViewById(R.id.time_per_round);
+        final SeekBar scoreWeightFactor = (SeekBar) mActivity.findViewById(R.id.score_weight_factor);
         final RadioGroup mapType = (RadioGroup) mActivity.findViewById(R.id.map_type);
         final Switch mapBorders = (Switch) mActivity.findViewById(R.id.map_borders);
         final Switch mapRoads = (Switch) mActivity.findViewById(R.id.map_roads);
@@ -103,7 +112,10 @@ public class CustomizeProfileFragment extends Fragment {
                 //gameProfile.setLimitedCountry(null);
                 gameProfile.setMultipleChoiceMode(multipleChoice.isChecked());
                 gameProfile.setPointingMode(pointingMode.isChecked());
-                gameProfile.setMinPopulationDefault(minPopulation.getProgress());
+                gameProfile.setMinTotalCities(minTotalCities.getProgress());
+                gameProfile.setMinCountryPopulation(minCountryPopulation.getProgress());
+                gameProfile.setScoreWeightFactor(scoreWeightFactor.getProgress());
+                gameProfile.setMinPopulationDefault(minDefaultPopulation.getProgress());
                 gameProfile.setTimePerRoundSec(timePerRound.getProgress());
 
                 MapOption mapOption = new MapOption();

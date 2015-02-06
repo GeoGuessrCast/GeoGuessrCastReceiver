@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.cast.ApplicationMetadata;
@@ -85,23 +86,29 @@ public class WelcomeActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Utility.hideSoftKeyboard(WelcomeActivity.this);
-                if(!sCastManager.isConnected()){
-                    mediaRouteButton.performClick();
+                if(usernameEditText.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(), getString(R.string.username_empty_tip), Toast.LENGTH_LONG).show();
                 }
                 else{
-                    //TODO: GameManager - StartGame
-                    try {
-                        String userName = usernameEditText.getText().toString();
-                        String userMac = DeviceInfo.getDeviceMacAddr(mContext);
-                        mUser = User.getInstance();
-                        mUser.setUserName(userName);
-                        mUser.setUserMac(userMac);
-                        storeUsername(userName);
-                        sCastManager.sendDataMessage(mUser.toJSONString(), getString(R.string.userChannel));
-                    } catch (Exception e) {
-                        Log.e("Error", "Exception while sending message", e);
+                    if(!sCastManager.isConnected()){
+                        mediaRouteButton.performClick();
+                    }
+                    else{
+                        //TODO: GameManager - StartGame
+                        try {
+                            String userName = usernameEditText.getText().toString();
+                            String userMac = DeviceInfo.getDeviceMacAddr(mContext);
+                            mUser = User.getInstance();
+                            mUser.setUserName(userName);
+                            mUser.setUserMac(userMac);
+                            storeUsername(userName);
+                            sCastManager.sendDataMessage(mUser.toJSONString(), getString(R.string.userChannel));
+                        } catch (Exception e) {
+                            Log.e("Error", "Exception while sending message", e);
+                        }
                     }
                 }
+
             }
         });
 

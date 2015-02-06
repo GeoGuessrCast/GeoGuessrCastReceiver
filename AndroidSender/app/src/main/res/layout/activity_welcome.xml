@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/mainText"
             android:id="@+id/playername"
+            android:hint="@string/username_hint"
             android:layout_gravity="center_horizontal"
             android:inputType="text"
             android:imeOptions="actionGo" />
