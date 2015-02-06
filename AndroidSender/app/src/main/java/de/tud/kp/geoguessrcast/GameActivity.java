@@ -33,9 +33,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.cast.CastDevice;
 import com.google.gson.Gson;
 import com.google.sample.castcompanionlibrary.cast.DataCastManager;
@@ -44,6 +46,8 @@ import com.google.sample.castcompanionlibrary.cast.callbacks.DataCastConsumerImp
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import de.tud.kp.geoguessrcast.adapters.HighscoreListAdapter;
 import de.tud.kp.geoguessrcast.beans.User;
 import de.tud.kp.geoguessrcast.beans.GameMessage;
 import de.tud.kp.geoguessrcast.fragments.ChooseModeFragment;
@@ -129,7 +133,6 @@ public class GameActivity extends ActionBarActivity {
                                 String[] choices = gameMessage.getChoices();
                                 startFragment(GameMode2Fragment.newInstance(roundNumber, timeRound, choices));
                             }
-
                         }
                     }
                     else if(gameMessage.getEvent_type().equals("round_ended")) {
@@ -144,19 +147,44 @@ public class GameActivity extends ActionBarActivity {
                             //TODO: GameManager - restartGame - resetAll!!!
                             //User.resetInstance();
                             //TODO: GameManager-initStartPage...
-                            ((Activity)mContext).finish();
+//                            ((Activity)mContext).finish();
                             //TODO make a method called hideOptionMenu
-                            mOptionMenu.setGroupVisible(R.id.adminMenu, false);
+//                            mOptionMenu.setGroupVisible(R.id.adminMenu, false);
+                            if(mUser.isAdmin()){
+                                startFragment(new ChooseModeFragment());
+                            }
+                            else {
+                                startFragment(new WaitGameFragment());
+                            }
                         }
                     }
                     Log.d(TAG, "onMessageReceived from GameChannel: " + message);
                 }
                 else if (namespace.equals(getString(R.string.userChannel))){
+
                     GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
+
                     if(gameMessage.getEvent_type().equals("answer_feedback")){
                         int pointsEarned = gameMessage.getPointsEarned();
                         updatePointOfProfileBar(pointsEarned);
                     }
+
+                    else if(gameMessage.getEvent_type().equals("returnHighScoreList")){
+                        //TODO: aufräumen
+                        View view = getLayoutInflater().inflate(R.layout.highscore_listview, null);
+                        ListView highscoreListView =  (ListView)view.findViewById(R.id.highscore_entry);
+                        highscoreListView.setAdapter(new HighscoreListAdapter(gameMessage.getHighScoreList(), mContext));
+//                        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                        MaterialDialog highscoreDialog = new MaterialDialog.Builder(mContext)
+                                .title(R.string.high_score)
+                                .customView(view, false)
+                                .build();
+                        ListView listView = highscoreDialog.getListView();
+
+
+                        highscoreDialog.show();
+                    }
+
                     Log.d(TAG, "onMessageReceived from UserChannel: " + message);
                 }
                 else{
@@ -242,6 +270,15 @@ public class GameActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
+            case R.id.request_high_score_list:
+                try {
+                    GameMessage gameMessage = new GameMessage();
+                    gameMessage.setEvent_type("requestHighScoreList");
+                    sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.userChannel));
+                }
+                catch (Exception e) {
+                }
+                return true;
             case R.id.toggleConsole:
                 if(mUser.isAdmin()){
                     if (!item.isChecked()) {

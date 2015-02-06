@@ -11,18 +11,23 @@
     <string name="media_route_menu_title">Play on…</string>
     <string name="welcome_message">Welcome to GeoGuessr</string>
     <string name="start_game">Los!</string>
-    <string name="wait_game_message">Please wait till the game starts!</string>
-    <string name="wait_game_round">Waiting for all players to choose answer.</string>
+    <string name="wait_game_message_1">Admin is choosing game settings, please wait till the game starts!</string>
+    <string name="wait_game_message_2">Please wait till the game starts!</string>
+    <string name="wait_game_round">Please wait for all players to choose answer.</string>
     <string name="tip">Tip</string>
     <string name="loading">Loading</string>
     <string name="ok">OK</string>
     <string name="player_confirm_tip">Congrats! You are the admin now! Make sure that all players have already connected to the game.</string>
+    <string name="high_score_tip">Global HighScore is already shown on the screen!</string>
     <string name="choose_mode">Start Choosing Mode!</string>
+    <string name="back_to_menu">Back to Menu</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_main_activity2">MainActivity2</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="points_abbreviation">&#160;Pts</string>
     <string name="slash">&#160;/&#160;</string>
+    <string name="high_score">HighScore</string>
+    <string name="number_abbr">No.</string>
 
 </resources>

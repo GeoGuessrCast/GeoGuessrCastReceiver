@@ -31,6 +31,8 @@ public class GameMessage {
     double answerDistance;
     int pointsEarned;
 
+    Highscore[] highScoreList;
+
     public GameMessage(){
     }
 
@@ -208,5 +210,13 @@ public class GameMessage {
 
     public void setMaxRounds(int maxRounds) {
         this.maxRounds = maxRounds;
+    }
+
+    public Highscore[] getHighScoreList() {
+        return highScoreList;
+    }
+
+    public void setHighScoreList(Highscore[] highScoreList) {
+        this.highScoreList = highScoreList;
     }
 }

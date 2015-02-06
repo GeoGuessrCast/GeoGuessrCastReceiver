@@ -7,6 +7,12 @@
         app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
         app:showAsAction="always"/>
 
+    <item
+        android:id="@+id/request_high_score_list"
+        android:title="@string/high_score"
+        android:icon="@drawable/ic_equalizer_white_48dp"
+        app:showAsAction="always"/>
+
     <group android:id="@+id/adminMenu"
         android:visible="false">
         <item android:id="@+id/toggleConsole"

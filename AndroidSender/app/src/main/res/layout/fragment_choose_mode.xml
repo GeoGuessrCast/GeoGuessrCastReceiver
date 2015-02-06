@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="de.tud.kp.geoguessrcast.GameActivity" >
+
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:fab="http://schemas.android.com/apk/res-auto"
@@ -26,6 +27,18 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:focusable="true" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/high_score"
+                android:id="@+id/show_high_score" />
 
         </LinearLayout>
 

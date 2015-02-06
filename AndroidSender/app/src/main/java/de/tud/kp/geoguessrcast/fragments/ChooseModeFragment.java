@@ -69,6 +69,7 @@ public class ChooseModeFragment extends Fragment {
                 .positiveText(R.string.choose_mode)
                 .show();
         tipDialog.setCanceledOnTouchOutside(false);
+        tipDialog.setCancelable(false);
     }
 
     @Override
@@ -76,6 +77,42 @@ public class ChooseModeFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_choose_mode, null, false);
+
+        Button showHighScoreBtn = (Button) view.findViewById(R.id.show_high_score);
+        showHighScoreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    GameMessage gameMessage = new GameMessage();
+                    gameMessage.setEvent_type("loadHighScore");
+                    sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.adminChannel));
+
+                    MaterialDialog highScoreTipDialog = new MaterialDialog.Builder(mActivity)
+                            .title(R.string.tip)
+                            .content(R.string.high_score_tip)
+                            .positiveText(R.string.back_to_menu)
+                            .callback(new MaterialDialog.ButtonCallback() {
+                                @Override
+                                public void onPositive(MaterialDialog dialog) {
+                                    super.onPositive(dialog);
+                                    try {
+                                        GameMessage gameMessage = new GameMessage();
+                                        gameMessage.setEvent_type("loadMainMenu");
+                                        sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.adminChannel));
+                                    }
+                                    catch (Exception e) {
+                                    }
+                                }
+                            })
+                            .show();
+                    highScoreTipDialog.setCanceledOnTouchOutside(false);
+                    highScoreTipDialog.setCancelable(false);
+
+                }
+                catch (Exception e) {
+                }
+            }
+        });
 
         chooseModeBtn = (FloatingActionButton) view.findViewById(R.id.choose_mode_btn);
         chooseModeBtn.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +127,6 @@ public class ChooseModeFragment extends Fragment {
                         sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.adminChannel));
                     } catch (Exception e) {
                     }
-
                     mActivity.startFragment(new ChooseProfileFragment());
                 }
             }
@@ -115,8 +151,6 @@ public class ChooseModeFragment extends Fragment {
                 showChooseModeBtn();
 
                 mGameMode = (GameMode) parent.getItemAtPosition(position);
-
-
             }
         });
 

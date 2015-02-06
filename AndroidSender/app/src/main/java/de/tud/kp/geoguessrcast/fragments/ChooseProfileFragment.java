@@ -110,10 +110,6 @@ public class ChooseProfileFragment extends Fragment {
                 }
             }
         });
-
-
-
-
         return view;
     }
 

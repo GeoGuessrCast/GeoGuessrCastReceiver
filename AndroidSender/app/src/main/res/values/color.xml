@@ -5,4 +5,5 @@
     <item name="colorPrimaryDark" type="color">#0D47A1</item>
     <item name="colorAccent" type="color">#69F0AE</item>
     <item name="background" type="color">@color/background_material_light</item>
+    <item name="entryBackground" type="color">#BBDEFB</item>
 </resources>
