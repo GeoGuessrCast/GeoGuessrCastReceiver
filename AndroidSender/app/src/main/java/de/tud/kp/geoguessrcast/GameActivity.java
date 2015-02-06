@@ -172,6 +172,8 @@ public class GameActivity extends ActionBarActivity {
                 }
                 else if (namespace.equals(getString(R.string.userChannel))){
 
+                    Log.d(TAG, "onMessageReceived from UserChannel: " + message);
+                    
                     GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
 
                     if(gameMessage.getEvent_type().equals("answer_feedback")){
@@ -192,7 +194,6 @@ public class GameActivity extends ActionBarActivity {
                         highscoreDialog.show();
                     }
 
-                    Log.d(TAG, "onMessageReceived from UserChannel: " + message);
                 }
                 else{
                     return;

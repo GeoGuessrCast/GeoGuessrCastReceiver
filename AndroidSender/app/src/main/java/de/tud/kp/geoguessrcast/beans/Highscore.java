@@ -7,7 +7,7 @@ public class Highscore {
 
     private String userMac;
     private String name;
-    private int points;
+    private double points;
     private int totalPoints;
     private int pointsPercent;
 
@@ -30,11 +30,11 @@ public class Highscore {
         this.name = name;
     }
 
-    public int getPoints() {
+    public double getPoints() {
         return points;
     }
 
-    public void setPoints(int points) {
+    public void setPoints(double points) {
         this.points = points;
     }
 
