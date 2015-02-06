@@ -42,6 +42,5 @@
         fab:fab_colorPressed="@color/colorPrimary"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="32dp"
         android:visibility="invisible"/>
 </RelativeLayout>

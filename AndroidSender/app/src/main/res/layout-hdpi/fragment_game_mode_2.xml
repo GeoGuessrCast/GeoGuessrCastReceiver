@@ -15,11 +15,11 @@
 
         <RelativeLayout
             android:id="@+id/layoutProgressBar"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
 
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:textColor="@color/mainText"
-                android:textSize="32sp" />
+                android:textSize="24sp" />
         </RelativeLayout>﻿
 
         <ListView android:id="@+id/game_mode_2_list"
