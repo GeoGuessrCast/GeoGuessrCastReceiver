@@ -100,7 +100,7 @@
             renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6 );
             gameRoundManager.roundTimer = executionManager.execDelayed(gameModeManager.currentGameModeProfile.timePerRoundSec*1000, gameRoundManager.endRound);
             gameRoundManager.roundTimerAnim = renderManager.playTimerAnimationWithRoundDisplay(gameModeManager.currentGameModeProfile.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
-            executionManager.execDelayed(2000, function(){
+            executionManager.execDelayed(1000, function(){
                 eventManager.broadcast(data.channelName.game, jsonData);
             });
         });
