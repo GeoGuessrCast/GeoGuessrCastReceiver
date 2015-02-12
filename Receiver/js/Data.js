@@ -194,8 +194,36 @@ data = {
             }
         },
         {
+            profileName: 'Pointing Mode',
+            id: 5,
+            limitedCountry: null,
+            multipleChoiceMode: false,
+            pointingMode: true,
+            minTotalCities: 1,
+            minCountryPopulation: 12111000,
+            minPopulationDefault: 800111,
+            scoreWeightFactor: 3.0,
+            timePerRoundSec: 30,
+            mapOption: {
+                mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
+                borders: true,
+                roads: false,
+                showCityNames: false,
+                showRiverNames: false,
+                showCountryNames: false,
+                renderOptions: {
+                    globalHue: '#ff2b00',
+                    globalGamma: 0.2,
+                    globalSaturation: -99,
+                    waterColor: '#250d0d',
+                    borderColor: '#ffffff',
+                    borderWeight: 0.4
+                }
+            }
+        },
+        {
             profileName: 'Custom ...',
-            id: 2,
+            id: 6,
             limitedCountry: null,
             multipleChoiceMode: false,
             pointingMode: false,
