@@ -212,7 +212,7 @@
     };
 
     rm.loadMainMenu = function(){
-        gameRoundManager.cancelGame();
+        gameModeManager.cancelGame();
         renderManager.applyGameMenuMapstyle();
 
         $('#gameOverlay').load('templates/MainMenu.html', function (content) {
@@ -226,7 +226,7 @@
     };
 
     rm.loadGameProfileMenu = function(selectedGameModeObject){
-        gameRoundManager.cancelGame();
+        gameModeManager.cancelGame();
         gameModeManager.setGameMode(selectedGameModeObject);
 
         $('#gameOverlay').load('templates/GameProfileMenu.html', function (content) {
@@ -250,7 +250,7 @@
     };
 
     rm.loadHighScoreList = function(highScoreList, heading){
-        gameRoundManager.cancelGame();
+        gameModeManager.cancelGame();
         renderManager.applyGameMenuMapstyle();
 
         $('#gameOverlay').load('templates/HighScore.html', function (content) {

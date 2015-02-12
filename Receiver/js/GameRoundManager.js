@@ -139,30 +139,6 @@
     };
 
 
-    grm.cancelGame = function() {
-        gameRoundManager.currentGameState = data.gameState.ended;
-        if (gameRoundManager.roundTimer != null) {
-            gameRoundManager.roundTimer.terminate();
-        }
-        if (gameRoundManager.roundTimerAnim != null) {
-            gameRoundManager.roundTimerAnim.terminate();
-        }
-        if (gameRoundManager.gameEvalTimer != null) {
-            gameRoundManager.gameEvalTimer.terminate();
-        }
-        if (gameRoundManager.viewHighScoreTimer != null) {
-            gameRoundManager.viewHighScoreTimer.terminate();
-        }
-        if (gameRoundManager.viewGlobalHighScoreTimer != null) {
-            gameRoundManager.viewGlobalHighScoreTimer.terminate();
-        }
-        if (gameRoundManager.viewMainMenuTimer != null) {
-            gameRoundManager.viewMainMenuTimer.terminate();
-        }
-
-    };
-
-
 
     grm.nextRound = function(){
         // check if max rounds reached
