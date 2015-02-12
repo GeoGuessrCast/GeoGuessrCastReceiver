@@ -111,6 +111,7 @@
         <input type="button" onclick="userFakeAnswer('Berlin','1111','1:11a!')" value="u1:Berlin"/>
         <input type="text" style="cursor: text" id="testInput" size="8" onclick="document.getElementById('testInput').value=''" onkeydown="keyPress()" value="-type a city-"/>
         <input type="button" onclick="gameRoundManager.cancelGame()" value="stopTimer"/>
+        <input type="button" onclick="eventManager.event_onSenderDisconnected({senderId:1111, data:{event_type: 'gameRound_answerChosen', answer: string , userMac: userMac}})" value="dc:Rei"/>
     </div>
 
 </body>

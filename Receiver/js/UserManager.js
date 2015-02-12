@@ -247,14 +247,21 @@
      */
     um.removeUser = function(senderId){
         // update user list
+        var adminLeft = false;
         var userList = _getUserList();
         var userLength = userList.length;
         for(var i = 0; i < userLength; i++){
             if(userList[i].senderId === senderId){
+                if (userList[i].admin) {
+                    adminLeft = true;
+                }
                 userList.splice(i, 1);
                 $('#'+userList[i].mac).remove();
                 break;
             }
+        }
+        if (adminLeft && userList.length > 0) {
+            userList[0].admin = true;
         }
         _setUserList(userList);
         if (gameRoundManager.currentGameState == data.gameState.ended) {
