@@ -48,13 +48,16 @@
         userLines = [];
     };
 
+    rm.displayRoundNumber = function(currentRound, maxRounds) {
+        $('#roundDisplayAndTimer')
+            .show()
+            .html('Round ' + currentRound + '/' + maxRounds);
+    };
 
     rm.playTimerAnimationWithRoundDisplay = function(animationDurationSec, currentRound, maxRounds) {
         currentTimerPosition = 0;
         renderManager.incTimerBy();
-        $('#roundDisplayAndTimer')
-            .show()
-            .html('Round ' + currentRound + '/' + maxRounds);
+        renderManager.displayRoundNumber(currentRound, maxRounds);
 
         var aniMs = parseInt(animationDurationSec)*1000;
         /*
@@ -250,7 +253,6 @@
     };
 
     rm.loadHighScoreList = function(highScoreList, heading){
-        gameModeManager.cancelGame();
         renderManager.applyGameMenuMapstyle();
 
         $('#gameOverlay').load('templates/HighScore.html', function (content) {

@@ -95,12 +95,14 @@
         gameModeManager.getMap().fitBounds(bounds);
         gameModeManager.getMap().setZoom(zoom);
 
+        renderManager.displayRoundNumber(gameModeManager.currentRound, gameModeManager.maxRounds);
         google.maps.event.addListenerOnce(map, 'idle', function() {
-            print("GOOGLE.MAP.IDLE EVENT !");
             renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6 );
             gameRoundManager.roundTimer = executionManager.execDelayed(gameModeManager.currentGameModeProfile.timePerRoundSec*1000, gameRoundManager.endRound);
             gameRoundManager.roundTimerAnim = renderManager.playTimerAnimationWithRoundDisplay(gameModeManager.currentGameModeProfile.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
-            eventManager.broadcast(data.channelName.game, jsonData);
+            executionManager.execDelayed(2000, function(){
+                eventManager.broadcast(data.channelName.game, jsonData);
+            });
         });
 
     };
