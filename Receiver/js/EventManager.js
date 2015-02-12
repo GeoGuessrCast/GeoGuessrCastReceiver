@@ -46,7 +46,7 @@
 
     castReceiver.event_onSenderDisconnected = function(event){
         userManager.removeUser(event.senderId);
-        if (window.castReceiverManager.getSenders().length == 0) {
+        if (userManager.getNumberOfUsers() == 0) {
             window.close();
         }
     };
