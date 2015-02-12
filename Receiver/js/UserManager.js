@@ -231,7 +231,6 @@
                     adminLeft = true;
                 }
                 userList.splice(i, 1);
-                $('#'+userList[i].mac).remove();
                 break;
             }
         }
