@@ -3,6 +3,12 @@
 
     grm.roundTimer = null;
     grm.roundTimerAnim = null;
+    grm.gameEvalTimer = null;
+
+    grm.viewHighScoreTimer = null;
+    grm.viewGlobalHighScoreTimer = null;
+    grm.viewMainMenuTimer = null;
+
     grm.timePerRoundSec = 30;
     grm.roundEvaluationTimeSec = 10;
     grm.goalGeoObject = null; // Target GeoObject
@@ -137,12 +143,23 @@
         gameRoundManager.currentGameState = data.gameState.ended;
         if (gameRoundManager.roundTimer != null) {
             gameRoundManager.roundTimer.terminate();
-            print('[GRM] killed roundTimer: ' + gameRoundManager.roundTimer);
         }
         if (gameRoundManager.roundTimerAnim != null) {
             gameRoundManager.roundTimerAnim.terminate();
-            print('[GRM] killed roundTimerAnim: ' + gameRoundManager.roundTimerAnim);
         }
+        if (gameRoundManager.gameEvalTimer != null) {
+            gameRoundManager.gameEvalTimer.terminate();
+        }
+        if (gameRoundManager.viewHighScoreTimer != null) {
+            gameRoundManager.viewHighScoreTimer.terminate();
+        }
+        if (gameRoundManager.viewGlobalHighScoreTimer != null) {
+            gameRoundManager.viewGlobalHighScoreTimer.terminate();
+        }
+        if (gameRoundManager.viewMainMenuTimer != null) {
+            gameRoundManager.viewMainMenuTimer.terminate();
+        }
+
     };
 
 
@@ -155,13 +172,13 @@
             var jsonData = {"ended": true, "event_type":"game_ended"};
             eventManager.broadcast(data.channelName.game, jsonData);
             // show roundHighscore >> globalHighscore >> mainMenu
-            executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec-2)*1000, renderManager.loadCurrentGameHighScoreList);
-            executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+10)*1000, renderManager.loadGlobalHighScoreList);
-            executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+20)*1000, renderManager.loadMainMenu);
+            gameRoundManager.viewHighScoreTimer = executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec-2)*1000, renderManager.loadCurrentGameHighScoreList);
+            gameRoundManager.viewGlobalHighScoreTimer = executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+10)*1000, renderManager.loadGlobalHighScoreList);
+            gameRoundManager.viewMainMenuTimer = executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+20)*1000, renderManager.loadMainMenu);
         } else {
             // next round...
             gameModeManager.currentRound = gameModeManager.currentRound + 1;
-            executionManager.execDelayed(gameRoundManager.roundEvaluationTimeSec*1000, gameRoundManager.startRound);
+            gameRoundManager.gameEvalTimer = executionManager.execDelayed(gameRoundManager.roundEvaluationTimeSec*1000, gameRoundManager.startRound);
         }
     };
 
