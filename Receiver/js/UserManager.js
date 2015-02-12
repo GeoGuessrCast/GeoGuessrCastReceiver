@@ -247,6 +247,7 @@
      */
     um.removeUser = function(senderId){
         // update user list
+        console.debug('userLeft: ' + senderId);
         var adminLeft = false;
         var userList = _getUserList();
         var userLength = userList.length;
@@ -261,6 +262,7 @@
             }
         }
         if (adminLeft && userList.length > 0) {
+            console.debug('setting new admin: ' + userList[0].name);
             userList[0].admin = true;
         }
         _setUserList(userList);
@@ -270,24 +272,6 @@
             renderManager.refreshBottomScoreboard();
         }
 
-    };
-
-    /**
-     * removes a {User} with the given id
-     * @param {string} mac
-     */
-    um.removeUser = function(mac){
-        // update user list
-        var userList = _getUserList();
-        var userLength = userList.length;
-        for(var i = 0; i < userLength; i++){
-            if(userList[i].mac === mac){
-                userList.splice(i, 1);
-                $('#'+userList[i].mac).remove();
-                break;
-            }
-        }
-        _setUserList(userList);
     };
 
     /**
