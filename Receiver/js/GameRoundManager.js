@@ -164,8 +164,10 @@
 
 
 
+
     function _getDistance(p1, p2) {
-        return google.maps.geometry.spherical.computeDistanceBetween (p1, p2); // returns the distance in meter
+        console.log("[GRM] DISTANCE: "+p1+ " :" +p2);
+        return google.maps.geometry.spherical.computeDistanceBetween(p1, p2); // returns the distance in meter
     }
 
 
@@ -206,7 +208,7 @@
                             }
                         }
                     }
-                    geoObject = new dataManager.GeoObject(0, cleanedAnswerString, pos.k, pos.B, countryCode, 0, 0, null);
+                    geoObject = new dataManager.GeoObject(0, cleanedAnswerString, pos.lat(), pos.lng(), countryCode, 0, 0, null, null, null, null);
                 } else {
                     print('[GRM] no valid '+locationType+' for: '+cleanedAnswerString);
                 }

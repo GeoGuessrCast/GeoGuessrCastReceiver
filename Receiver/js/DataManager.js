@@ -26,7 +26,10 @@
      * @param marker
      * @constructor
      */
-    dm.GeoObject = function(id, name, lat, long, countryCode, population, elevation, marker){
+    dm.GeoObject = function (id, name, lat, long, countryCode, population, elevation, marker, viewport, bounds, objectType){
+        objectType = objectType || null;
+        viewport = viewport || null;
+        bounds = bounds || null;
         /** @type {number} */
         this.id = id;
         /** @type {string} */
@@ -43,6 +46,7 @@
         this.elevation  = elevation;
         /** @type {marker} */
         this.marker = marker;
+
         /**
          *
          * @type {google.maps.LatLng}
@@ -155,7 +159,7 @@
 
                 if (typeof(code) === "string"
                     ) {
-                    var geoObject = new dataManager.GeoObject(i, name, 0, 0, code, population, 0, null);
+                    var geoObject = new dataManager.GeoObject(i, name, 0, 0, code, population, 0, null, null, null, null);
                     console.debug("[DM] geoObject: " + geoObject.toString());
                     countryGeoObjects.push(geoObject);
                 } else {
@@ -498,7 +502,50 @@
         return highScoreFilteredAndSorted;
     };
 
+    dm.gecodeLocation = function(location, locationType,region){
 
+        //var locationType = "locality"; //TODO river etc
+
+        gameModeManager.getGeocoder().geocode({
+            address: location,
+            region: region
+        }, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                //console.debug(results[0]);
+                var isValidLocality = false;
+                for (var a=0; a<results[0].types.length; a++) {
+                    if (results[0].types[a] == locationType) {
+                        isValidLocality = true;
+                        break;
+                    }
+                }
+                if (isValidLocality) {
+                    var pos = results[0].geometry.location;
+                    var countryCode = null;
+                    //finding country code if present:
+                    for (var i=0; i<results[0].address_components.length; i++) {
+                        for (var b=0;b<results[0].address_components[i].types.length;b++) {
+                            if (results[0].address_components[i].types[b] == "country") {
+                                countryCode = results[0].address_components[i].short_name;
+                                break;
+                            }
+                        }
+                    }
+                    //finding country code if present:
+                    var bounds = results[0].geometry.bounds;
+                    var viewport = results[0].geometry.viewport;
+                    console.debug("GeoObject: "+geoObject);
+
+                    geoObject = new dataManager.GeoObject(0, location, pos.lat(), pos.lng(), countryCode, 0, 0, null, viewport, bounds, locationType);
+                } else {
+                    print('[DM] no valid '+locationType+' for: '+location);
+                }
+            } else {
+                print('[DM] could not be geocoded: '+location+" (" + status +')');
+            }
+        });
+        return geoObject;
+    };
     /**
      *
      * @param ftTableId
@@ -608,7 +655,7 @@
                     && typeof(countryCode) === "string"
                     && onlyDigitsPattern.test(population)
                     && onlyDigitsPattern.test(elevation)) {
-                    geoObject = new dataManager.GeoObject(id, name, lat, long, countryCode, population, elevation, null);
+                    geoObject = new dataManager.GeoObject(id, name, lat, long, countryCode, population, elevation, null, null, null, null);
                     //console.debug("[DM] geoObject: " + geoObject.toString());
                     geo.push(geoObject);
                 } else {
