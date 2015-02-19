@@ -179,8 +179,11 @@
         var cleanedAnswerString = answer.replace(/([^a-zäöü\s]+)/gi, ' ');
         cleanedAnswerString = cleanedAnswerString.substring(0, data.constants.maxAnswerLength);
         var user = userManager.getUserByMac(userMac);
-
-        var locationType = "locality"; //TODO river etc
+        if (gameModeManager.currentGameMode.geoObjType == data.geoObjType.city) {
+            var locationType = "locality"; //TODO river etc
+        } else {
+            var locationType = "country"
+        }
         var geoObject = null;
 
         gameModeManager.getGeocoder().geocode({
@@ -208,7 +211,10 @@
                             }
                         }
                     }
-                    geoObject = new dataManager.GeoObject(0, cleanedAnswerString, pos.lat(), pos.lng(), countryCode, 0, 0, null, null, null, null);
+
+                    var bounds = results[0].geometry.bounds;
+                    var viewport = results[0].geometry.viewport;
+                    geoObject = new dataManager.GeoObject(0, cleanedAnswerString, pos.lat(), pos.lng(), countryCode, 0, 0, null, viewport, bounds, locationType);
                 } else {
                     print('[GRM] no valid '+locationType+' for: '+cleanedAnswerString);
                 }

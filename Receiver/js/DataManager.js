@@ -5,7 +5,7 @@
 
     //Fusion Table ID:
     var ftTableIdCity = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
-    var ftTableIdCountry = "1-VEhohvOlHrzF_1-PIaS2IzwH21x9xQ6t-OWk83C";
+    var ftTableIdCountry = "1Gf74ezjOHKaVxS_vF9PtbJc5yTfm8a6JsuxHGjzD";
     var locationColumn = "col4"; // TODO Column Names
     var userHighscoreTable = "1eUC797_4AgjDAn0IRdGcNVdll245lnJaSCXe0YPz"
     var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
@@ -154,12 +154,13 @@
 
             for (var i = 0; i < resultLength; i++) {
                 var name = targetCountries.rows[i][0];
-                var code = targetCountries.rows[i][17];
-                var population = parseInt(targetCountries.rows[i][7]);
-
+                var code = targetCountries.rows[i][8];
+                var population = parseInt(targetCountries.rows[i][5]);
+                var lat = parseFloat(targetCountries.rows[i][6].split(",")[0]);
+                var long = parseFloat(targetCountries.rows[i][6].split(",")[1]);
                 if (typeof(code) === "string"
                     ) {
-                    var geoObject = new dataManager.GeoObject(i, name, 0, 0, code, population, 0, null, null, null, null);
+                    var geoObject = new dataManager.GeoObject(i, name, lat, long, code, population, 0, null, null, null, null);
                     console.debug("[DM] geoObject: " + geoObject.toString());
                     countryGeoObjects.push(geoObject);
                 } else {
@@ -506,6 +507,7 @@
 
         //var locationType = "locality"; //TODO river etc
 
+        var geoObject = null;
         gameModeManager.getGeocoder().geocode({
             address: location,
             region: region
