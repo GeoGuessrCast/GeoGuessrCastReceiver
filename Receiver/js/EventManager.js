@@ -37,7 +37,6 @@
 
     // ============ GLOBAL EVENTS ============
     castReceiver.event_onReady = function(event) {
-        dataManager.getAllCountrySizes();
         renderManager.loadMainMenu();
     };
 

@@ -42,11 +42,7 @@
 
 
     grm.startRound = function(){
-        if (!dataManager.countrySizesAvailable()) {
-            print('[GRM] startRound - still waiting for async countrySize query');
-            setTimeout(gameRoundManager.startRound, 1000);
-            return;
-        }
+
         print("\n======= Round " + gameModeManager.currentRound + " =======");
 
         gameRoundManager.currentGameState = data.gameState.guessing;
@@ -100,8 +96,9 @@
         }
 
 
-        var zoom = dataManager.getZoomLevelForCountry(gameRoundManager.goalGeoObject.countryCode);
         var bounds = dataManager.getBoundsForCountry(gameRoundManager.goalGeoObject.countryCode);
+        var zoom = dataManager.getZoomLevelForCountry(bounds);
+
         gameModeManager.getMap().setCenter(goalPos);
         gameModeManager.getMap().fitBounds(bounds);
         gameModeManager.getMap().setZoom(zoom);
