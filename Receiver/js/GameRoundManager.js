@@ -201,6 +201,9 @@
         }
         var cleanedAnswerString = answer.replace(/([^a-zäöü\s]+)/gi, ' ');
         cleanedAnswerString = cleanedAnswerString.substring(0, data.constants.maxAnswerLength);
+        //Check if answer is correct on string level
+
+
         var user = userManager.getUserByMac(userMac);
         if (gameModeManager.currentGameMode.geoObjType == data.geoObjType.city) {
             var locationType = "locality"; //TODO river etc
@@ -208,44 +211,49 @@
             var locationType = "country"
         }
         var geoObject = null;
-
-        gameModeManager.getGeocoder().geocode({
-            address: cleanedAnswerString,
-            region: gameRoundManager.goalGeoObject.countryCode
-        }, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                //console.debug(results[0]);
-                var isValidLocality = false;
-                for (var a=0; a<results[0].types.length; a++) {
-                    if (results[0].types[a] == locationType) {
-                        isValidLocality = true;
-                        break;
-                    }
-                }
-                if (isValidLocality) {
-                    var pos = results[0].geometry.location;
-                    var countryCode = null;
-                    //finding country code if present:
-                    for (var i=0; i<results[0].address_components.length; i++) {
-                        for (var b=0;b<results[0].address_components[i].types.length;b++) {
-                            if (results[0].address_components[i].types[b] == "country") {
-                                countryCode = results[0].address_components[i].short_name;
-                                break;
-                            }
+        if (cleanedAnswerString === gameRoundManager.goalGeoObject.name) {
+            console.debug("Answer is identical to goal geo object, no need to geocode this.");
+            _evaluateAnswer(user, cleanedAnswerString, gameRoundManager.goalGeoObject);
+        } else {
+            gameModeManager.getGeocoder().geocode({
+                address: cleanedAnswerString,
+                region: gameRoundManager.goalGeoObject.countryCode
+            }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    //console.debug(results[0]);
+                    var isValidLocality = false;
+                    for (var a = 0; a < results[0].types.length; a++) {
+                        if (results[0].types[a] == locationType) {
+                            isValidLocality = true;
+                            break;
                         }
                     }
+                    if (isValidLocality) {
+                        var pos = results[0].geometry.location;
+                        var countryCode = null;
+                        //finding country code if present:
+                        for (var i = 0; i < results[0].address_components.length; i++) {
+                            for (var b = 0; b < results[0].address_components[i].types.length; b++) {
+                                if (results[0].address_components[i].types[b] == "country") {
+                                    countryCode = results[0].address_components[i].short_name;
+                                    break;
+                                }
+                            }
+                        }
 
-                    var bounds = results[0].geometry.bounds;
-                    var viewport = results[0].geometry.viewport;
-                    geoObject = new dataManager.GeoObject(0, cleanedAnswerString, pos.lat(), pos.lng(), countryCode, 0, 0, null, viewport, bounds, locationType);
+                        var bounds = results[0].geometry.bounds;
+                        var viewport = results[0].geometry.viewport;
+                        geoObject = new dataManager.GeoObject(0, cleanedAnswerString, pos.lat(), pos.lng(), countryCode, 0, 0, null, viewport, bounds, locationType);
+                    } else {
+                        print('[GRM] no valid ' + locationType + ' for: ' + cleanedAnswerString);
+                    }
                 } else {
-                    print('[GRM] no valid '+locationType+' for: '+cleanedAnswerString);
+                    print('[GRM] could not be geocoded: ' + cleanedAnswerString + " (" + status + ')');
                 }
-            } else {
-                print('[GRM] could not be geocoded: '+cleanedAnswerString+" (" + status +')');
-            }
-            _evaluateAnswer(user, cleanedAnswerString, geoObject);
-        });
+
+                _evaluateAnswer(user, cleanedAnswerString, geoObject);
+            });
+        }
     };
 
 
