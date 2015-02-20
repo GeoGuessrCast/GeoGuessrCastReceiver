@@ -86,6 +86,7 @@
 
         var jsonData = {"event_type": data.eventType.startGame,
             "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode ,
+            "pointingMode": gameModeManager.currentGameModeProfile.pointingMode ,
             "started": true,
             "roundNumber": gameModeManager.currentRound,
             "maxRounds": gameModeManager.maxRounds,
