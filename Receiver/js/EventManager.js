@@ -37,7 +37,6 @@
 
     // ============ GLOBAL EVENTS ============
     castReceiver.event_onReady = function(event) {
-        dataManager.getAllCountrySizes();
         renderManager.loadMainMenu();
     };
 
@@ -45,8 +44,8 @@
     };
 
     castReceiver.event_onSenderDisconnected = function(event){
-        userManager.removeUser(event.data.userMac);
-        if (window.castReceiverManager.getSenders().length == 0) {
+        userManager.removeUser(event.senderId);
+        if (userManager.getNumberOfUsers() == 0) {
             window.close();
         }
     };

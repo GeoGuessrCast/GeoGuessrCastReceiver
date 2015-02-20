@@ -41,6 +41,10 @@
         /** @type {boolean} */
         this.admin = admin;
 
+        this.isAdmin = function() {
+          return this.admin;
+        };
+
         this.id = _getFreeUserId();
 
         /** @type {string} **/
@@ -119,25 +123,24 @@
         var hasUser = userManager.hasUserMac(event.data.userMac);
         var trimmedName = event.data.userName.replace(/([^a-z0-9_.\s]+)/gi, ' ');
         trimmedName = trimmedName.substring(0, data.constants.maxNameLength);
+        var user = null;
         if (!hasUser) {
             //add new User
             var isAdmin = false;
             if (userManager.getUserList().length === 0) {
                 isAdmin = true;
             }
-            var user = new userManager.User(event.senderId, trimmedName, event.data.userMac, isAdmin);
+            user = new userManager.User(event.senderId, trimmedName, event.data.userMac, isAdmin);
             userManager.addUser(user);
         } else {
             // update name and senderId
-            userManager.updateUser(event.data.userMac, trimmedName, event.senderId);
+            user = userManager.updateUser(event.data.userMac, trimmedName, event.senderId);
         }
         //inform the Sender if the user is game leader
         var jsonData;
-        if (userManager.isUserAdmin(event.data.userMac)) {
-            var user = um.getUserByMac(event.data.userMac);
+        if (user.isAdmin()) {
             jsonData = {event_type:data.eventType.isAdmin, admin:true, user_color: user.getColor(), gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
         } else {
-            var user = um.getUserByMac(event.data.userMac);
             jsonData = {event_type:data.eventType.isAdmin, admin:false, user_color: user.getColor()};
         }
         eventManager.send(event.senderId, data.channelName.user, jsonData);
@@ -193,37 +196,8 @@
         return false;
     };
 
-    ///**
-    // * checks if an {User} with a given senderId is Admin
-    // * @param {string} senderId
-    // * @returns {boolean}
-    // */
-    //castReceiver.isUserAdmin = function(senderId){
-    //    var userList = _getUserList();
-    //    var userLength = userList.length;
-    //    for(var i = 0; i < userLength; i++){
-    //        if(userList[i].senderId === senderId){
-    //            return userList[i].admin;
-    //        }
-    //    }
-    //    return false;
-    //};
 
-    /**
-     * checks if an {User} with a given mac address is Admin
-     * @param {string} mac
-     * @returns {boolean}
-     */
-    um.isUserAdmin = function(mac){
-        var userList = _getUserList();
-        var userLength = userList.length;
-        for(var i = 0; i < userLength; i++){
-            if(userList[i].mac === mac){
-                return userList[i].admin;
-            }
-        }
-        return false;
-    };
+
 
     /**
      * checks if an {User} with a given mac address exists in local storage
@@ -247,14 +221,25 @@
      */
     um.removeUser = function(senderId){
         // update user list
+        console.debug('userLeft: ' + senderId);
+        var adminLeft = false;
         var userList = _getUserList();
         var userLength = userList.length;
         for(var i = 0; i < userLength; i++){
             if(userList[i].senderId === senderId){
+                if (userList[i].isAdmin()) {
+                    adminLeft = true;
+                }
                 userList.splice(i, 1);
-                $('#'+userList[i].mac).remove();
                 break;
             }
+        }
+        if (adminLeft && userList.length > 0) {
+            var newAdmin = userList[0];
+            console.debug('setting new admin: ' + newAdmin.name);
+            newAdmin.admin = true;
+            var jsonData = {event_type:data.eventType.isAdmin, admin:true, user_color: newAdmin.getColor(), gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
+            eventManager.send(newAdmin.senderId, data.channelName.user, jsonData);
         }
         _setUserList(userList);
         if (gameRoundManager.currentGameState == data.gameState.ended) {
@@ -263,24 +248,6 @@
             renderManager.refreshBottomScoreboard();
         }
 
-    };
-
-    /**
-     * removes a {User} with the given id
-     * @param {string} mac
-     */
-    um.removeUser = function(mac){
-        // update user list
-        var userList = _getUserList();
-        var userLength = userList.length;
-        for(var i = 0; i < userLength; i++){
-            if(userList[i].mac === mac){
-                userList.splice(i, 1);
-                $('#'+userList[i].mac).remove();
-                break;
-            }
-        }
-        _setUserList(userList);
     };
 
     /**
@@ -304,10 +271,11 @@
             if(userList[i].mac === mac){
                 userList[i].senderId = senderId;
                 userList[i].name = userName;
-                break;
+                return userList[i];
             }
         }
         _setUserList(userList);
+        return null;
     };
 
 

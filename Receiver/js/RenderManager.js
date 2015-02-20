@@ -48,13 +48,16 @@
         userLines = [];
     };
 
+    rm.displayRoundNumber = function(currentRound, maxRounds) {
+        $('#roundDisplayAndTimer')
+            .show()
+            .html('Round ' + currentRound + '/' + maxRounds);
+    };
 
     rm.playTimerAnimationWithRoundDisplay = function(animationDurationSec, currentRound, maxRounds) {
         currentTimerPosition = 0;
         renderManager.incTimerBy();
-        $('#roundDisplayAndTimer')
-            .show()
-            .html('Round ' + currentRound + '/' + maxRounds);
+        renderManager.displayRoundNumber(currentRound, maxRounds);
 
         var aniMs = parseInt(animationDurationSec)*1000;
         /*
@@ -212,7 +215,7 @@
     };
 
     rm.loadMainMenu = function(){
-        gameRoundManager.cancelGame();
+        gameModeManager.cancelGame();
         renderManager.applyGameMenuMapstyle();
 
         $('#gameOverlay').load('templates/MainMenu.html', function (content) {
@@ -226,7 +229,7 @@
     };
 
     rm.loadGameProfileMenu = function(selectedGameModeObject){
-        gameRoundManager.cancelGame();
+        gameModeManager.cancelGame();
         gameModeManager.setGameMode(selectedGameModeObject);
 
         $('#gameOverlay').load('templates/GameProfileMenu.html', function (content) {
@@ -250,7 +253,6 @@
     };
 
     rm.loadHighScoreList = function(highScoreList, heading){
-        gameRoundManager.cancelGame();
         renderManager.applyGameMenuMapstyle();
 
         $('#gameOverlay').load('templates/HighScore.html', function (content) {

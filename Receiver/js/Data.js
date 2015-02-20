@@ -58,14 +58,8 @@ data = {
             iconCssClass: 'cityIcon'
         },
         {
-            gameModeName: 'River Guessing',
-            id: 1,
-            geoObjType: 1,
-            iconCssClass: 'riverIcon'
-        },
-        {
             gameModeName: 'Country Guessing',
-            id: 2,
+            id: 1,
             geoObjType: 2,
             iconCssClass: 'countryIcon'
         }
@@ -194,8 +188,30 @@ data = {
             }
         },
         {
+            profileName: 'Pointing Mode',
+            id: 5,
+            limitedCountry: null,
+            multipleChoiceMode: false,
+            pointingMode: true,
+            minTotalCities: 1,
+            minCountryPopulation: 8111000,
+            minPopulationDefault: 700111,
+            scoreWeightFactor: 1.0,
+            timePerRoundSec: 20,
+            mapOption: {
+                mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
+                borders: true,
+                roads: true,
+                showCityNames: false,
+                showRiverNames: false,
+                showCountryNames: true,
+                renderOptions: {
+                }
+            }
+        },
+        {
             profileName: 'Custom ...',
-            id: 2,
+            id: 6,
             limitedCountry: null,
             multipleChoiceMode: false,
             pointingMode: false,

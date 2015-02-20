@@ -36,13 +36,13 @@ function initialize() {
         };
 
         castReceiverManager.onSenderConnected = function(event) {
-            console.debug('onSenderConnected -> ' + event.data);
+            console.debug('onSenderConnected -> ' + JSON.stringify(event));
             //console.log(window.castReceiverManager.getSender(event.data).userAgent);
             eventManager.event_onSenderConnected(event);
         };
 
         castReceiverManager.onSenderDisconnected = function(event) {
-            console.debug('onSenderDisconnected -> ' + event.data);
+            console.debug('onSenderDisconnected -> ' + JSON.stringify(event));
             eventManager.event_onSenderDisconnected(event);
         };
         window.castReceiverManager.start({statusText: "Application is starting"});

@@ -3,6 +3,12 @@
 
     grm.roundTimer = null;
     grm.roundTimerAnim = null;
+    grm.gameEvalTimer = null;
+
+    grm.viewHighScoreTimer = null;
+    grm.viewGlobalHighScoreTimer = null;
+    grm.viewMainMenuTimer = null;
+
     grm.timePerRoundSec = 30;
     grm.roundEvaluationTimeSec = 10;
     grm.goalGeoObject = null; // Target GeoObject
@@ -36,14 +42,10 @@
 
 
     grm.startRound = function(){
-        if (!dataManager.countrySizesAvailable()) {
-            print('[GRM] startRound - still waiting for async countrySize query');
-            setTimeout(gameRoundManager.startRound, 1000);
-            return;
-        }
+
+        print("\n======= Round " + gameModeManager.currentRound + " =======");
 
         gameRoundManager.currentGameState = data.gameState.guessing;
-        print("\n======= Round " + gameModeManager.currentRound + " =======");
 
         var countryCode = null;
         if (gameModeManager.currentGameModeProfile.limitedCountry == null) {
@@ -61,7 +63,6 @@
             userList[i].lastAnswerGiven = null;
         }
         renderManager.refreshBottomScoreboard();
-        renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6 );
 
         var geoObjects = dataManager.getGeoObjects(
             gameModeManager.currentGameMode.geoObjType, countryCode ,
@@ -69,20 +70,10 @@
             , 10);
 
         gameRoundManager.goalGeoObject = geoObjects[0];
-        var goalPos = new google.maps.LatLng(gameRoundManager.goalGeoObject.latitude, gameRoundManager.goalGeoObject.longitude);
-        _placeGoalMarker(goalPos);
-        var zoom = dataManager.getZoomLevelForCountry(gameRoundManager.goalGeoObject.countryCode);
-        var bounds = dataManager.getBoundsForCountry(gameRoundManager.goalGeoObject.countryCode);
-        //gameModeManager.getMap().setCenter(goalPos);
-        gameModeManager.getMap().fitBounds(bounds);
-
-        gameModeManager.getMap().setZoom(zoom);
-
 
         var geoNameChoices = dataManager.getCityNameArray(geoObjects);
         console.debug('[geoObjects] ' + geoObjects);
         print('[geoNameChoices] ' + geoNameChoices);
-
 
         var jsonData = {"event_type": data.eventType.startGame,
             "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode ,
@@ -92,10 +83,44 @@
             "maxRounds": gameModeManager.maxRounds,
             "timerRound" : gameModeManager.currentGameModeProfile.timePerRoundSec,
             "choices" : geoNameChoices};
-        eventManager.broadcast(data.channelName.game, jsonData);
 
-        gameRoundManager.roundTimer = executionManager.execDelayed(gameModeManager.currentGameModeProfile.timePerRoundSec*1000, gameRoundManager.endRound);
-        gameRoundManager.roundTimerAnim = renderManager.playTimerAnimationWithRoundDisplay(gameModeManager.currentGameModeProfile.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
+        var goalPos = new google.maps.LatLng(gameRoundManager.goalGeoObject.latitude, gameRoundManager.goalGeoObject.longitude);
+
+
+        if (gameModeManager.currentGameModeProfile.pointingMode == false) {
+            _placeGoalMarker(goalPos);
+        } else {
+            if (gameModeManager.goalMarker != null) {
+                gameModeManager.goalMarker.setMap(null);
+            }
+        }
+
+
+        var bounds = dataManager.getBoundsForCountry(gameRoundManager.goalGeoObject.countryCode);
+        var zoom = dataManager.getZoomLevelForCountry(bounds);
+
+        gameModeManager.getMap().setCenter(goalPos);
+        gameModeManager.getMap().fitBounds(bounds);
+        gameModeManager.getMap().setZoom(zoom);
+
+        renderManager.displayRoundNumber(gameModeManager.currentRound, gameModeManager.maxRounds);
+        google.maps.event.addListenerOnce(map, 'idle', function() {
+            var constMobileAppBroadcastDelay;
+            if (gameModeManager.currentGameModeProfile.pointingMode == false) {
+                constMobileAppBroadcastDelay = 1000;
+                renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6 );
+            } else {
+                constMobileAppBroadcastDelay = 0;
+                renderManager.showMidScreenMessage('Where is ' + gameRoundManager.goalGeoObject.name + ' ?', gameModeManager.currentGameModeProfile.timePerRoundSec*0.8 );
+            }
+
+            gameRoundManager.roundTimer = executionManager.execDelayed(gameModeManager.currentGameModeProfile.timePerRoundSec*1000, gameRoundManager.endRound);
+            gameRoundManager.roundTimerAnim = renderManager.playTimerAnimationWithRoundDisplay(gameModeManager.currentGameModeProfile.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
+            executionManager.execDelayed(constMobileAppBroadcastDelay, function(){
+                eventManager.broadcast(data.channelName.game, jsonData);
+            });
+        });
+
     };
 
 
@@ -104,7 +129,13 @@
         gameRoundManager.currentGameState = data.gameState.evaluating;
         print('-> Round ' + gameModeManager.currentRound +  ' ended.' );
 
-        renderManager.showMidScreenMessage('Answer: ' + gameRoundManager.goalGeoObject.name, gameRoundManager.roundEvaluationTimeSec-3 );
+
+        if (gameModeManager.currentGameModeProfile.pointingMode == false) {
+            renderManager.showMidScreenMessage('Answer: ' + gameRoundManager.goalGeoObject.name, gameRoundManager.roundEvaluationTimeSec-3 );
+        } else {
+            _placeGoalMarker(gameRoundManager.goalGeoObject.position);
+        }
+
         var userList = userManager.getUserList();
         for(var i = 0; i < userList.length; i++){
             var user = userList[i];
@@ -134,19 +165,6 @@
     };
 
 
-    grm.cancelGame = function() {
-        gameRoundManager.currentGameState = data.gameState.ended;
-        if (gameRoundManager.roundTimer != null) {
-            gameRoundManager.roundTimer.terminate();
-            print('[GRM] killed roundTimer: ' + gameRoundManager.roundTimer);
-        }
-        if (gameRoundManager.roundTimerAnim != null) {
-            gameRoundManager.roundTimerAnim.terminate();
-            print('[GRM] killed roundTimerAnim: ' + gameRoundManager.roundTimerAnim);
-        }
-    };
-
-
 
     grm.nextRound = function(){
         // check if max rounds reached
@@ -156,20 +174,22 @@
             var jsonData = {"ended": true, "event_type":"game_ended"};
             eventManager.broadcast(data.channelName.game, jsonData);
             // show roundHighscore >> globalHighscore >> mainMenu
-            executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec-2)*1000, renderManager.loadCurrentGameHighScoreList);
-            executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+10)*1000, renderManager.loadGlobalHighScoreList);
-            executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+20)*1000, renderManager.loadMainMenu);
+            gameRoundManager.viewHighScoreTimer = executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec-2)*1000, renderManager.loadCurrentGameHighScoreList);
+            gameRoundManager.viewGlobalHighScoreTimer = executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+10)*1000, renderManager.loadGlobalHighScoreList);
+            gameRoundManager.viewMainMenuTimer = executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+20)*1000, renderManager.loadMainMenu);
         } else {
             // next round...
             gameModeManager.currentRound = gameModeManager.currentRound + 1;
-            executionManager.execDelayed(gameRoundManager.roundEvaluationTimeSec*1000, gameRoundManager.startRound);
+            gameRoundManager.gameEvalTimer = executionManager.execDelayed(gameRoundManager.roundEvaluationTimeSec*1000, gameRoundManager.startRound);
         }
     };
 
 
 
+
     function _getDistance(p1, p2) {
-        return google.maps.geometry.spherical.computeDistanceBetween (p1, p2); // returns the distance in meter
+        console.log("[GRM] DISTANCE: "+p1+ " :" +p2);
+        return google.maps.geometry.spherical.computeDistanceBetween(p1, p2); // returns the distance in meter
     }
 
 
@@ -181,8 +201,11 @@
         var cleanedAnswerString = answer.replace(/([^a-zäöü\s]+)/gi, ' ');
         cleanedAnswerString = cleanedAnswerString.substring(0, data.constants.maxAnswerLength);
         var user = userManager.getUserByMac(userMac);
-
-        var locationType = "locality"; //TODO river etc
+        if (gameModeManager.currentGameMode.geoObjType == data.geoObjType.city) {
+            var locationType = "locality"; //TODO river etc
+        } else {
+            var locationType = "country"
+        }
         var geoObject = null;
 
         gameModeManager.getGeocoder().geocode({
@@ -210,7 +233,10 @@
                             }
                         }
                     }
-                    geoObject = new dataManager.GeoObject(0, cleanedAnswerString, pos.k, pos.B, countryCode, 0, 0, null);
+
+                    var bounds = results[0].geometry.bounds;
+                    var viewport = results[0].geometry.viewport;
+                    geoObject = new dataManager.GeoObject(0, cleanedAnswerString, pos.lat(), pos.lng(), countryCode, 0, 0, null, viewport, bounds, locationType);
                 } else {
                     print('[GRM] no valid '+locationType+' for: '+cleanedAnswerString);
                 }
