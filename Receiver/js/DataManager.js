@@ -1,6 +1,6 @@
 (function(dm){
 
-    var countrySizes = null;
+    var countrySizes = [];
     var asyncCountrySizeFetchIsRunning = false;
 
     //Fusion Table ID:
@@ -10,8 +10,10 @@
     var userHighscoreTable = "1eUC797_4AgjDAn0IRdGcNVdll245lnJaSCXe0YPz"
     var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
     //Google API Key
-    var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';
+    //var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';// SH acc api key
+    var queryUrlTail = '&key=AIzaSyCtj5FXdE2WNZJBRVfyd2294YM0z1CDnq0'; //RN acc Api Key
     var countryCodes = {};
+
     var clientID = '309924748076-rjhri6p3mqng1iej0agdllo4ijvrcgje.apps.googleusercontent.com';
     var scopes = 'https://www.googleapis.com/auth/fusiontables';
     var accessToken = '?access_token=nGh0RYqr85xlpQacEnGVVMYr';
@@ -296,7 +298,14 @@
             return groups[group];
         })
     };
-
+    function _sleep(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+            if ((new Date().getTime() - start) > milliseconds){
+                break;
+            }
+        }
+    }
     dm.calcCountrySizes = function(countryCodes){
 
         var geoObjects = _createGeoObjects(countryCodes);
@@ -335,6 +344,29 @@
         print("[DM] done with async fetching...");
         asyncCountrySizeFetchIsRunning = false;
     };
+    dm.calcCountrySizesNew = function(offset){
+        var select = "name";
+        var countryCodes = _createFusionTableQuery(ftTableIdCountry, select, null, offset, 10, null, null,null);
+
+
+        if (typeof(countryCodes.rows) != 'undefined') {
+            var resultLength = countryCodes.rows.length;
+            console.debug("Rows: "+resultLength);
+            for (var i = 0; i < resultLength; i++) {
+                var code = countryCodes.rows[i][0];
+                console.log("request for "+code);
+                _sleep(1500);
+                _gecodeLocation(code,"country","");
+                console.debug(i+" [DM] Country: "+code+ " of: "+countrySizes.length );
+
+
+            }
+        }
+        localStorage.setItem("countryMeasures", JSON.stringify(countrySizes));
+
+        print("[DM] done with async fetching..." +countrySizes.size);
+        asyncCountrySizeFetchIsRunning = false;
+    };
 
     dm.countrySizesAvailable = function(){
         return countrySizes != null;
@@ -353,6 +385,24 @@
                 print("[DM] fetching country sizes async...");
                 _createFusionTableQuery(ftTableIdCity, "*", null, 0, 0, null, null, dataManager.calcCountrySizes);
 
+                localStorage.setItem("countryMeasures", JSON.stringify(countrySizes));
+            } else {
+                countrySizes = JSON.parse(localStorage.getItem("countryMeasures"));
+            }
+        }
+        console.debug("[DM] -- done");
+
+        return countrySizes;
+    };
+
+    dm.getAllCountrySizesNew = function(){
+
+        if (asyncCountrySizeFetchIsRunning) {
+            return null;
+        }
+
+        if (countrySizes != null) {
+            if (localStorage.getItem("countryMeasures") === null) {
                 localStorage.setItem("countryMeasures", JSON.stringify(countrySizes));
             } else {
                 countrySizes = JSON.parse(localStorage.getItem("countryMeasures"));
@@ -503,7 +553,7 @@
         return highScoreFilteredAndSorted;
     };
 
-    dm.gecodeLocation = function(location, locationType,region){
+    function _gecodeLocation(location, locationType,region){
 
         //var locationType = "locality"; //TODO river etc
 
@@ -534,11 +584,19 @@
                         }
                     }
                     //finding country code if present:
-                    var bounds = results[0].geometry.bounds;
+                    //var bounds = results[0].geometry.bounds;
                     var viewport = results[0].geometry.viewport;
-                    console.debug("GeoObject: "+geoObject);
-
-                    geoObject = new dataManager.GeoObject(0, location, pos.lat(), pos.lng(), countryCode, 0, 0, null, viewport, bounds, locationType);
+                    var ne = viewport.getNorthEast();
+                    var sw = viewport.getSouthWest();
+                    console.debug("Country: "+countryCode+" V: "+viewport);
+                    countrySizes.push({
+                        countryCode: countryCode,
+                        minLat: sw.lat(),
+                        maxLat: ne.lat(),
+                        minLong: sw.lng(),
+                        maxLong: ne.lng()
+                });
+                    //console.log(countrySizes);
                 } else {
                     print('[DM] no valid '+locationType+' for: '+location);
                 }
@@ -546,7 +604,7 @@
                 print('[DM] could not be geocoded: '+location+" (" + status +')');
             }
         });
-        return geoObject;
+        //return countrySizes.length;
     };
     /**
      *
