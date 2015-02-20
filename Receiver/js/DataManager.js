@@ -5,8 +5,9 @@
 
     //Fusion Table ID:
     var ftTableIdCity = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
-    var ftTableIdCountry = "1Gf74ezjOHKaVxS_vF9PtbJc5yTfm8a6JsuxHGjzD";
+    var ftTableIdCountry = "1Gf74ezjOHKaVxS_vF9PtbJc5yTfm8a6JsuxHGjzD"; https://www.google.com/fusiontables/DataSource?docid=1BuyI_S9TNtXhs_iOg4wwvaL1COJK_tM6UYN5drbF
     var ftTableIdCountryCodes  = "12hNfYsKsCii925gL_5WNh-TdmDu2sjUv_AVPtMeK";
+
     var locationColumn = "col4"; // TODO Column Names
     var userHighscoreTable = "1eUC797_4AgjDAn0IRdGcNVdll245lnJaSCXe0YPz"
     var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
@@ -68,7 +69,7 @@
         this.pointsPercent = Math.round(points/totalPoints*100);
 
         this.toString = function() {
-            return '[ '+userMac+' Name: '+name+' ('+ points +'/'+totalPoints+ ')]';
+            return '[DM] Name: '+name+' ('+ points +'/'+totalPoints+ ')]';
         }
     };
     var minPopWeigthsPerCountry = {
@@ -359,11 +360,12 @@
             return false;
         }
         var highscores = [];
+        var userMacHash = _hashUserMac(userMac);
 
         if (localStorage.getItem("highscores") === null)
         {
 
-            highscores.push(new this.Highscore(userMac, username,userPoints, maxPoints));
+            highscores.push(new this.Highscore(userMacHash, username,userPoints, maxPoints));
 
             localStorage.setItem("highscores",JSON.stringify(highscores));
             console.debug("[DM] Saved new user highscore: "+highscores);
@@ -374,18 +376,18 @@
 
             for (var i = 0; i < highscores.length; i++){
                 var oldScore = highscores[i];
-                if(oldScore.userMac === userMac){
-                    var newScore = new this.Highscore(userMac,username,oldScore.points + userPoints, oldScore.totalPoints + maxPoints);
+                if(oldScore.userMac === userMacHash){
+                    var newScore = new this.Highscore(userMacHash,username,oldScore.points + userPoints, oldScore.totalPoints + maxPoints);
                     highscores[i] = newScore;
-                    console.debug("[DM] updated user highscore: "+oldScore+"->"+ newScore);
+                    console.debug("[DM] updated user highscore: "+oldScore.name+"->"+ newScore);
                     isNewUser = false;
                     break;
                 }
             }
             if (isNewUser){
-                var newScore = new this.Highscore(userMac, username ,userPoints, maxPoints);
+                var newScore = new this.Highscore(userMacHash, username ,userPoints, maxPoints);
                 highscores[i] = newScore;
-                console.debug("[DM] Saved new user highscore: "+oldScore+"->"+ newScore);
+                console.debug("[DM] Saved new user highscore: "+oldScore.name+"->"+ newScore);
 
             }
             localStorage.setItem("highscores", JSON.stringify(highscores));
@@ -393,7 +395,11 @@
 
         return true;
     };
+    function _hashUserMac (mac){
+        var hash = CryptoJS.SHA256(mac);
 
+        return hash.toString();
+    };
     dm.getHighScoreList = function(minTotalPoints) {
         if (!window.localStorage) {
             console.error("ChromeCast does not support local stoarge.")
