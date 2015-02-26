@@ -110,7 +110,7 @@
                 constMobileAppBroadcastDelay = 1000;
                 renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6 );
             } else {
-                constMobileAppBroadcastDelay = 0;
+                constMobileAppBroadcastDelay = 100;
                 renderManager.showMidScreenMessage('Where is ' + gameRoundManager.goalGeoObject.name + ' ?', gameModeManager.currentGameModeProfile.timePerRoundSec*0.8 );
             }
 
