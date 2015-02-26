@@ -75,6 +75,9 @@
         console.debug('[geoObjects] ' + geoObjects);
         print('[geoNameChoices] ' + geoNameChoices);
 
+        var bounds = dataManager.getBoundsForCountry(gameRoundManager.goalGeoObject.countryCode);
+        //var zoom = dataManager.getZoomLevelForCountry(bounds); //USE bounds OR zoom+center !
+
         var jsonData = {"event_type": data.eventType.startGame,
             "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode ,
             "pointingMode": gameModeManager.currentGameModeProfile.pointingMode ,
@@ -82,6 +85,9 @@
             "roundNumber": gameModeManager.currentRound,
             "maxRounds": gameModeManager.maxRounds,
             "timerRound" : gameModeManager.currentGameModeProfile.timePerRoundSec,
+            "bounds" : bounds,
+            "styledMapOptions" : gameModeManager.styledMapOptions,
+            "mapTypeTemplate" : gameModeManager.currentGameModeProfile.mapOption.mapType,
             "choices" : geoNameChoices};
 
         var goalPos = new google.maps.LatLng(gameRoundManager.goalGeoObject.latitude, gameRoundManager.goalGeoObject.longitude);
@@ -96,12 +102,11 @@
         }
 
 
-        var bounds = dataManager.getBoundsForCountry(gameRoundManager.goalGeoObject.countryCode);
-        var zoom = dataManager.getZoomLevelForCountry(bounds);
 
-        gameModeManager.getMap().setCenter(goalPos);
+        //gameModeManager.getMap().setCenter(goalPos);
+        //gameModeManager.getMap().setZoom(zoom);
+
         gameModeManager.getMap().fitBounds(bounds);
-        gameModeManager.getMap().setZoom(zoom);
 
         renderManager.displayRoundNumber(gameModeManager.currentRound, gameModeManager.maxRounds);
         google.maps.event.addListenerOnce(map, 'idle', function() {
@@ -110,14 +115,13 @@
                 constMobileAppBroadcastDelay = 1000;
                 renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6 );
             } else {
-                constMobileAppBroadcastDelay = 100;
+                constMobileAppBroadcastDelay = 0;
                 renderManager.showMidScreenMessage('Where is ' + gameRoundManager.goalGeoObject.name + ' ?', gameModeManager.currentGameModeProfile.timePerRoundSec*0.8 );
             }
 
             gameRoundManager.roundTimer = executionManager.execDelayed(gameModeManager.currentGameModeProfile.timePerRoundSec*1000, gameRoundManager.endRound);
             gameRoundManager.roundTimerAnim = renderManager.playTimerAnimationWithRoundDisplay(gameModeManager.currentGameModeProfile.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
             executionManager.execDelayed(constMobileAppBroadcastDelay, function(){
-                console.log(jsonData)
                 eventManager.broadcast(data.channelName.game, jsonData);
             });
         });

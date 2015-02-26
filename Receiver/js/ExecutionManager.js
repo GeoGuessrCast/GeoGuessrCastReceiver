@@ -39,7 +39,7 @@
                     intervalFunc();
                 }
 
-                if (data.tick === 0) { // last iteration
+                if (data.tick <= 0) { // last iteration
                     if (endingFunc && typeof endingFunc === 'function') {
                         endingFunc();
                     }

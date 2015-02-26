@@ -84,9 +84,10 @@
 
 
     rm.applyGameMenuMapstyle = function() {
+        var mapTypeTemplate = google.maps.MapTypeId.TERRAIN;  // ROADMAP || SATELLITE || HYBRID || TERRAIN
         window.map.setCenter(new google.maps.LatLng(45.74167213456433, 38.26884827734375));
         window.map.setZoom(2);
-        renderManager.applyMapOptions(
+        var styledMapOptions = renderManager.generateStyledMapOptions(
             {
                 gameModeName: 'Menu Screen',
                 id: -1,
@@ -102,7 +103,7 @@
                 minPopulationDefault: 0,
                 timePerRoundSec: 1000,
                 mapOption: {
-                    mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || SATELLITE || HYBRID || TERRAIN
+                    mapType : mapTypeTemplate,
                     borders: false,
                     roads: false,
                     showCityNames: false,
@@ -120,20 +121,25 @@
                 }
             }
         );
+        renderManager.applyMapOptions(mapTypeTemplate, styledMapOptions);
     };
 
-    rm.applyMapOptions = function(gameModeObject, profileObject){
+    rm.applyMapOptions = function(mapTypeTemplate, styledMapOptions){
+        map.setMapTypeId(mapTypeTemplate);
+        map.setOptions({styles: styledMapOptions});
+    };
+    
+    rm.generateStyledMapOptions = function(gameModeObject, profileObject){
 
         var cityNameVis = gameModeObject.geoObjType==data.geoObjType.city || profileObject.mapOption.showCityNames==false ? "off" : "on";
         var riverNameVis = gameModeObject.geoObjType==data.geoObjType.river || profileObject.mapOption.showRiverNames==false ? "off" : "on";
         var countryNameVis = gameModeObject.geoObjType==data.geoObjType.country || profileObject.mapOption.showCountryNames==false ? "off" : "simplified";
 
-        var mapTypeTemplate = profileObject.mapOption.mapType;
         var countryBorderVis = profileObject.mapOption.borders ? "on" : "off";
         var roadVis = profileObject.mapOption.roads ? "simplified" : "off";
 
         // basic settings
-        var featureOpts = [
+        var styledMapOptions = [
             {
                 "stylers": [
                     { "visibility": "off" }
@@ -191,27 +197,26 @@
             var renderOpts = profileObject.mapOption.renderOptions;
 
             if (renderOpts.hasOwnProperty('globalHue')) {
-                featureOpts[0]["stylers"].push({hue: renderOpts['globalHue']});
+                styledMapOptions[0]["stylers"].push({hue: renderOpts['globalHue']});
             }
             if (renderOpts.hasOwnProperty('globalGamma')) {
-                featureOpts[0]["stylers"].push({gamma: renderOpts['globalGamma']});
+                styledMapOptions[0]["stylers"].push({gamma: renderOpts['globalGamma']});
             }
             if (renderOpts.hasOwnProperty('globalSaturation')) {
-                featureOpts[0]["stylers"].push({saturation: renderOpts['globalSaturation']});
+                styledMapOptions[0]["stylers"].push({saturation: renderOpts['globalSaturation']});
             }
             if (renderOpts.hasOwnProperty('waterColor')) {
-                featureOpts[2]["stylers"].push({color: renderOpts['waterColor']});
+                styledMapOptions[2]["stylers"].push({color: renderOpts['waterColor']});
             }
             if (renderOpts.hasOwnProperty('borderColor')) {
-                featureOpts[1]["stylers"].push({color: renderOpts['borderColor']});
+                styledMapOptions[1]["stylers"].push({color: renderOpts['borderColor']});
             }
             if (renderOpts.hasOwnProperty('borderWeight')) {
-                featureOpts[1]["stylers"].push({weight: renderOpts['borderWeight']});
+                styledMapOptions[1]["stylers"].push({weight: renderOpts['borderWeight']});
             }
         }
 
-        map.setMapTypeId(mapTypeTemplate);
-        map.setOptions({styles: featureOpts});
+        return styledMapOptions;
     };
 
     rm.loadMainMenu = function(){

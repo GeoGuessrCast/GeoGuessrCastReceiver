@@ -10,6 +10,7 @@
     gmm.currentGameMode = null;
     gmm.originalGameModeProfile = null;
     gmm.currentGameModeProfile = null;
+    gmm.styledMapOptions = null;
 
 
     gmm.setGameMode = function(gameModeObject){
@@ -37,7 +38,11 @@
     gmm.startGame = function(profileObject){
         gameModeManager.setGameModeProfile(profileObject);
         gameModeManager.resetGame();
-        renderManager.applyMapOptions(gameModeManager.currentGameMode, profileObject );
+        
+        var mapTypeTemplate = profileObject.mapOption.mapType;
+        gameModeManager.styledMapOptions = renderManager.generateStyledMapOptions(gameModeManager.currentGameMode, profileObject);
+        renderManager.applyMapOptions(mapTypeTemplate, gameModeManager.styledMapOptions);
+        
         _loadGameUi();
         gameRoundManager.startRound( gameModeManager.currentRound );
     };
