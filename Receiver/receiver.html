@@ -110,6 +110,7 @@
         <input type="button" onclick="eventManager.event_onReady(null)" value="onReady"/>
         <input type="button" onclick="createFakeUser()" value="fakeUser"/>
         <input type="button" onclick="userFakeAnswer('Berlin','1111','1:11a!')" value="u1:Berlin"/>
+        <input type="button" onclick="userFakeAnswer('{&quot;longitude&quot;:13.41, &quot;latitude&quot;:52.52}','1111','1:11a!')" value="u1:(52,13)"/>
         <input type="text" style="cursor: text" id="testInput" size="8" onclick="document.getElementById('testInput').value=''" onkeydown="keyPress()" value="-type a city-"/>
         <input type="button" onclick="gameModeManager.cancelGame()" value="stopTimer"/>
         <input type="button" onclick="eventManager.event_onSenderDisconnected({senderId:'1111'})" value="dc:Rei"/>

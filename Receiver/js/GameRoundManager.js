@@ -86,7 +86,7 @@
             "roundNumber": gameModeManager.currentRound,
             "maxRounds": gameModeManager.maxRounds,
             "timerRound" : gameModeManager.currentGameModeProfile.timePerRoundSec,
-            "bounds" : bounds,
+            "bounds" : bounds.toString(),
             "styledMapOptions" : gameModeManager.styledMapOptions,
             "mapTypeTemplate" : gameModeManager.currentGameModeProfile.mapOption.mapType,
             "choices" : geoNameChoices};
@@ -106,10 +106,6 @@
 
         //gameModeManager.getMap().setCenter(goalPos);
         //gameModeManager.getMap().setZoom(zoom);
-
-        print(map.getBounds());
-        print(bounds);
-        print(map.getBounds().equals(bounds));
 
         gameModeManager.getMap().fitBounds(bounds);
 
@@ -211,18 +207,46 @@
         return google.maps.geometry.spherical.computeDistanceBetween(p1, p2); // returns the distance in meter
     }
 
+    function _latLongStringToPos(answerString) {
+        print(answerString);
+        var answer = JSON.parse(answerString);
+        //INPUT:    '{longitude:13.41, latitude:52.52}'
+        var lat, long;
+
+        if(answer.hasOwnProperty('longitude')){
+            long = answer['longitude'];
+        } else console.error("cant parse longitude from: " + answer );
+
+        if(answer.hasOwnProperty('latitude')){
+            lat = answer['latitude'];
+        } else console.error("cant parse latitude from: " + answer );
+
+        return new google.maps.LatLng(lat, long);
+    }
 
 
     grm.choseAnswer = function(userMac, answer){
         if (gameRoundManager.currentGameState != data.gameState.guessing) {
             return;
         }
+        var user = userManager.getUserByMac(userMac);
+
+
+        // STRING -> LAT LONG ANSWER
+        if (gameModeManager.currentGameModeProfile.pointingMode){
+            var pos = _latLongStringToPos(answer);
+            var answerGeoObject = new dataManager.GeoObject(0, "", pos.lat(), pos.lng(), null, 0, 0, null, null, null, null);
+            var distInKm = _getDistance(answerGeoObject.position, gameRoundManager.goalGeoObject.position) / 1000;
+            answerGeoObject.name = Math.round(distInKm) + 'km';
+            _evaluateAnswer(user, answerGeoObject.name, answerGeoObject);
+            return;
+        }
+
+
+        // STRING -> CITYNAME ANSWER
         var cleanedAnswerString = answer.replace(/([^a-zäöü\s]+)/gi, ' ');
         cleanedAnswerString = cleanedAnswerString.substring(0, data.constants.maxAnswerLength);
-        //Check if answer is correct on string level
 
-
-        var user = userManager.getUserByMac(userMac);
         if (gameModeManager.currentGameMode.geoObjType == data.geoObjType.city) {
             var locationType = "locality"; //TODO river etc
         } else {

@@ -190,7 +190,7 @@ data = {
         {
             profileName: 'Pointing Mode',
             id: 5,
-            limitedCountry: null,
+            limitedCountry: 'DE',
             multipleChoiceMode: false,
             pointingMode: true,
             minTotalCities: 1,

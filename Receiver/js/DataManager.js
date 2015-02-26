@@ -334,6 +334,13 @@
                 var sw = new google.maps.LatLng(minLat, minLong);
                 var bounds = new google.maps.LatLngBounds(sw, ne);
 
+                //print(minLat);
+                //print(minLong);
+                //print(maxLat);
+                //print(maxLong);
+                //print(bounds.toString());
+
+
                 console.debug("[DM] Country "+ code+ " bounds: "+bounds);
 
             }
