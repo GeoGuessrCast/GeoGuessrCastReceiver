@@ -20,6 +20,12 @@
         var count = ~~numberOfExecutions,
         delay = ~~intervalMs;
 
+        if(intervalMs <= 0){
+            if (endingFunc && typeof endingFunc === 'function') {
+                endingFunc();
+            }
+            return null;
+        }
         if(count === 0){
             return null;
         }
@@ -39,7 +45,7 @@
                     intervalFunc();
                 }
 
-                if (data.tick <= 0) { // last iteration
+                if (data.tick === 0) { // last iteration
                     if (endingFunc && typeof endingFunc === 'function') {
                         endingFunc();
                     }

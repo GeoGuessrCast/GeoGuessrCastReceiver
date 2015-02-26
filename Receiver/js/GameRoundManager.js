@@ -14,6 +14,7 @@
     grm.goalGeoObject = null; // Target GeoObject
     grm.goalMarker = null; // Target GeoObject
     grm.currentGameState = data.gameState.ended;
+    var lastRoundCountryCode = 'menuMap';
 
     grm.getMaxPointsPerAnswer = function() {
         if (gameModeManager.currentGameModeProfile == null) {
@@ -106,10 +107,15 @@
         //gameModeManager.getMap().setCenter(goalPos);
         //gameModeManager.getMap().setZoom(zoom);
 
+        print(map.getBounds());
+        print(bounds);
+        print(map.getBounds().equals(bounds));
+
         gameModeManager.getMap().fitBounds(bounds);
 
         renderManager.displayRoundNumber(gameModeManager.currentRound, gameModeManager.maxRounds);
-        google.maps.event.addListenerOnce(map, 'idle', function() {
+
+        var onMapLoaded = function() {
             var constMobileAppBroadcastDelay;
             if (gameModeManager.currentGameModeProfile.pointingMode == false) {
                 constMobileAppBroadcastDelay = 1000;
@@ -124,8 +130,16 @@
             executionManager.execDelayed(constMobileAppBroadcastDelay, function(){
                 eventManager.broadcast(data.channelName.game, jsonData);
             });
-        });
+        };
 
+        if (gameRoundManager.lastRoundCountryCode === countryCode) {
+            onMapLoaded();
+        } else {
+            google.maps.event.addListenerOnce(map, 'idle', onMapLoaded);
+        }
+
+
+        gameRoundManager.lastRoundCountryCode = countryCode;
     };
 
 
