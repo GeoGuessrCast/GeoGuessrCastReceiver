@@ -27,6 +27,20 @@
                 gameModeProfileObject[key] = gameModeManager.originalGameModeProfile[key];
             }
         }
+        if (gameModeManager.originalGameModeProfile.hasOwnProperty('mapOption')){
+            for (var key in gameModeManager.originalGameModeProfile.mapOption) {
+                if (gameModeManager.originalGameModeProfile.mapOption.hasOwnProperty(key) && !gameModeProfileObject.mapOption.hasOwnProperty(key)) {
+                    gameModeProfileObject.mapOption[key] = gameModeManager.originalGameModeProfile.mapOption[key];
+                }
+            }
+            if (gameModeManager.originalGameModeProfile.mapOption.hasOwnProperty('renderOptions')){
+                for (var key in gameModeManager.originalGameModeProfile.mapOption.renderOptions) {
+                    if (gameModeManager.originalGameModeProfile.mapOption.renderOptions.hasOwnProperty(key) && !gameModeProfileObject.mapOption.renderOptions.hasOwnProperty(key)) {
+                        gameModeProfileObject.mapOption.renderOptions[key] = gameModeManager.originalGameModeProfile.mapOption.renderOptions[key];
+                    }
+                }
+            }
+        }
         gameModeManager.currentGameModeProfile = gameModeProfileObject;
     };
 
