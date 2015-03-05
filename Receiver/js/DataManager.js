@@ -72,7 +72,7 @@
             return '[DM] Name: '+name+' ('+ points +'/'+totalPoints+ ')]';
         }
     };
-    var minPopWeigthsPerCountry = {
+    var countryHardnessFactors = {
         'DE': 0.5,
         'IT': 0.7,
         'US': 0.8,
@@ -80,11 +80,11 @@
                         //TODO more factors...
     };
 
-    dm.applyPopulationFact = function(countryCode, minPopProfile) {
-        if (!minPopWeigthsPerCountry.hasOwnProperty(countryCode)) {
-            return minPopProfile;
+    dm.applyHardnessFact = function(countryCode, valueToJustify) {
+        if (!countryHardnessFactors.hasOwnProperty(countryCode)) {
+            return valueToJustify;
         } else {
-            return minPopWeigthsPerCountry[countryCode] * minPopProfile;
+            return countryHardnessFactors[countryCode] * valueToJustify;
         }
     };
 

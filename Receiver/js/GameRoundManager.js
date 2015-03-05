@@ -23,6 +23,9 @@
             return data.constants.maxPointsPerAnswer * gameModeManager.currentGameModeProfile.scoreWeightFactor;
         }
     };
+    grm.getMaxPointsPerAnswerUnweighted = function() {
+        return data.constants.maxPointsPerAnswer;
+    };
 
 
     grm.Answer = function(guessedName, distanceToGoalKm, geoObject, points) {
@@ -55,7 +58,7 @@
             countryCode = gameModeManager.currentGameModeProfile.limitedCountry;
         }
         var minPopProfile = gameModeManager.currentGameModeProfile.minPopulationDefault;
-        var minPopCountry = dataManager.applyPopulationFact(countryCode, minPopProfile);
+        var minPopCountry = dataManager.applyHardnessFact(countryCode, minPopProfile);
         print('[GRM] country: ' + countryCode + ', minPop: ' + minPopProfile + '->' + minPopCountry );
 
         renderManager.clearMarkers();
@@ -157,12 +160,12 @@
             user.maxPointsInCurrentGame += gameRoundManager.getMaxPointsPerAnswer();
             if (user.lastAnswerGiven != null) { // ATTENTION - IF NO ANSWER GIVEN lastAnswerGiven = null !
                 user.pointsInCurrentGame += user.lastAnswerGiven.points;
-                dataManager.persistHighScoreList(user.mac,user.name,user.lastAnswerGiven.points, gameRoundManager.getMaxPointsPerAnswer());
+                dataManager.persistHighScoreList(user.mac,user.name,user.lastAnswerGiven.points, gameRoundManager.getMaxPointsPerAnswerUnweighted());
                 if (user.lastAnswerGiven.geoObject != null) {
                     renderManager.placeUserMarkerOnMap(user, user.lastAnswerGiven.geoObject.position);
                 }
             } else {
-                dataManager.persistHighScoreList(user.mac,user.name,0, gameRoundManager.getMaxPointsPerAnswer());
+                dataManager.persistHighScoreList(user.mac,user.name,0, gameRoundManager.getMaxPointsPerAnswerUnweighted());
             }
             var jsonData = {
                 "event_type":"round_ended",
@@ -314,7 +317,8 @@
             }
         } else {
             if (answerGeoObject != null) {
-                points = Math.floor(Math.max(0,Math.min(data.constants.maxPointsPerAnswer,(data.constants.maxDistanceErrorKm+100-distInKm)/100))) * gameModeManager.currentGameModeProfile.scoreWeightFactor;
+                var maxDistanceErrorKm = data.constants.maxDistanceErrorKmDefault;
+                points = Math.floor(Math.max(0,Math.min(data.constants.maxPointsPerAnswer,(maxDistanceErrorKm+100-distInKm)/100))) * gameModeManager.currentGameModeProfile.scoreWeightFactor;
                 print("[GRM] " + user.name + " got " + points + " points for " + cleanedAnswerString + ' (' + answerGeoObject.countryCode + ', '+Math.floor(distInKm)+'km)');
             } else {
                 //TODO send message to android app: geo-obj not found - retype your answer

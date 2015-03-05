@@ -7,7 +7,7 @@ data = {
     constants : {
         midScreenMessageFadeInTimeMs: 600,
         midScreenMessageFadeOutTimeMs: 800,
-        maxDistanceErrorKm: 1000,
+        maxDistanceErrorKmDefault: 1000,
         numberOfChoices: 5,
         maxPointsPerAnswer: 10, // use gameRoundManager.getMaxPointsPerAnswer() !
         maxNameLength: 25,
@@ -76,7 +76,7 @@ data = {
             minTotalCities: 10,
             minCountryPopulation: 10111000,
             minPopulationDefault: 600111,
-            scoreWeightFactor: 1.3,
+            scoreWeightFactor: 1.0,
             timePerRoundSec: 30,
             mapOption: {
                 mapType : google.maps.MapTypeId.ROADMAP, // ROADMAP || HYBRID || TERRAIN
@@ -124,7 +124,7 @@ data = {
             minTotalCities: 1,
             minCountryPopulation: 5111000,
             minPopulationDefault: 350111,
-            scoreWeightFactor: 2.3,
+            scoreWeightFactor: 1.8,
             timePerRoundSec: 30,
             mapOption: {
                 mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
@@ -173,7 +173,7 @@ data = {
             pointingMode: false,
             minTotalCities: 10,
             minCountryPopulation: 0,
-            minPopulationDefault: 700000, // applyPopulationFact DE=0.5 !
+            minPopulationDefault: 700000, // applyHardnessFact DE=0.5 !
             scoreWeightFactor: 0.7,
             timePerRoundSec: 18,
             mapOption: {
@@ -218,7 +218,7 @@ data = {
             minTotalCities: 1,
             minCountryPopulation: 5111000,
             minPopulationDefault: 350111,
-            scoreWeightFactor: 2.3,
+            scoreWeightFactor: 1.0,
             timePerRoundSec: 30,
             mapOption: {
                 mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
