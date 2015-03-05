@@ -128,14 +128,14 @@
             });
         };
 
-        if (gameRoundManager.lastRoundCountryCode === countryCode) {
+        if (lastRoundCountryCode === countryCode) {
             onMapLoaded();
         } else {
             google.maps.event.addListenerOnce(map, 'idle', onMapLoaded);
         }
 
 
-        gameRoundManager.lastRoundCountryCode = countryCode;
+        lastRoundCountryCode = countryCode;
     };
 
 

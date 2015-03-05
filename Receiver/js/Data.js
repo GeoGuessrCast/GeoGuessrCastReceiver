@@ -93,7 +93,7 @@ data = {
         {
             profileName: 'Easy (FC)',
             id: 1,
-            limitedCountry: null,
+            limitedCountry: 'US',
             multipleChoiceMode: false,
             pointingMode: false,
             minTotalCities: 10,
