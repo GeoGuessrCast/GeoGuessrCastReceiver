@@ -157,7 +157,7 @@
         var userList = userManager.getUserList();
         for(var i = 0; i < userList.length; i++){
             var user = userList[i];
-            user.maxPointsInCurrentGame += gameRoundManager.getMaxPointsPerAnswer();
+            user.maxPointsInCurrentGame += gameRoundManager.getMaxPointsPerAnswerUnweighted();
             if (user.lastAnswerGiven != null) { // ATTENTION - IF NO ANSWER GIVEN lastAnswerGiven = null !
                 user.pointsInCurrentGame += user.lastAnswerGiven.points;
                 dataManager.persistHighScoreList(user.mac,user.name,user.lastAnswerGiven.points, gameRoundManager.getMaxPointsPerAnswerUnweighted());
