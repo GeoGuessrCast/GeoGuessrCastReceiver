@@ -17,6 +17,7 @@
     var lastRoundCountryCode = 'menuMap';
 
     grm.currentRoundJsonData = null;
+    grm.currentRoundStartMs = 0;
 
     grm.getMaxPointsPerAnswer = function() {
         if (gameModeManager.currentGameModeProfile == null) {
@@ -46,11 +47,23 @@
         };
     };
 
+    grm.getRemainingRoundTime = function(){
+        if (gameRoundManager.currentRoundStartMs == null) return gameModeManager.currentGameModeProfile.timePerRoundSec;
+
+        return gameModeManager.currentGameModeProfile.timePerRoundSec - ( new Date().getTime() - gameRoundManager.currentRoundStartMs ) / 1000;
+    };
+
+    grm.getCurrentRoundJsonData = function(){
+        var newJsonData = gameRoundManager.currentRoundJsonData;
+        newJsonData.timerRound = gameRoundManager.getRemainingRoundTime();
+        return newJsonData;
+    };
 
     grm.startRound = function(){
 
         print("\n======= Round " + gameModeManager.currentRound + " =======");
 
+        gameRoundManager.currentRoundStartMs = new Date().getTime();
         gameRoundManager.currentGameState = data.gameState.guessing;
 
         var countryCode = null;
