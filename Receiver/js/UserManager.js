@@ -148,7 +148,9 @@
         //start round if running
         if (gameRoundManager.currentRoundJsonData != null) {
             print('sending currentRoundJsonData @latecomer...');
-            eventManager.send(event.senderId, data.channelName.game, gameRoundManager.getCurrentRoundJsonData());
+            var currentJsonData = gameRoundManager.getCurrentRoundJsonData();
+            console.log(currentJsonData);
+            eventManager.send(event.senderId, data.channelName.game, currentJsonData );
         }
     };
 
