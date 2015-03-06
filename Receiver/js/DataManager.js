@@ -242,6 +242,7 @@
             console.log("[DM] - Get Random Country Code returned no results for given query: Cities:" + nrOfCities+ " Pop: "+population);
             //return this.getRandomCountryCode(10,1000000); //Fallback
         }
+        return 'TW';
         return getRandomSubsetOfArray(returnCountryCodes,1);
     };
 

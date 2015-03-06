@@ -146,7 +146,7 @@ data = {
         {
             profileName: 'Multiple Choice',
             id: 3,
-            limitedCountry: 'TW',
+            limitedCountry: null,
             multipleChoiceMode: true,
             pointingMode: false,
             minTotalCities: 10,
