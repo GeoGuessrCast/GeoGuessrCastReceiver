@@ -131,12 +131,12 @@
             });
         };
 
-        if (lastRoundCountryCode === countryCode) {
-            onMapLoaded();
-        } else {
-            google.maps.event.addListenerOnce(map, 'idle', onMapLoaded);
-        }
-
+        //if (lastRoundCountryCode === countryCode) {
+        //    onMapLoaded();
+        //} else {
+        //    google.maps.event.addListenerOnce(map, 'idle', onMapLoaded);
+        //}
+        google.maps.event.addListenerOnce(map, 'idle', onMapLoaded);
 
         lastRoundCountryCode = countryCode;
     };
