@@ -138,6 +138,10 @@
         //}
         google.maps.event.addListenerOnce(map, 'idle', onMapLoaded);
 
+        executionManager.execDelayed(5000, function(){
+            google.maps.event.trigger(map, 'idle');
+        });
+
         lastRoundCountryCode = countryCode;
     };
 
