@@ -19,6 +19,8 @@ package de.tud.kp.geoguessrcast;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+//import android.support.v4.app.FragmentManager;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -26,7 +28,6 @@ import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;

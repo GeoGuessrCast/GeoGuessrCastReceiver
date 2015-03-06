@@ -147,7 +147,6 @@ public class GameMode2Fragment extends Fragment  {
                 mActivity.startFragment(new WaitRoundFragment());
             }
         };
-
         mTimer.start();
     }
 

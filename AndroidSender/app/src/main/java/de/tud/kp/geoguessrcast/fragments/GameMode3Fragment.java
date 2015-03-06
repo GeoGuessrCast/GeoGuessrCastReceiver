@@ -1,6 +1,8 @@
 package de.tud.kp.geoguessrcast.fragments;
 
 
+import android.app.FragmentManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -142,7 +144,6 @@ public class GameMode3Fragment extends Fragment {
                 mActivity.startFragment(new WaitRoundFragment());
             }
         };
-
         mTimer.start();
     }
 
@@ -165,7 +166,9 @@ public class GameMode3Fragment extends Fragment {
 
 
     private void setUpMap(){
-        googleMap = ((MapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMap();
+        MapFragment mapFragment = getMapFragment();
+        googleMap = mapFragment.getMap();
+//        googleMap = ((MapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMap();
         if(googleMap == null){
             return;
         }
@@ -210,16 +213,18 @@ public class GameMode3Fragment extends Fragment {
     }
 
     private void clearMapFragment(){
-        Fragment fragment = getChildFragmentManager().findFragmentById(R.id.map);
-        getChildFragmentManager().beginTransaction().remove(fragment).commit();
+        FragmentManager fm = isVersionLollipop()?getChildFragmentManager():getFragmentManager();
+        Fragment mapFragment = getMapFragment();
+        if(mapFragment!=null){
+            fm.beginTransaction().remove(mapFragment).commit();
+        }
         googleMap.clear();
         googleMap = null;
     }
 
     @Override
     public void onDestroyView() {
-//        clearMapFragment();
-        super.onDestroy();
+        super.onDestroyView();
     }
 
 
@@ -230,6 +235,7 @@ public class GameMode3Fragment extends Fragment {
     }
     @Override
     public void onDestroy(){
+        clearMapFragment();
         resetTimer();
         super.onDestroy();
     }
@@ -238,6 +244,19 @@ public class GameMode3Fragment extends Fragment {
         if(mTimer !=null){
             mTimer.cancel();
             mTimer = null;
+        }
+    }
+
+    private MapFragment getMapFragment() {
+        FragmentManager fm = isVersionLollipop()?getChildFragmentManager():getFragmentManager();
+        return (MapFragment) fm.findFragmentById(R.id.map);
+    }
+
+    private boolean isVersionLollipop(){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return false;
+        } else {
+            return true;
         }
     }
 }
