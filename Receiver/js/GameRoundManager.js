@@ -63,7 +63,6 @@
 
         print("\n======= Round " + gameModeManager.currentRound + " =======");
 
-        gameRoundManager.currentRoundStartMs = new Date().getTime();
         gameRoundManager.currentGameState = data.gameState.guessing;
 
         var countryCode = null;
@@ -142,6 +141,7 @@
             gameRoundManager.roundTimer = executionManager.execDelayed(gameModeManager.currentGameModeProfile.timePerRoundSec*1000, gameRoundManager.endRound);
             gameRoundManager.roundTimerAnim = renderManager.playTimerAnimationWithRoundDisplay(gameModeManager.currentGameModeProfile.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
             executionManager.execDelayed(constMobileAppBroadcastDelay, function(){
+                gameRoundManager.currentRoundStartMs = new Date().getTime();
                 eventManager.broadcast(data.channelName.game, gameRoundManager.currentRoundJsonData);
             });
         };
