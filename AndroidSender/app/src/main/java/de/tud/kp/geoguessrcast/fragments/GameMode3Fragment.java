@@ -25,6 +25,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.sample.castcompanionlibrary.cast.DataCastManager;
 
+import java.lang.reflect.Field;
+
 import de.tud.kp.geoguessrcast.GameActivity;
 import de.tud.kp.geoguessrcast.R;
 import de.tud.kp.geoguessrcast.beans.GameMessage;
@@ -229,10 +231,21 @@ public class GameMode3Fragment extends Fragment {
 
 
     @Override
-    public void onDetach(){
-        resetTimer();
+    public void onDetach() {
         super.onDetach();
+
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
+
     @Override
     public void onDestroy(){
         clearMapFragment();
@@ -252,6 +265,7 @@ public class GameMode3Fragment extends Fragment {
         return (MapFragment) fm.findFragmentById(R.id.map);
     }
 
+    //TODO: put this method into Utility!
     private boolean isVersionLollipop(){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return false;
