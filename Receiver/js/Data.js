@@ -199,7 +199,7 @@ data = {
             scoreWeightFactor: 1.0,
             timePerRoundSec: 20,
             mapOption: {
-                mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
+                mapType : google.maps.MapTypeId.SATELLITE, // ROADMAP || HYBRID || TERRAIN
                 borders: true,
                 roads: true,
                 showCityNames: false,
