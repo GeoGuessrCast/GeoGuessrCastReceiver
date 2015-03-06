@@ -145,6 +145,10 @@
         }
         eventManager.send(event.senderId, data.channelName.user, jsonData);
 
+        //start round if running
+        if (gameRoundManager.currentRoundJsonData != null) {
+            eventManager.send(event.senderId, data.channelName.game, gameRoundManager.currentRoundJsonData);
+        }
     };
 
 

@@ -232,11 +232,11 @@
             renderManager.rebuildUserList();
 
 
-            var xhReq = new XMLHttpRequest();
-            xhReq.open("HEAD", "/GeoGuessrCastReceiver/Receiver/js/GameRoundManager.js", false);
-            xhReq.send(null);
-            var lastModified = xhReq.getResponseHeader("Last-Modified");
-            $('#versionDisplay').html(lastModified);
+            //var xhReq = new XMLHttpRequest();
+            //xhReq.open("HEAD", "/GeoGuessrCastReceiver/Receiver/js/GameRoundManager.js", false);
+            //xhReq.send(null);
+            //var lastModified = xhReq.getResponseHeader("Last-Modified");
+            //$('#versionDisplay').html(lastModified);
         });
     };
 

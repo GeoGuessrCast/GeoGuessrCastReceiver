@@ -16,6 +16,8 @@
     grm.currentGameState = data.gameState.ended;
     var lastRoundCountryCode = 'menuMap';
 
+    grm.currentRoundJsonData = null;
+
     grm.getMaxPointsPerAnswer = function() {
         if (gameModeManager.currentGameModeProfile == null) {
             return data.constants.maxPointsPerAnswer;
@@ -82,7 +84,7 @@
         var bounds = dataManager.getBoundsForCountry(gameRoundManager.goalGeoObject.countryCode);
         //var zoom = dataManager.getZoomLevelForCountry(bounds); //USE bounds OR zoom+center !
 
-        var jsonData = {"event_type": data.eventType.startGame,
+        gameRoundManager.currentRoundJsonData = {"event_type": data.eventType.startGame,
             "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode ,
             "pointingMode": gameModeManager.currentGameModeProfile.pointingMode ,
             "started": true,
@@ -127,7 +129,7 @@
             gameRoundManager.roundTimer = executionManager.execDelayed(gameModeManager.currentGameModeProfile.timePerRoundSec*1000, gameRoundManager.endRound);
             gameRoundManager.roundTimerAnim = renderManager.playTimerAnimationWithRoundDisplay(gameModeManager.currentGameModeProfile.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
             executionManager.execDelayed(constMobileAppBroadcastDelay, function(){
-                eventManager.broadcast(data.channelName.game, jsonData);
+                eventManager.broadcast(data.channelName.game, gameRoundManager.currentRoundJsonData);
             });
         };
 
@@ -149,6 +151,7 @@
         gameRoundManager.currentGameState = data.gameState.evaluating;
         print('-> Round ' + gameModeManager.currentRound +  ' ended.' );
 
+        gameRoundManager.currentRoundJsonData = null;
 
         if (gameModeManager.currentGameModeProfile.pointingMode == false) {
             renderManager.showMidScreenMessage('Answer: ' + gameRoundManager.goalGeoObject.name, gameRoundManager.roundEvaluationTimeSec-3 );
