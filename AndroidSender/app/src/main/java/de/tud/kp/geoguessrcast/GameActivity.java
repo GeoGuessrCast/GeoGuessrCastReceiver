@@ -26,6 +26,7 @@ import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -39,6 +40,8 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.cast.CastDevice;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.google.sample.castcompanionlibrary.cast.DataCastManager;
 import com.google.sample.castcompanionlibrary.cast.callbacks.DataCastConsumerImpl;
@@ -53,6 +56,7 @@ import de.tud.kp.geoguessrcast.beans.GameMessage;
 import de.tud.kp.geoguessrcast.fragments.ChooseModeFragment;
 import de.tud.kp.geoguessrcast.fragments.GameMode1Fragment;
 import de.tud.kp.geoguessrcast.fragments.GameMode2Fragment;
+import de.tud.kp.geoguessrcast.fragments.GameMode3Fragment;
 import de.tud.kp.geoguessrcast.fragments.WaitGameFragment;
 
 /**
@@ -126,12 +130,17 @@ public class GameActivity extends ActionBarActivity {
                             int maxRounds = gameMessage.getMaxRounds();
                             updateRoundOfProfileBar(roundNumber, maxRounds);
                             initPointInfoOfProfileBar();
-                            if(!gameMessage.isMultipleChoiceMode()){
-                                startFragment(GameMode1Fragment.newInstance(roundNumber, timeRound));
-                            }
-                            else{
+                            if(gameMessage.isMultipleChoiceMode()){
                                 String[] choices = gameMessage.getChoices();
                                 startFragment(GameMode2Fragment.newInstance(roundNumber, timeRound, choices));
+                            }
+                            else if(gameMessage.isPointingMode()){
+                                double[] defaultBounds = gameMessage.getBounds();
+                                String mapType = gameMessage.getMapTypeTemplate();
+                                startFragment(GameMode3Fragment.newInstance(defaultBounds, mapType, roundNumber, timeRound));
+                            }
+                            else{
+                                startFragment(GameMode1Fragment.newInstance(roundNumber, timeRound));
                             }
                         }
                     }

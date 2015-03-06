@@ -1,5 +1,9 @@
 package de.tud.kp.geoguessrcast.beans;
 
+import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +21,7 @@ public class GameMessage {
     int roundNumber;
     int maxRounds;
     boolean multipleChoiceMode;
+    boolean pointingMode;
     boolean admin;
     GameMode[] gameModes;
     GameMode gameMode;
@@ -25,6 +30,10 @@ public class GameMessage {
     String answer;
     String userMac;
     String user_color;
+    String bounds;
+    String mapTypeTemplate;
+
+
 
     String correctAnswer;
     String userAnswer;
@@ -218,5 +227,40 @@ public class GameMessage {
 
     public void setHighScoreList(Highscore[] highScoreList) {
         this.highScoreList = highScoreList;
+    }
+
+    public boolean isPointingMode() {
+        return pointingMode;
+    }
+
+    public void setPointingMode(boolean pointingMode) {
+        this.pointingMode = pointingMode;
+    }
+
+    public double[] getBounds() {
+        if(bounds!=null){
+            String[] splitResult = bounds.split(",");
+            double[] boundsArray = new double[4];
+            boundsArray[0] = Double.parseDouble(splitResult[0].substring(2));
+            boundsArray[1] = Double.parseDouble(splitResult[1].substring(0,splitResult[1].length()-1));
+            boundsArray[2] = Double.parseDouble(splitResult[2].substring(2));
+            boundsArray[3] = Double.parseDouble(splitResult[3].substring(0,splitResult[3].length()-2));
+            return boundsArray;
+        }
+        else{
+            return null;
+        }
+    }
+
+    public void setBounds(String bounds) {
+        this.bounds = bounds;
+    }
+
+    public String getMapTypeTemplate() {
+        return mapTypeTemplate;
+    }
+
+    public void setMapTypeTemplate(String mapTypeTemplate) {
+        this.mapTypeTemplate = mapTypeTemplate;
     }
 }

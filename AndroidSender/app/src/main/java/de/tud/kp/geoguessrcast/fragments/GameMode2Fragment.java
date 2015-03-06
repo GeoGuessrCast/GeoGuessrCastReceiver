@@ -135,7 +135,7 @@ public class GameMode2Fragment extends Fragment  {
         final ProgressBar countDownProgressBar = (ProgressBar) mActivity.findViewById(R.id.countDownProgressBar);
         final TextView countDownTimeTextView = (TextView) mActivity.findViewById(R.id.countDownTime);
 
-        //init timer
+        //init Timer
         mTimer = new TimerWithVibration(timeRound, 5, mActivity) {
             @Override
             public void onTimerTick(int second, int percent) {
