@@ -22,6 +22,7 @@ import android.app.FragmentManager;
 //import android.support.v4.app.FragmentManager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -52,6 +53,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.tud.kp.geoguessrcast.adapters.HighscoreListAdapter;
+import de.tud.kp.geoguessrcast.beans.GameSetting;
 import de.tud.kp.geoguessrcast.beans.User;
 import de.tud.kp.geoguessrcast.beans.GameMessage;
 import de.tud.kp.geoguessrcast.fragments.ChooseModeFragment;
@@ -124,6 +126,7 @@ public class GameActivity extends ActionBarActivity {
                 }
                 else if (namespace.equals(getString(R.string.gameChannel))){
                     GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
+                    Log.d(TAG, "onMessageReceived from GameChannel: " + message);
                     if(gameMessage.getEvent_type().equals("startGame")){
                         if(gameMessage.isStarted()){
                             int roundNumber = gameMessage.getRoundNumber();
@@ -178,19 +181,28 @@ public class GameActivity extends ActionBarActivity {
                             }
                         }
                     }
-                    Log.d(TAG, "onMessageReceived from GameChannel: " + message);
                 }
                 else if (namespace.equals(getString(R.string.userChannel))){
-
-                    Log.d(TAG, "onMessageReceived from UserChannel: " + message);
-                    
                     GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
-
+                    Log.d(TAG, "onMessageReceived from UserChannel: " + message);
                     if(gameMessage.getEvent_type().equals("answer_feedback")){
                         int pointsEarned = gameMessage.getPointsEarned();
                         updatePointOfProfileBar(pointsEarned);
                     }
-
+                    else if(gameMessage.getEvent_type().equals("isAdmin")){
+                        mUser.setColor(gameMessage.getUser_color());
+                        if(gameMessage.isAdmin()==true){
+                            //TODO: admin setup ()...
+                            mUser.setAdmin(true);
+                            GameSetting gameSetting = GameSetting.getInstance();
+                            gameSetting.setGameModes(gameMessage.getGameModes());
+                            gameSetting.setGameProfiles(gameMessage.getGameProfiles());
+                            mOptionMenu.setGroupVisible(R.id.adminMenu, true);
+                            if(getCurrentFragment() instanceof WaitGameFragment){
+                                startFragment(ChooseModeFragment.newInstance(1));
+                            }
+                        }
+                    }
                     else if(gameMessage.getEvent_type().equals("returnHighScoreList")){
                         //TODO: aufräumen
                         View view = getLayoutInflater().inflate(R.layout.highscore_listview, null);
@@ -350,6 +362,11 @@ public class GameActivity extends ActionBarActivity {
 //                .commit();
                 //instead of commit for avoiding the "after onSaveInstanceState" problem
                 .commitAllowingStateLoss();
+    }
+
+    public Fragment getCurrentFragment(){
+        Fragment f = getFragmentManager().findFragmentById(R.id.main_page_container);
+        return f;
     }
 
     public void clearFragmentBackStack(){
