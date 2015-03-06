@@ -248,7 +248,7 @@ public class GameMode3Fragment extends Fragment {
 
     @Override
     public void onDestroy(){
-//        clearMapFragment();
+        clearMapFragment();
         resetTimer();
         super.onDestroy();
     }
@@ -265,6 +265,7 @@ public class GameMode3Fragment extends Fragment {
         return (MapFragment) fm.findFragmentById(R.id.map);
     }
 
+    //TODO: put this method into Utility!
     private boolean isVersionLollipop(){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return false;
