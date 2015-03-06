@@ -145,6 +145,16 @@ h3 {
     width: 50%;
 }
 
+#versionDisplay {
+    position: absolute;
+    box-sizing: border-box;
+    background-color: rgba(218, 218, 218, 0.30);
+    z-index: 1;
+    bottom: 0%;
+    right: 0%;
+    font-size: 2vh;
+    padding: 0.3vh;
+}
 #mainMenuUserList {
     top: 20%;
     right: 1%;
@@ -288,9 +298,6 @@ h3 {
 }
 
 
-.gmnoprint {
-    display: none;
-}
 
 
 #roundDisplayAndTimer {
@@ -311,4 +318,10 @@ h3 {
     padding: 1.1vh;
     font-size: 5vh;
     font-weight: bold;
+}
+
+
+
+.gmnoprint, .gm-style-cc {
+    display: none;
 }

@@ -230,6 +230,13 @@
                 gameModeList.append('<li class="menuButton noLinebreak" onclick="renderManager.loadGameProfileMenu(data.gameMode['+g+']);">'+data.gameMode[g].gameModeName+'</li>');
             }
             renderManager.rebuildUserList();
+
+
+            var xhReq = new XMLHttpRequest();
+            xhReq.open("HEAD", "/GeoGuessrCastReceiver/Receiver/js/GameRoundManager.js", false);
+            xhReq.send(null);
+            var lastModified = xhReq.getResponseHeader("Last-Modified");
+            $('#versionDisplay').html(lastModified);
         });
     };
 
