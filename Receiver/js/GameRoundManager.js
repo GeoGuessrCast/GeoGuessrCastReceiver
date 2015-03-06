@@ -131,16 +131,14 @@
             });
         };
 
-        //if (lastRoundCountryCode === countryCode) {
-        //    onMapLoaded();
-        //} else {
-        //    google.maps.event.addListenerOnce(map, 'idle', onMapLoaded);
-        //}
-        google.maps.event.addListenerOnce(map, 'idle', onMapLoaded);
-
-        executionManager.execDelayed(5000, function(){
-            google.maps.event.trigger(map, 'idle');
-        });
+        if (lastRoundCountryCode === countryCode) {
+            onMapLoaded();
+        } else {
+            google.maps.event.addListenerOnce(map, 'idle', onMapLoaded);
+            executionManager.execDelayed(4000, function(){ //anti deadlock function
+                google.maps.event.trigger(map, 'idle');
+            });
+        }
 
         lastRoundCountryCode = countryCode;
     };
