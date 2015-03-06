@@ -68,31 +68,8 @@ data = {
 
     gameModeProfile : [
         {
-            profileName: 'Free Choice',
+            profileName: 'Free Choice [easy]',
             id: 0,
-            limitedCountry: null,
-            multipleChoiceMode: false,
-            pointingMode: false,
-            minTotalCities: 10,
-            minCountryPopulation: 10111000,
-            minPopulationDefault: 600111,
-            scoreWeightFactor: 1.0,
-            timePerRoundSec: 30,
-            mapOption: {
-                mapType : google.maps.MapTypeId.ROADMAP, // ROADMAP || HYBRID || TERRAIN
-                borders: true,
-                roads: true,
-                showCityNames: true,
-                showRiverNames: true,
-                showCountryNames: true,
-                renderOptions: {
-                    globalGamma: 0.43
-                }
-            }
-        },
-        {
-            profileName: 'Easy (FC)',
-            id: 1,
             limitedCountry: null,
             multipleChoiceMode: false,
             pointingMode: false,
@@ -116,7 +93,30 @@ data = {
             }
         },
         {
-            profileName: 'Hardcore (FC)',
+            profileName: 'Free Choice [medium]',
+            id: 1,
+            limitedCountry: null,
+            multipleChoiceMode: false,
+            pointingMode: false,
+            minTotalCities: 10,
+            minCountryPopulation: 10111000,
+            minPopulationDefault: 600111,
+            scoreWeightFactor: 1.0,
+            timePerRoundSec: 30,
+            mapOption: {
+                mapType : google.maps.MapTypeId.ROADMAP, // ROADMAP || HYBRID || TERRAIN
+                borders: true,
+                roads: true,
+                showCityNames: true,
+                showRiverNames: true,
+                showCountryNames: true,
+                renderOptions: {
+                    globalGamma: 0.43
+                }
+            }
+        },
+        {
+            profileName: 'Free Choice [hard]',
             id: 2,
             limitedCountry: null,
             multipleChoiceMode: false,
@@ -166,7 +166,7 @@ data = {
             }
         },
         {
-            profileName: 'Germany Only (MC)',
+            profileName: 'Multiple Choice [GER]',
             id: 4,
             limitedCountry: 'DE',
             multipleChoiceMode: true,
