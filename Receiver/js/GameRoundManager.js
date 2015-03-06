@@ -50,7 +50,7 @@
     grm.getRemainingRoundTime = function(){
         if (gameRoundManager.currentRoundStartMs == null) return gameModeManager.currentGameModeProfile.timePerRoundSec;
 
-        return Math.round(gameModeManager.currentGameModeProfile.timePerRoundSec - ( new Date().getTime() - gameRoundManager.currentRoundStartMs ) / 1000);
+        return Math.max(0, Math.round(gameModeManager.currentGameModeProfile.timePerRoundSec - ( new Date().getTime() - gameRoundManager.currentRoundStartMs ) / 1000 - 300));
     };
 
     grm.getCurrentRoundJsonData = function(){
