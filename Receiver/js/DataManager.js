@@ -117,7 +117,7 @@
             queryGeoObjects = _getGeoObjectsForCityObjects(minPopulation, countryCode, ftTableIdCity, minPoolSize);
 
         } else if (geoObjType == data.geoObjType.country) {
-            queryGeoObjects = _getGeoObjectsForCountryObjects(minPopulation,ftTableIdCountry,minPoolSize);
+            queryGeoObjects = _getGeoObjectsForCountryObjects(minPopulation,ftTableIdCompleteCountryCodes,minPoolSize);
         } else {
             console.log("[DM] GeoObject request not implemented.")
         }
@@ -176,20 +176,20 @@
         return countryGeoObjects;
     }
 
-    function _getGeoObjectsForCountryObjects(minPopulation, ftTableIdCity, minPoolSize) {
+    function _getGeoObjectsForCountryObjects(minPopulation, ftTableId, minPoolSize) {
         var countryGeoObjects = [];
 
         // Get all Objects for the requested query, not limited for more diversity
         var select = "*";
         var where = "population > "+ minPopulation;
 
-        var targetCountries = _createFusionTableQuery(ftTableIdCity, select, where, 0, 0, null, null,null);
+        var targetCountries = _createFusionTableQuery(ftTableId, select, where, 0, 0, null, null,null);
 
         countryGeoObjects = _createGeoObjectsForCountries(targetCountries, minPopulation);
         console.log("[DM] Got "+ countryGeoObjects.length +" the query matching criterias.");
         if (countryGeoObjects.length < minPoolSize) {
          var orderBy = "population DESC";
-         var result = _createFusionTableQuery(ftTableIdCity, select, null, 0, minPoolSize, orderBy, null,null);
+         var result = _createFusionTableQuery(ftTableId, select, null, 0, minPoolSize, orderBy, null,null);
          countryGeoObjects = _createGeoObjectsForCountries(result, 0);
 
             console.debug("[DM] getCityGeoObjects: had to ignore population to satisify minPopulation to , it returned now " + (countryGeoObjects.length >= minPoolSize) + " objects");
@@ -229,15 +229,6 @@
         var returnCountryCodes = [];
 
 
-        /*if (countryCodes.size == undefined) {
-            console.debug("[DM] Fetching Country Codes");
-            countryCodes = this.getAllCountryCodes();
-        }
-        for (var code in countryCodes){
-            if (countryCodes[code].population >= population && countryCodes[code].nrOfCities >= nrOfCities){
-                returnCountryCodes.push(code);
-            }
-        }*/
         var select = "countryCode, nrOfCities, populationInCities";
         var where = "nrOfCities >= "+nrOfCities + " and populationInCities >= "+population+ "";
         var countryCodes = _createFusionTableQuery(ftTableIdCompleteCountryCodes, select, where, 0, 0, null, null,null);
@@ -271,36 +262,7 @@
         })
         return cityNames;
     };
-    dm.getAllCountryCodes = function(){
-        var codes = [];
-        // Get all Objects for the requested query, not limited for more diversity
-        if (localStorage.getItem("countryCodes") === null) {
-            var select = "countryCode , COUNT() as numberOfCities, SUM(population) AS populationSum";
-            var countryCodes = _createFusionTableQuery(ftTableIdCompleteCountryCodes, select, null, 0, 0, null, "countryCode",null);
 
-            if (typeof(countryCodes.rows) != 'undefined') {
-                var resultLength = countryCodes.rows.length;
-                for (var i = 0; i < resultLength; i++) {
-                    var code = countryCodes.rows[i][0];
-                    var nrOfCities = parseInt(countryCodes.rows[i][1]);
-                    var population = parseInt(countryCodes.rows[i][2]);
-                    codes.push({
-                        countryCode: code,
-                        nrOfCities: nrOfCities,
-                        population: population
-                    });
-
-                    //console.debug("Country not qualified: "+code);
-
-                }
-            }
-            localStorage.setItem("countryCodes", JSON.stringify(codes));
-        } else {
-            codes = JSON.parse(localStorage.getItem("countryCodes"));
-        }
-        console.log("[DM] Got country codes.");
-        return codes;
-    };
 
     function _getBoundsZoomLevel(bounds, mapDim) {
         // http://stackoverflow.com/questions/6048975/google-maps-v3-how-to-calculate-the-zoom-level-for-a-given-bounds
@@ -334,7 +296,7 @@
 
         var select = "*";
         var where = "countryCode = '"+countryCode+"'";
-        var countryCodes = _createFusionTableQuery(ftTableIdCountryCodes, select, where, 0, 0, null, null,null);
+        var countryCodes = _createFusionTableQuery(ftTableIdCompleteCountryCodes, select, where, 0, 0, null, null,null);
 
         if (typeof(countryCodes.rows) != 'undefined') {
             var resultLength = countryCodes.rows.length;
