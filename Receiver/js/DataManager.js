@@ -7,8 +7,8 @@
     var ftTableIdCity = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
     var ftTableIdCountry = "1Gf74ezjOHKaVxS_vF9PtbJc5yTfm8a6JsuxHGjzD"; https://www.google.com/fusiontables/DataSource?docid=1BuyI_S9TNtXhs_iOg4wwvaL1COJK_tM6UYN5drbF
     var ftTableIdCountryCodes  = "12hNfYsKsCii925gL_5WNh-TdmDu2sjUv_AVPtMeK";
+    var ftTableIdCompleteCountryCodes = "1BuyI_S9TNtXhs_iOg4wwvaL1COJK_tM6UYN5drbF";
 
-    var locationColumn = "col4"; // TODO Column Names
     var userHighscoreTable = "1eUC797_4AgjDAn0IRdGcNVdll245lnJaSCXe0YPz"
     var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
     //Google API Key
@@ -229,7 +229,7 @@
         var returnCountryCodes = [];
 
 
-        if (countryCodes.size == undefined) {
+        /*if (countryCodes.size == undefined) {
             console.debug("[DM] Fetching Country Codes");
             countryCodes = this.getAllCountryCodes();
         }
@@ -237,11 +237,25 @@
             if (countryCodes[code].population >= population && countryCodes[code].nrOfCities >= nrOfCities){
                 returnCountryCodes.push(code);
             }
+        }*/
+        var select = "countryCode, nrOfCities, populationInCities";
+        var where = "nrOfCities >= "+nrOfCities + " and populationInCities >= "+population+ "";
+        var countryCodes = _createFusionTableQuery(ftTableIdCompleteCountryCodes, select, where, 0, 0, null, null,null);
+
+        if (typeof(countryCodes.rows) != 'undefined') {
+            var resultLength = countryCodes.rows.length;
+            for (var i = 0; i < resultLength; i++) {
+                var code = countryCodes.rows[i][0];
+                returnCountryCodes.push(code);
+
+
+            }
+        } else {
+            console.error("[DM] - Get Random Country Code returned no results for given query: Cities:" + nrOfCities+ " Pop: "+population);
         }
-        if (returnCountryCodes.length == 0) {
-            console.log("[DM] - Get Random Country Code returned no results for given query: Cities:" + nrOfCities+ " Pop: "+population);
-            //return this.getRandomCountryCode(10,1000000); //Fallback
-        }
+        console.debug(returnCountryCodes.length+" Countries qualified");
+
+
         return getRandomSubsetOfArray(returnCountryCodes,1);
     };
 
@@ -258,11 +272,11 @@
         return cityNames;
     };
     dm.getAllCountryCodes = function(){
-        var codes = {};
+        var codes = [];
         // Get all Objects for the requested query, not limited for more diversity
         if (localStorage.getItem("countryCodes") === null) {
             var select = "countryCode , COUNT() as numberOfCities, SUM(population) AS populationSum";
-            var countryCodes = _createFusionTableQuery(ftTableIdCity, select, null, 0, 0, null, "countryCode",null);
+            var countryCodes = _createFusionTableQuery(ftTableIdCompleteCountryCodes, select, null, 0, 0, null, "countryCode",null);
 
             if (typeof(countryCodes.rows) != 'undefined') {
                 var resultLength = countryCodes.rows.length;
@@ -270,10 +284,11 @@
                     var code = countryCodes.rows[i][0];
                     var nrOfCities = parseInt(countryCodes.rows[i][1]);
                     var population = parseInt(countryCodes.rows[i][2]);
-                    codes[code] = {
+                    codes.push({
+                        countryCode: code,
                         nrOfCities: nrOfCities,
                         population: population
-                    };
+                    });
 
                     //console.debug("Country not qualified: "+code);
 
