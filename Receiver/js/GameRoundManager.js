@@ -161,11 +161,11 @@
                 lastRoundCountryCode = countryCode;
              } else {
                 console.error("[GRM] error: could not fetch bounds.");
-                gameRoundManager.gameFailed();
+                gameRoundManager.gameFailed("There was an error with the DB. Please try again");
             }
         } else {
             console.error("[GRM] error: could not fetch geo data.");
-            gameRoundManager.gameFailed();
+            gameRoundManager.gameFailed("There was an error with the DB. Please try again");
         }
     };
 
@@ -234,13 +234,12 @@
         gameRoundManager.viewGlobalHighScoreTimer = executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+10)*1000, renderManager.loadGlobalHighScoreList);
         gameRoundManager.viewMainMenuTimer = executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+20)*1000, renderManager.loadMainMenu);
     };
-    grm.gameFailed = function(){
+    grm.gameFailed = function(errorMessage){
         var jsonData = {"ended": true, "event_type":"game_ended"};
         eventManager.broadcast(data.channelName.game, jsonData);
-        renderManager.showMidScreenMessage("There was a problem, please try again.");
-
+        renderManager.showMidScreenMessage(errorMessage);
         // show mainMenu
-        renderManager.loadMainMenu();
+        gameRoundManager.viewMainMenuTimer = executionManager.execDelayed(5000, renderManager.loadMainMenu);
     }
 
     function _getDistance(p1, p2) {
@@ -330,6 +329,10 @@
                     } else {
                         print('[GRM] no valid ' + locationType + ' for: ' + cleanedAnswerString);
                     }
+                } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+                    // TODO: end game, send message
+                    gameRoundManager.currentGameState = data.gameState.ended;
+                    gameRoundManager.gameFailed("Maximum games played today. Sorry.");
                 } else {
                     print('[GRM] could not be geocoded: ' + cleanedAnswerString + " (" + status + ')');
                 }
