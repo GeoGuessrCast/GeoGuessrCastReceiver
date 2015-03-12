@@ -7,7 +7,7 @@
     var ftTableIdCountryCodes  = "12hNfYsKsCii925gL_5WNh-TdmDu2sjUv_AVPtMeK";
     var ftTableIdCompleteCountryCodes = "1BuyI_S9TNtXhs_iOg4wwvaL1COJK_tM6UYN5drbF";
 
-    var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
+    var queryUrlHead = 'https://www.googleapis.com/fusiontables/v2/query?sql=';
     //Google API Key
     var queryUrlTail = '&key=AIzaSyCtj5FXdE2WNZJBRVfyd2294YM0z1CDnq0'; //RN acc Api Key
 
