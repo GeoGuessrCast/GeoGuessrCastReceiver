@@ -86,76 +86,87 @@
             gameModeManager.currentGameMode.geoObjType, countryCode ,
             gameModeManager.currentGameModeProfile.multipleChoiceMode ? data.constants.numberOfChoices : 1, minPopCountry
             , 10);
+        if (geoObjects != null) {
+            gameRoundManager.goalGeoObject = geoObjects[0];
 
-        gameRoundManager.goalGeoObject = geoObjects[0];
+            var geoNameChoices = dataManager.getCityNameArray(geoObjects);
+            console.debug('[geoObjects] ' + geoObjects);
+            print('[geoNameChoices] ' + geoNameChoices);
 
-        var geoNameChoices = dataManager.getCityNameArray(geoObjects);
-        console.debug('[geoObjects] ' + geoObjects);
-        print('[geoNameChoices] ' + geoNameChoices);
-
-        var bounds = dataManager.getBoundsForCountry(gameRoundManager.goalGeoObject.countryCode);
-        //var zoom = dataManager.getZoomLevelForCountry(bounds); //USE bounds OR zoom+center !
-
-        gameRoundManager.currentRoundJsonData = {"event_type": data.eventType.startGame,
-            "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode ,
-            "pointingMode": gameModeManager.currentGameModeProfile.pointingMode ,
-            "started": true,
-            "roundNumber": gameModeManager.currentRound,
-            "maxRounds": gameModeManager.maxRounds,
-            "timerRound" : gameModeManager.currentGameModeProfile.timePerRoundSec,
-            "bounds" : bounds.toString(),
-            "styledMapOptions" : gameModeManager.styledMapOptions,
-            "mapTypeTemplate" : gameModeManager.currentGameModeProfile.mapOption.mapType,
-            "choices" : geoNameChoices};
-
-        var goalPos = new google.maps.LatLng(gameRoundManager.goalGeoObject.latitude, gameRoundManager.goalGeoObject.longitude);
+            var bounds = dataManager.getBoundsForCountry(gameRoundManager.goalGeoObject.countryCode);
+            //var zoom = dataManager.getZoomLevelForCountry(bounds); //USE bounds OR zoom+center !
+            if (bounds != null) {
 
 
-        if (gameModeManager.currentGameModeProfile.pointingMode == false) {
-            _placeGoalMarker(goalPos);
-        } else {
-            if (gameModeManager.goalMarker != null) {
-                gameModeManager.goalMarker.setMap(null);
+                gameRoundManager.currentRoundJsonData = {
+                    "event_type": data.eventType.startGame,
+                    "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode,
+                    "pointingMode": gameModeManager.currentGameModeProfile.pointingMode,
+                    "started": true,
+                    "roundNumber": gameModeManager.currentRound,
+                    "maxRounds": gameModeManager.maxRounds,
+                    "timerRound": gameModeManager.currentGameModeProfile.timePerRoundSec,
+                    "bounds": bounds.toString(),
+                    "styledMapOptions": gameModeManager.styledMapOptions,
+                    "mapTypeTemplate": gameModeManager.currentGameModeProfile.mapOption.mapType,
+                    "choices": geoNameChoices
+                };
+
+                var goalPos = new google.maps.LatLng(gameRoundManager.goalGeoObject.latitude, gameRoundManager.goalGeoObject.longitude);
+
+
+                if (gameModeManager.currentGameModeProfile.pointingMode == false) {
+                    _placeGoalMarker(goalPos);
+                } else {
+                    if (gameModeManager.goalMarker != null) {
+                        gameModeManager.goalMarker.setMap(null);
+                    }
+                }
+
+
+                //gameModeManager.getMap().setCenter(goalPos);
+                //gameModeManager.getMap().setZoom(zoom);
+
+                gameModeManager.getMap().fitBounds(bounds);
+
+                renderManager.displayRoundNumber(gameModeManager.currentRound, gameModeManager.maxRounds);
+
+                var onMapLoaded = function () {
+                    var constMobileAppBroadcastDelay;
+                    if (gameModeManager.currentGameModeProfile.pointingMode == false) {
+                        constMobileAppBroadcastDelay = 1000;
+                        renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6);
+                    } else {
+                        constMobileAppBroadcastDelay = 0;
+                        renderManager.showMidScreenMessage('Where is ' + gameRoundManager.goalGeoObject.name + ' ?', gameModeManager.currentGameModeProfile.timePerRoundSec * 0.8);
+                    }
+
+                    gameRoundManager.roundTimer = executionManager.execDelayed(gameModeManager.currentGameModeProfile.timePerRoundSec * 1000, gameRoundManager.endRound);
+                    gameRoundManager.roundTimerAnim = renderManager.playTimerAnimationWithRoundDisplay(gameModeManager.currentGameModeProfile.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds);
+                    executionManager.execDelayed(constMobileAppBroadcastDelay, function () {
+                        gameRoundManager.currentRoundStartMs = new Date().getTime();
+                        eventManager.broadcast(data.channelName.game, gameRoundManager.currentRoundJsonData);
+                    });
+                };
+
+                if (lastRoundCountryCode === countryCode) {
+                    onMapLoaded();
+                } else {
+                    google.maps.event.addListenerOnce(map, 'idle', onMapLoaded);
+                    executionManager.execDelayed(4000, function () { //anti deadlock function
+                        google.maps.event.trigger(map, 'idle');
+                    });
+                }
+
+                lastRoundCountryCode = countryCode;
+             } else {
+                console.error("[GRM] error: could not fetch bounds.");
+                gameRoundManager.gameFailed();
             }
-        }
-
-
-
-        //gameModeManager.getMap().setCenter(goalPos);
-        //gameModeManager.getMap().setZoom(zoom);
-
-        gameModeManager.getMap().fitBounds(bounds);
-
-        renderManager.displayRoundNumber(gameModeManager.currentRound, gameModeManager.maxRounds);
-
-        var onMapLoaded = function() {
-            var constMobileAppBroadcastDelay;
-            if (gameModeManager.currentGameModeProfile.pointingMode == false) {
-                constMobileAppBroadcastDelay = 1000;
-                renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6 );
-            } else {
-                constMobileAppBroadcastDelay = 0;
-                renderManager.showMidScreenMessage('Where is ' + gameRoundManager.goalGeoObject.name + ' ?', gameModeManager.currentGameModeProfile.timePerRoundSec*0.8 );
-            }
-
-            gameRoundManager.roundTimer = executionManager.execDelayed(gameModeManager.currentGameModeProfile.timePerRoundSec*1000, gameRoundManager.endRound);
-            gameRoundManager.roundTimerAnim = renderManager.playTimerAnimationWithRoundDisplay(gameModeManager.currentGameModeProfile.timePerRoundSec, gameModeManager.currentRound, gameModeManager.maxRounds );
-            executionManager.execDelayed(constMobileAppBroadcastDelay, function(){
-                gameRoundManager.currentRoundStartMs = new Date().getTime();
-                eventManager.broadcast(data.channelName.game, gameRoundManager.currentRoundJsonData);
-            });
-        };
-
-        if (lastRoundCountryCode === countryCode) {
-            onMapLoaded();
         } else {
-            google.maps.event.addListenerOnce(map, 'idle', onMapLoaded);
-            executionManager.execDelayed(4000, function(){ //anti deadlock function
-                google.maps.event.trigger(map, 'idle');
-            });
+            console.error("[GRM] error: could not fetch geo data.");
+            gameRoundManager.gameFailed();
         }
-
-        lastRoundCountryCode = countryCode;
     };
 
 
@@ -207,12 +218,7 @@
         if(gameModeManager.currentRound === gameModeManager.maxRounds) {
             // end game mode
             print('[GRM] maxRounds reached: ' + gameModeManager.maxRounds);
-            var jsonData = {"ended": true, "event_type":"game_ended"};
-            eventManager.broadcast(data.channelName.game, jsonData);
-            // show roundHighscore >> globalHighscore >> mainMenu
-            gameRoundManager.viewHighScoreTimer = executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec-2)*1000, renderManager.loadCurrentGameHighScoreList);
-            gameRoundManager.viewGlobalHighScoreTimer = executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+10)*1000, renderManager.loadGlobalHighScoreList);
-            gameRoundManager.viewMainMenuTimer = executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+20)*1000, renderManager.loadMainMenu);
+           gameRoundManager.gameEnded();
         } else {
             // next round...
             gameModeManager.currentRound = gameModeManager.currentRound + 1;
@@ -220,8 +226,22 @@
         }
     };
 
+    grm.gameEnded = function(){
+        var jsonData = {"ended": true, "event_type":"game_ended"};
+        eventManager.broadcast(data.channelName.game, jsonData);
+        // show roundHighscore >> globalHighscore >> mainMenu
+        gameRoundManager.viewHighScoreTimer = executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec-2)*1000, renderManager.loadCurrentGameHighScoreList);
+        gameRoundManager.viewGlobalHighScoreTimer = executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+10)*1000, renderManager.loadGlobalHighScoreList);
+        gameRoundManager.viewMainMenuTimer = executionManager.execDelayed((gameRoundManager.roundEvaluationTimeSec+20)*1000, renderManager.loadMainMenu);
+    };
+    grm.gameFailed = function(){
+        var jsonData = {"ended": true, "event_type":"game_ended"};
+        eventManager.broadcast(data.channelName.game, jsonData);
+        renderManager.showMidScreenMessage("There was a problem, please try again.");
 
-
+        // show mainMenu
+        renderManager.loadMainMenu();
+    }
 
     function _getDistance(p1, p2) {
         console.log("[GRM] DISTANCE: "+p1+ " :" +p2);

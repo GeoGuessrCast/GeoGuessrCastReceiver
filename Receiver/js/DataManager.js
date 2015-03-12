@@ -91,23 +91,23 @@
 
             console.debug("[DM] - Country Code not set, random Country is selected: "+countryCode);
         }
+        if (countryCode != null) {
 
-        var queryGeoObjects = [];
-        if (geoObjType === data.geoObjType.city) {
-            queryGeoObjects = _getGeoObjectsForCityObjects(minPopulation, countryCode, ftTableIdCity, minPoolSize);
+            var queryGeoObjects = [];
+            if (geoObjType === data.geoObjType.city) {
+                queryGeoObjects = _getGeoObjectsForCityObjects(minPopulation, countryCode, ftTableIdCity, minPoolSize);
 
-        } else if (geoObjType == data.geoObjType.country) {
-            queryGeoObjects = _getGeoObjectsForCountryObjects(minPopulation,ftTableIdCompleteCountryCodes,minPoolSize);
-        } else {
-            console.log("[DM] GeoObject request not implemented.")
+            } else if (geoObjType == data.geoObjType.country) {
+                queryGeoObjects = _getGeoObjectsForCountryObjects(minPopulation, ftTableIdCompleteCountryCodes, minPoolSize);
+            } else {
+                console.log("[DM] GeoObject request not implemented.")
+            }
+
+
+            var geoObjects = getRandomSubsetOfArray(queryGeoObjects, count);
+            //return query results object
+            return geoObjects;
         }
-
-
-        var geoObjects = getRandomSubsetOfArray(queryGeoObjects, count);
-
-
-        //return query results object
-        return geoObjects;
     };
 
     function _getGeoObjectsForCityObjects(minPopulation, countryCode, ftTableIdCity, minPoolSize) {
@@ -128,28 +128,31 @@
 
     function _createGeoObjectsForCountries(targetCountries) {
         var countryGeoObjects = [];
+        if (targetCountries != null) {
+            if (typeof(targetCountries.rows) != 'undefined') {
+                var resultLength = targetCountries.rows.length;
 
-        if (typeof(targetCountries.rows) != 'undefined') {
-            var resultLength = targetCountries.rows.length;
-
-            for (var i = 0; i < resultLength; i++) {
-                var name = targetCountries.rows[i][0];
-                var code = targetCountries.rows[i][8];
-                var population = parseInt(targetCountries.rows[i][5]);
-                var lat = parseFloat(targetCountries.rows[i][6].split(",")[0]);
-                var long = parseFloat(targetCountries.rows[i][6].split(",")[1]);
-                if (typeof(code) === "string"
+                for (var i = 0; i < resultLength; i++) {
+                    var name = targetCountries.rows[i][0];
+                    var code = targetCountries.rows[i][8];
+                    var population = parseInt(targetCountries.rows[i][5]);
+                    var lat = parseFloat(targetCountries.rows[i][6].split(",")[0]);
+                    var long = parseFloat(targetCountries.rows[i][6].split(",")[1]);
+                    if (typeof(code) === "string"
                     ) {
-                    var geoObject = new dataManager.GeoObject(i, name, lat, long, code, population, 0, null, null, null, null);
-                    console.debug("[DM] geoObject: " + geoObject.toString());
-                    countryGeoObjects.push(geoObject);
-                } else {
-                    console.debug("Country not qualified: " + code);
+                        var geoObject = new dataManager.GeoObject(i, name, lat, long, code, population, 0, null, null, null, null);
+                        console.debug("[DM] geoObject: " + geoObject.toString());
+                        countryGeoObjects.push(geoObject);
+                    } else {
+                        console.debug("Country not qualified: " + code);
+                    }
                 }
-            }
 
+            }
+            return countryGeoObjects;
+        } else {
+            return null;
         }
-        return countryGeoObjects;
     }
 
     function _getGeoObjectsForCountryObjects(minPopulation, ftTableId, minPoolSize) {
@@ -169,6 +172,9 @@
          countryGeoObjects = _createGeoObjectsForCountries(result, 0);
 
             console.debug("[DM] getCityGeoObjects: had to ignore population to satisify minPopulation to , it returned now " + (countryGeoObjects.length >= minPoolSize) + " objects");
+            if (!(countryGeoObjects.length >= minPoolSize)) {
+                return null;
+            }
          }
         return countryGeoObjects;
     }
@@ -208,22 +214,27 @@
         var select = "countryCode, nrOfCities, populationInCities";
         var where = "nrOfCities >= "+nrOfCities + " and populationInCities >= "+population+ "";
         var countryCodes = _createFusionTableQuery(ftTableIdCompleteCountryCodes, select, where, 0, 0, null, null,null);
+        if (countryCodes != null) {
+            if (typeof(countryCodes.rows) != 'undefined') {
+                var resultLength = countryCodes.rows.length;
+                for (var i = 0; i < resultLength; i++) {
+                    var code = countryCodes.rows[i][0];
+                    returnCountryCodes.push(code);
 
-        if (typeof(countryCodes.rows) != 'undefined') {
-            var resultLength = countryCodes.rows.length;
-            for (var i = 0; i < resultLength; i++) {
-                var code = countryCodes.rows[i][0];
-                returnCountryCodes.push(code);
 
-
+                }
+            } else {
+                console.error("[DM] - Get Random Country Code returned no results for given query: Cities:" + nrOfCities + " Pop: " + population);
             }
+            console.debug(returnCountryCodes.length + " Countries qualified");
+
+
+            return getRandomSubsetOfArray(returnCountryCodes, 1);
         } else {
-            console.error("[DM] - Get Random Country Code returned no results for given query: Cities:" + nrOfCities+ " Pop: "+population);
+            console.error("[DM] - Get Random Country Code returned no results for given query: Cities:" + nrOfCities + " Pop: " + population);
+            return null;
         }
-        console.debug(returnCountryCodes.length+" Countries qualified");
 
-
-        return getRandomSubsetOfArray(returnCountryCodes,1);
     };
 
         /**
@@ -273,36 +284,40 @@
         var select = "*";
         var where = "countryCode = '"+countryCode+"'";
         var countryCodes = _createFusionTableQuery(ftTableIdCompleteCountryCodes, select, where, 0, 0, null, null,null);
+        if (countryCode != null) {
+            if (typeof(countryCodes.rows) != 'undefined') {
+                var resultLength = countryCodes.rows.length;
+                for (var i = 0; i < resultLength; i++) {
+                    var code = countryCodes.rows[i][0];
+                    var minLat = countryCodes.rows[i][1];
+                    var maxLat = countryCodes.rows[i][2];
+                    var minLong = countryCodes.rows[i][3];
+                    var maxLong = countryCodes.rows[i][4];
 
-        if (typeof(countryCodes.rows) != 'undefined') {
-            var resultLength = countryCodes.rows.length;
-            for (var i = 0; i < resultLength; i++) {
-                var code = countryCodes.rows[i][0];
-                var minLat = countryCodes.rows[i][1];
-                var maxLat = countryCodes.rows[i][2];
-                var minLong = countryCodes.rows[i][3];
-                var maxLong = countryCodes.rows[i][4];
+                    var ne = new google.maps.LatLng(maxLat, maxLong);
+                    var sw = new google.maps.LatLng(minLat, minLong);
+                    var bounds = new google.maps.LatLngBounds(sw, ne);
 
-                var ne = new google.maps.LatLng(maxLat, maxLong);
-                var sw = new google.maps.LatLng(minLat, minLong);
-                var bounds = new google.maps.LatLngBounds(sw, ne);
-
-                //print(minLat);
-                //print(minLong);
-                //print(maxLat);
-                //print(maxLong);
-                //print(bounds.toString());
+                    //print(minLat);
+                    //print(minLong);
+                    //print(maxLat);
+                    //print(maxLong);
+                    //print(bounds.toString());
 
 
-                console.debug("[DM] Country "+ code+ " bounds: "+bounds);
+                    console.debug("[DM] Country " + code + " bounds: " + bounds);
+
+                }
+            } else {
+                //TODO If no bounds available: take center of country to get position
+                console.error("[DM] Country " + countryCode + "has no saved bounds.");
 
             }
+            return bounds;
         } else {
-            //TODO If no bounds available: take center of country to get position
-            console.error("[DM] Country "+ countryCode+ "has no saved bounds: ");
-
+            console.error("[DM] Country bounds request failed" );
+            return null;
         }
-        return bounds;
     };
 
     dm.getZoomLevelForCountry = function(bounds){
@@ -443,6 +458,17 @@
                 success: function(data) {
                     optionalAsyncCallback(data);
                 },
+                error: function(d) {
+                   console.debug("[DM] async db request failed, error handling to do"+data);
+                    // Error when access db, fallback to start
+                    gameRoundManager.currentGameState = data.gameState.ended;
+
+                },
+                statusCode: {
+                    400: function() {
+                        console.debug("[DM] could not parse query" );
+                    }
+                },
                 async:true
             });
 
@@ -451,6 +477,16 @@
                 url: queryurl,
                 success: function(data) {
                     result = data;
+                },
+                    error: function(d) {
+                        console.debug("[DM] sync db request failed, error handling to do"+data);
+                        // Error when access db, fallback to start
+                        gameRoundManager.currentGameState = data.gameState.ended;
+                    },
+                    statusCode: {
+                        400: function() {
+                            console.debug("[DM] could not parse query" );
+                        }
                 },
                 async:false
             });
