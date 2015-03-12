@@ -1,24 +1,17 @@
 (function(dm){
 
     var countrySizes = [];
-    var asyncCountrySizeFetchIsRunning = false;
-
     //Fusion Table ID:
     var ftTableIdCity = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
     var ftTableIdCountry = "1Gf74ezjOHKaVxS_vF9PtbJc5yTfm8a6JsuxHGjzD"; https://www.google.com/fusiontables/DataSource?docid=1BuyI_S9TNtXhs_iOg4wwvaL1COJK_tM6UYN5drbF
     var ftTableIdCountryCodes  = "12hNfYsKsCii925gL_5WNh-TdmDu2sjUv_AVPtMeK";
     var ftTableIdCompleteCountryCodes = "1BuyI_S9TNtXhs_iOg4wwvaL1COJK_tM6UYN5drbF";
 
-    var userHighscoreTable = "1eUC797_4AgjDAn0IRdGcNVdll245lnJaSCXe0YPz"
     var queryUrlHead = 'https://www.googleapis.com/fusiontables/v1/query?sql=';
     //Google API Key
-    //var queryUrlTail = '&key=AIzaSyBDXF2p6in0gxcCMZVepVyvVHy_ASfmiXo';// SH acc api key
     var queryUrlTail = '&key=AIzaSyCtj5FXdE2WNZJBRVfyd2294YM0z1CDnq0'; //RN acc Api Key
-    var countryCodes = {};
 
-    var clientID = '309924748076-rjhri6p3mqng1iej0agdllo4ijvrcgje.apps.googleusercontent.com';
-    var scopes = 'https://www.googleapis.com/auth/fusiontables';
-    var accessToken = '?access_token=nGh0RYqr85xlpQacEnGVVMYr';
+
     /**
      *
      * @param name
@@ -88,19 +81,6 @@
         }
     };
 
-    // Run OAuth 2.0 authorization.
-    function _auth(immediate) {
-        gapi.auth.authorize({
-            client_id: "nGh0RYqr85xlpQacEnGVVMYr",
-            scope: "https://www.googleapis.com/auth/fusiontables",
-            embedded: true,
-            immediate: immediate
-        }, handleAuthResult);
-    }
-    // Handle the results of the OAuth 2.0 flow.
-    function handleAuthResult(authResult) {
-        console.debug("Auth: "+authResult);
-    }
 
     dm.getGeoObjects = function(geoObjType, countryCode, count, minPopulation, minPoolSize) {
         if (count > minPoolSize){
@@ -124,10 +104,6 @@
 
 
         var geoObjects = getRandomSubsetOfArray(queryGeoObjects, count);
-
-
-
-        //_auth(true);
 
 
         //return query results object
@@ -427,59 +403,7 @@
         return highScoreFilteredAndSorted;
     };
 
-    function _gecodeLocation(location, locationType,region){
 
-        //var locationType = "locality"; //TODO river etc
-
-        var geoObject = null;
-        gameModeManager.getGeocoder().geocode({
-            address: location,
-            region: region
-        }, function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                //console.debug(results[0]);
-                var isValidLocality = false;
-                for (var a=0; a<results[0].types.length; a++) {
-                    if (results[0].types[a] == locationType) {
-                        isValidLocality = true;
-                        break;
-                    }
-                }
-                if (isValidLocality) {
-                    var pos = results[0].geometry.location;
-                    var countryCode = null;
-                    //finding country code if present:
-                    for (var i=0; i<results[0].address_components.length; i++) {
-                        for (var b=0;b<results[0].address_components[i].types.length;b++) {
-                            if (results[0].address_components[i].types[b] == "country") {
-                                countryCode = results[0].address_components[i].short_name;
-                                break;
-                            }
-                        }
-                    }
-                    //finding country code if present:
-                    //var bounds = results[0].geometry.bounds;
-                    var viewport = results[0].geometry.viewport;
-                    var ne = viewport.getNorthEast();
-                    var sw = viewport.getSouthWest();
-                    console.debug("Country: "+countryCode+" V: "+viewport);
-                    countrySizes.push({
-                        countryCode: countryCode,
-                        minLat: sw.lat(),
-                        maxLat: ne.lat(),
-                        minLong: sw.lng(),
-                        maxLong: ne.lng()
-                });
-                    //console.log(countrySizes);
-                } else {
-                    print('[DM] no valid '+locationType+' for: '+location);
-                }
-            } else {
-                print('[DM] could not be geocoded: '+location+" (" + status +')');
-            }
-        });
-        //return countrySizes.length;
-    };
     /**
      *
      * @param ftTableId
@@ -537,31 +461,6 @@
         return result;
     }
 
-
-    dm.insertFusionTableQuery = function(ftTableId, userData) {
-        // Builds a Fusion Tables SQL query and hands the result to  dataHandler
-        // write your SQL as normal, then encode it
-        var query = "INSERT INTO " + ftTableId + " (UserID, Scores) VALUES (";
-        var values = "";
-        var valueEnd = ")";
-        for (var userid in userData){
-            values = values + " " + userid + "," + userData[userid];
-        }
-        query = query + values + valueEnd;
-        console.debug("[DM] SQL INSERT Query: "+query);
-        var queryurl = encodeURI(queryUrlHead + query + queryUrlTail);
-
-        jQuery.ajax({
-            url: queryurl,
-            method:"POST",
-            success: function(data) {
-                console.log("Insert successfull");
-            },
-            async:false
-        });
-
-        return true;
-    };
     /**
      * gets the data from the sql query with the address
      * @param response
@@ -569,37 +468,42 @@
     function _createGeoObjects(response) {
         //do something with the data using response.rows
         var geo = [];
-        if (typeof(response.rows) != 'undefined') {
-            var resultLength = response.rows.length;
-            for (var i = 0; i < resultLength; i++) {
-                var id = response.rows[i][0];
-                var name = response.rows[i][1];
-                var lat = response.rows[i][2];
-                var long = response.rows[i][3];
-                var countryCode = response.rows[i][4];
-                var population = response.rows[i][5];
-                var elevation = response.rows[i][6];
-                var geoObject = null;
-                var onlyDigitsPattern = new RegExp("^[0-9]*$");
-                //var latLongPatternCheck = new RegExp("^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$");
-                if (onlyDigitsPattern.test(id)
-                    && typeof(name) === "string"
-                    && typeof(parseFloat(lat)) === "number"
-                    && typeof(parseFloat(long)) === "number"
-                    && typeof(countryCode) === "string"
-                    && onlyDigitsPattern.test(population)
-                    && onlyDigitsPattern.test(elevation)) {
-                    geoObject = new dataManager.GeoObject(id, name, lat, long, countryCode, population, elevation, null, null, null, null);
-                    //console.debug("[DM] geoObject: " + geoObject.toString());
-                    geo.push(geoObject);
-                } else {
+        if (response != 'null') {
+            if (typeof(response.rows) != 'undefined') {
+                var resultLength = response.rows.length;
+                for (var i = 0; i < resultLength; i++) {
+                    var id = response.rows[i][0];
+                    var name = response.rows[i][1];
+                    var lat = response.rows[i][2];
+                    var long = response.rows[i][3];
+                    var countryCode = response.rows[i][4];
+                    var population = response.rows[i][5];
+                    var elevation = response.rows[i][6];
+                    var geoObject = null;
+                    var onlyDigitsPattern = new RegExp("^[0-9]*$");
+                    //var latLongPatternCheck = new RegExp("^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$");
+                    if (onlyDigitsPattern.test(id)
+                        && typeof(name) === "string"
+                        && typeof(parseFloat(lat)) === "number"
+                        && typeof(parseFloat(long)) === "number"
+                        && typeof(countryCode) === "string"
+                        && onlyDigitsPattern.test(population)
+                        && onlyDigitsPattern.test(elevation)) {
+                        geoObject = new dataManager.GeoObject(id, name, lat, long, countryCode, population, elevation, null, null, null, null);
+                        //console.debug("[DM] geoObject: " + geoObject.toString());
+                        geo.push(geoObject);
+                    } else {
 
-                    //console.debug("[DM] error validating geoObjRow for: " + name);
+                        //console.debug("[DM] error validating geoObjRow for: " + name);
+                    }
+
                 }
-
+            } else {
+                console.error("[DM] Query returned no results.")
             }
         } else {
-            console.error("[DM] Query returned no results.")
+            console.error("[DM] Query failed.")
+
         }
         console.debug("[DM] Query returned "+ geo.length+ " results.");
         return geo;
