@@ -133,11 +133,11 @@
                 var resultLength = targetCountries.rows.length;
 
                 for (var i = 0; i < resultLength; i++) {
-                    var name = targetCountries.rows[i][0];
-                    var code = targetCountries.rows[i][8];
-                    var population = parseInt(targetCountries.rows[i][5]);
-                    var lat = parseFloat(targetCountries.rows[i][6].split(",")[0]);
-                    var long = parseFloat(targetCountries.rows[i][6].split(",")[1]);
+                    var name = targetCountries.rows[i][5];
+                    var code = targetCountries.rows[i][0];
+                    var population = parseInt(targetCountries.rows[i][10]);
+                    var lat = parseFloat(targetCountries.rows[i][11].split(",")[0]);
+                    var long = parseFloat(targetCountries.rows[i][11].split(",")[1]);
                     if (typeof(code) === "string"
                     ) {
                         var geoObject = new dataManager.GeoObject(i, name, lat, long, code, population, 0, null, null, null, null);
