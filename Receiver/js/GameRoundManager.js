@@ -324,7 +324,7 @@
                                     var bounds = results[i].geometry.bounds;
                                     var viewport = results[i].geometry.viewport;
                                     geoObject = new dataManager.GeoObject(0, countryName, pos.lat(), pos.lng(), countryCode, 0, 0, null, viewport, bounds, locationType);
-                                    _evaluateAnswer(user,countryCode,geoObject);
+                                    _evaluateAnswer(user,countryName,geoObject);
                                     break;
                                 }
                             }
@@ -379,6 +379,8 @@
                             for (var b = 0; b < results[0].address_components[i].types.length; b++) {
                                 if (results[0].address_components[i].types[b] == "country") {
                                     countryCode = results[0].address_components[i].short_name;
+                                    countryCode = results[0].address_components[i].long_name;
+
                                     break;
                                 }
                             }
@@ -408,10 +410,12 @@
         var points = 0;
         var distInKm = 10000000000;
         if (answerGeoObject != null) {
-            if (gameModeManager.currentGameModeProfile.pointingMode && cleanedAnswerString === gameRoundManager.goalGeoObject.countryCode){
+            if (gameModeManager.currentGameModeProfile.pointingMode && cleanedAnswerString === gameRoundManager.goalGeoObject.name){
                 points = gameRoundManager.getMaxPointsPerAnswer();
                 print("[GRM] " + user.name + " got " + points + " points for the RIGHT answer (" + cleanedAnswerString + ")");
-
+                user.lastAnswerGiven = new grm.Answer(cleanedAnswerString,distInKm,answerGeoObject,points);
+                renderManager.refreshBottomScoreboard();
+                return;
             } else {
                 distInKm = _getDistance(answerGeoObject.position, gameRoundManager.goalGeoObject.position) / 1000;
             }
@@ -424,7 +428,7 @@
                 print("[GRM] " + user.name + " got " + points + " points for the WRONG answer (" + cleanedAnswerString + ")");
             }
         } else {
-            if (answerGeoObject != null) {
+            if (answerGeoObject != null ) {
                 var maxDistanceErrorKm = data.constants.maxDistanceErrorKmDefault;
                 points = Math.floor(Math.max(0,Math.min(data.constants.maxPointsPerAnswer,(maxDistanceErrorKm+100-distInKm)/100))) * gameModeManager.currentGameModeProfile.scoreWeightFactor;
                 print("[GRM] " + user.name + " got " + points + " points for " + cleanedAnswerString + ' (' + answerGeoObject.countryCode + ', '+Math.floor(distInKm)+'km)');
