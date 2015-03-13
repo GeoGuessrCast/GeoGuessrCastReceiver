@@ -51,8 +51,8 @@
         if (gameRoundManager.currentRoundStartMs == null) return gameModeManager.currentGameModeProfile.timePerRoundSec;
         console.debug("new Date().getTime(): " + new Date().getTime());
         console.debug("gameRoundManager.currentRoundStartMs: " + gameRoundManager.currentRoundStartMs);
-        console.debug(Math.round(gameModeManager.currentGameModeProfile.timePerRoundSec - ( new Date().getTime() - gameRoundManager.currentRoundStartMs ) / 1000 - 300));
-        return Math.max(0, Math.round(gameModeManager.currentGameModeProfile.timePerRoundSec - ( new Date().getTime() - gameRoundManager.currentRoundStartMs ) / 1000 - 300));
+        console.debug(Math.round(gameModeManager.currentGameModeProfile.timePerRoundSec - ( new Date().getTime() - gameRoundManager.currentRoundStartMs ) / 1000 - 0.3));
+        return Math.max(0, Math.round(gameModeManager.currentGameModeProfile.timePerRoundSec - ( new Date().getTime() - gameRoundManager.currentRoundStartMs ) / 1000 - 0.3));
     };
 
     grm.getCurrentRoundJsonData = function(){
