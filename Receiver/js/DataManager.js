@@ -133,11 +133,11 @@
                 var resultLength = targetCountries.rows.length;
 
                 for (var i = 0; i < resultLength; i++) {
-                    var name = targetCountries.rows[i][0];
-                    var code = targetCountries.rows[i][8];
-                    var population = parseInt(targetCountries.rows[i][5]);
-                    var lat = parseFloat(targetCountries.rows[i][6].split(",")[0]);
-                    var long = parseFloat(targetCountries.rows[i][6].split(",")[1]);
+                    var name = targetCountries.rows[i][5];
+                    var code = targetCountries.rows[i][0];
+                    var population = parseInt(targetCountries.rows[i][10]);
+                    var lat = parseFloat(targetCountries.rows[i][11].split(",")[0]);
+                    var long = parseFloat(targetCountries.rows[i][11].split(",")[1]);
                     if (typeof(code) === "string"
                     ) {
                         var geoObject = new dataManager.GeoObject(i, name, lat, long, code, population, 0, null, null, null, null);
@@ -160,22 +160,26 @@
 
         // Get all Objects for the requested query, not limited for more diversity
         var select = "*";
-        var where = "population > "+ minPopulation;
+        var where = "population > " + minPopulation;
 
-        var targetCountries = _createFusionTableQuery(ftTableId, select, where, 0, 0, null, null,null);
+        var targetCountries = _createFusionTableQuery(ftTableId, select, where, 0, 0, null, null, null);
+        if (targetCountries != null) {
 
         countryGeoObjects = _createGeoObjectsForCountries(targetCountries, minPopulation);
-        console.log("[DM] Got "+ countryGeoObjects.length +" the query matching criterias.");
+        console.log("[DM] Got " + countryGeoObjects.length + " the query matching criterias.");
         if (countryGeoObjects.length < minPoolSize) {
-         var orderBy = "population DESC";
-         var result = _createFusionTableQuery(ftTableId, select, null, 0, minPoolSize, orderBy, null,null);
-         countryGeoObjects = _createGeoObjectsForCountries(result, 0);
+            var orderBy = "population DESC";
+            var result = _createFusionTableQuery(ftTableId, select, null, 0, minPoolSize, orderBy, null, null);
+            countryGeoObjects = _createGeoObjectsForCountries(result, 0);
 
             console.debug("[DM] getCityGeoObjects: had to ignore population to satisify minPopulation to , it returned now " + (countryGeoObjects.length >= minPoolSize) + " objects");
             if (!(countryGeoObjects.length >= minPoolSize)) {
                 return null;
             }
-         }
+        }
+        } else {
+            console.error("[DM] Could not access db.");
+        }
         return countryGeoObjects;
     }
 
@@ -279,12 +283,13 @@
 
         return Math.min(latZoom, lngZoom, ZOOM_MAX);
     };
+
     dm.getBoundsForCountry = function(countryCode){
 
         var select = "*";
         var where = "countryCode = '"+countryCode+"'";
         var countryCodes = _createFusionTableQuery(ftTableIdCompleteCountryCodes, select, where, 0, 0, null, null,null);
-        if (countryCode != null) {
+        if (countryCode != null && countryCodes != null) {
             if (typeof(countryCodes.rows) != 'undefined') {
                 var resultLength = countryCodes.rows.length;
                 for (var i = 0; i < resultLength; i++) {
@@ -298,20 +303,11 @@
                     var sw = new google.maps.LatLng(minLat, minLong);
                     var bounds = new google.maps.LatLngBounds(sw, ne);
 
-                    //print(minLat);
-                    //print(minLong);
-                    //print(maxLat);
-                    //print(maxLong);
-                    //print(bounds.toString());
-
-
                     console.debug("[DM] Country " + code + " bounds: " + bounds);
 
                 }
             } else {
-                //TODO If no bounds available: take center of country to get position
                 console.error("[DM] Country " + countryCode + "has no saved bounds.");
-
             }
             return bounds;
         } else {
@@ -329,6 +325,8 @@
 
         return zoom;
     };
+
+
     dm.persistHighScoreList = function(userMac, username, userPoints, maxPoints) {
         if (!window.localStorage) {
             console.error("ChromeCast does not support local stoarge.")
@@ -539,7 +537,7 @@
             }
         } else {
             console.error("[DM] Query failed.")
-
+            return null;
         }
         console.debug("[DM] Query returned "+ geo.length+ " results.");
         return geo;
