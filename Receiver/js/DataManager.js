@@ -319,8 +319,8 @@
     dm.getBoundsForCountryGuessing = function(countryCode){
         //TODO better bounds ??
         var worldBounds = new google.maps.LatLngBounds(
-            new google.maps.LatLng(65, -100),           // top left corner of map
-            new google.maps.LatLng(-35, 100)            // bottom right corner
+            new google.maps.LatLng(25, -70),           // top left corner of map
+            new google.maps.LatLng(-25, 70)            // bottom right corner
         );
         return worldBounds;
     };
