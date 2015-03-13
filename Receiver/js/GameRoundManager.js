@@ -86,7 +86,7 @@
             gameModeManager.currentGameMode.geoObjType, countryCode ,
             gameModeManager.currentGameModeProfile.multipleChoiceMode ? data.constants.numberOfChoices : 1, minPopCountry
             , 10);
-        if (geoObjects != null) {
+        if (geoObjects != null && geoObjects[0] != null) {
             gameRoundManager.goalGeoObject = geoObjects[0];
 
             var geoNameChoices = dataManager.getCityNameArray(geoObjects);
@@ -276,10 +276,62 @@
         if (gameModeManager.currentGameModeProfile.pointingMode){
             var pos = _latLongStringToPos(answer);
             var answerGeoObject = new dataManager.GeoObject(0, "", pos.lat(), pos.lng(), null, 0, 0, null, null, null, null);
-            var distInKm = _getDistance(answerGeoObject.position, gameRoundManager.goalGeoObject.position) / 1000;
-            answerGeoObject.name = Math.round(distInKm) + 'km';
-            _evaluateAnswer(user, answerGeoObject.name, answerGeoObject);
-            return;
+
+            if (gameModeManager.currentGameMode.gameModeName === 'City Guessing') {
+                var distInKm = _getDistance(answerGeoObject.position, gameRoundManager.goalGeoObject.position) / 1000;
+                answerGeoObject.name = Math.round(distInKm) + 'km';
+                _evaluateAnswer(user, answerGeoObject.name, answerGeoObject);
+                return;
+            }else if (gameModeManager.currentGameMode.gameModeName === 'Country Guessing'){
+                var locationType = "country"
+                console.debug("Country guessing - pointing mode selected");
+                gameModeManager.getGeocoder().geocode({
+                    'latLng': pos
+                    }, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        for (var i = 0; i < results.length; i++) {
+                            var isValidLocality = false;
+                            if (results[i]) {
+                                for (var a = 0; a < results[i].types.length; a++) {
+                                    if (results[i].types[a] == locationType) {
+                                        isValidLocality = true;
+                                        break;
+                                    }
+                                }
+                                if (isValidLocality) {
+                                    var countryCode = null;
+                                    var countryName = null;
+                                    //finding country code if present:
+                                    for (var z = 0; z < results[i].address_components.length; z++) {
+                                        for (var b = 0; b < results[i].address_components[z].types.length; b++) {
+                                            if (results[i].address_components[z].types[b] == "country") {
+                                                countryCode = results[i].address_components[z].short_name;
+                                                countryName = results[i].address_components[z].long_name;
+
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    var bounds = results[i].geometry.bounds;
+                                    var viewport = results[i].geometry.viewport;
+                                    geoObject = new dataManager.GeoObject(0, countryName, pos.lat(), pos.lng(), countryCode, 0, 0, null, viewport, bounds, locationType);
+                                    _evaluateAnswer(user,countryCode,geoObject);
+                                    break;
+                                }
+                            }
+                        }
+                    } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+                            // TODO: end game, send message
+                            gameRoundManager.currentGameState = data.gameState.ended;
+                            gameRoundManager.gameFailed("Maximum games played today. Sorry.");
+                    } else {
+                            console.error('No results found' + status);
+                    }
+
+                });
+
+                return
+            }
         }
 
 
@@ -347,7 +399,13 @@
         var points = 0;
         var distInKm = 10000000000;
         if (answerGeoObject != null) {
-            distInKm = _getDistance(answerGeoObject.position, gameRoundManager.goalGeoObject.position) / 1000;
+            if (gameModeManager.currentGameModeProfile.pointingMode && answerGeoObject.countryCode === gameRoundManager.goalGeoObject.countryCode){
+                points = gameRoundManager.getMaxPointsPerAnswer();
+                print("[GRM] " + user.name + " got " + points + " points for the RIGHT answer (" + cleanedAnswerString + ")");
+
+            } else {
+                distInKm = _getDistance(answerGeoObject.position, gameRoundManager.goalGeoObject.position) / 1000;
+            }
         }
         if (gameModeManager.currentGameModeProfile.multipleChoiceMode) {
             if (cleanedAnswerString == gameRoundManager.goalGeoObject.name) {
