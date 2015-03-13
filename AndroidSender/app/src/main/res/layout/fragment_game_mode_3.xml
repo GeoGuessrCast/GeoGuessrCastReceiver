@@ -11,6 +11,23 @@ tools:context="de.tud.kp.geoguessrcast.GameActivity" >
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         class="com.google.android.gms.maps.MapFragment"/>
+    <RelativeLayout
+        android:id="@+id/layoutProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:layout_alignParentBottom="true">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:indeterminate="false"
+            android:progressDrawable="@drawable/bar_progress_bar"
+            android:max="100"
+            android:id="@+id/countDownProgressBar"
+            android:layout_gravity="center"/>
+    </RelativeLayout>﻿
 
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/answer_confirm_btn"

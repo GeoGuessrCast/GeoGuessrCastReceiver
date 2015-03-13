@@ -5,11 +5,14 @@ import android.app.FragmentManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -134,12 +137,13 @@ public class GameMode3Fragment extends Fragment {
         sCastManager = mActivity.getCastManager();
         setUpMap();
 
+
+        final ProgressBar countDownProgressBar = (ProgressBar) mActivity.findViewById(R.id.countDownProgressBar);
         //init timer
         mTimer = new TimerWithVibration(mTimeRound, 5, mActivity) {
             @Override
             public void onTimerTick(int second, int percent) {
-//                countDownTimeTextView.setText(String.valueOf(second));
-//                countDownProgressBar.setProgress(percent);
+                countDownProgressBar.setProgress(percent);
             }
             @Override
             public void onTimerFinish() {
@@ -217,11 +221,15 @@ public class GameMode3Fragment extends Fragment {
     private void clearMapFragment(){
         FragmentManager fm = isVersionLollipop()?getChildFragmentManager():getFragmentManager();
         Fragment mapFragment = getMapFragment();
-        if(mapFragment!=null){
-            fm.beginTransaction().remove(mapFragment).commit();
+        try {
+            if (mapFragment != null) {
+                fm.beginTransaction().remove(mapFragment).commitAllowingStateLoss();
+            }
+            googleMap.clear();
+            googleMap = null;
+        }catch (IllegalStateException e) {
+            Log.d("Exception", "IllegalStateException");
         }
-        googleMap.clear();
-        googleMap = null;
     }
 
     @Override
