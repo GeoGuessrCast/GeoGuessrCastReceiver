@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:text="City Name: "
+            android:text="@string/answer_label"
             android:textSize="@dimen/abc_text_size_large_material"/>
         <EditText
             android:id="@+id/cityNameEditText"
