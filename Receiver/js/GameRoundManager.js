@@ -62,6 +62,7 @@
     };
 
     grm.startRound = function(){
+        gameRoundManager.currentRoundStartMs = new Date().getTime() + 1000;
 
         print("\n======= Round " + gameModeManager.currentRound + " =======");
 
