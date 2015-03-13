@@ -5,7 +5,7 @@
     var ftTableIdCity = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
     var ftTableIdCountry = "1Gf74ezjOHKaVxS_vF9PtbJc5yTfm8a6JsuxHGjzD"; https://www.google.com/fusiontables/DataSource?docid=1BuyI_S9TNtXhs_iOg4wwvaL1COJK_tM6UYN5drbF
     var ftTableIdCountryCodes  = "12hNfYsKsCii925gL_5WNh-TdmDu2sjUv_AVPtMeK";
-    var ftTableIdCompleteCountryCodes = "1BuyI_S9TNtXhs_iOg4wwvaL1COJK_tM6UYN5drbf";
+    var ftTableIdCompleteCountryCodes = "1BuyI_S9TNtXhs_iOg4wwvaL1COJK_tM6UYN5drbF";
 
     var queryUrlHead = 'https://www.googleapis.com/fusiontables/v2/query?sql=';
     //Google API Key
