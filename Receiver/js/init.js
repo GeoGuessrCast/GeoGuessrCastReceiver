@@ -10,7 +10,7 @@ function initialize() {
 
 
     if (typeof(cast) !== 'undefined') {
-        cast.receiver.logger.setLevelValue(1000); //= ERROR
+        cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.DEBUG); //= ERROR
         console.log("[init] ChromeCast mode started");
         window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
     } else {
