@@ -1,22 +1,10 @@
-<!--
-Copyright (C) 2014 Google Inc. All Rights Reserved.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
--->
 <!DOCTYPE html>
 <html>
 <head>
-<title>Hello World</title>
+<title>Geo Guessing</title>
+<link rel="stylesheet" href="../Receiver/css/reset.css" type="text/css" media="all">
+<link rel="stylesheet" href="../Receiver/css/style.css" type="text/css" media="all">
+
 <style type="text/css">
 html, body, #wrapper {
    height:100%;
@@ -172,7 +160,7 @@ function appendMessage(message) {
   console.log(message);
   var dw = document.getElementById("debugmessage");
   dw.innerHTML += '\n' + JSON.stringify(message);
-};
+}
 
 /**
  * utility function to handle text typed in by user in the input field
@@ -202,7 +190,7 @@ function transcribe(words) {
   </table>	
 
   <!-- Debbugging output -->
-  <div style="margin:10px; visibility:hidden;">
+  <div style="margin:10px;">
     <textarea rows="20" cols="70" id="debugmessage">
     </textarea>
   </div>
