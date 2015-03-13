@@ -316,6 +316,15 @@
         }
     };
 
+    dm.getBoundsForCountryGuessing = function(countryCode){
+        //TODO better bounds ??
+        var worldBounds = new google.maps.LatLngBounds(
+            new google.maps.LatLng(85, -180),           // top left corner of map
+            new google.maps.LatLng(-85, 180)            // bottom right corner
+        );
+        return worldBounds;
+    };
+
     dm.getZoomLevelForCountry = function(bounds){
         var $mapDiv = $('#map-canvas');
         var mapDim = { height: $mapDiv.height(), width: $mapDiv.width() };

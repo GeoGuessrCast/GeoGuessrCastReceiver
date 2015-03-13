@@ -73,7 +73,12 @@
         } else {
             countryCode = gameModeManager.currentGameModeProfile.limitedCountry;
         }
-        var minPopProfile = gameModeManager.currentGameModeProfile.minPopulationDefault;
+        var minPopProfile;
+        if (gameModeManager.currentGameMode.geoObjType == data.geoObjType.country){
+            minPopProfile = gameModeManager.currentGameModeProfile.minCountryPopulation;
+        } else {
+            minPopProfile = gameModeManager.currentGameModeProfile.minPopulationDefault;
+        }
         var minPopCountry = dataManager.applyHardnessFact(countryCode, minPopProfile);
         print('[GRM] country: ' + countryCode + ', minPop: ' + minPopProfile + '->' + minPopCountry );
 
@@ -95,11 +100,13 @@
             console.debug('[geoObjects] ' + geoObjects);
             print('[geoNameChoices] ' + geoNameChoices);
 
-            var bounds = dataManager.getBoundsForCountry(gameRoundManager.goalGeoObject.countryCode);
-            //var zoom = dataManager.getZoomLevelForCountry(bounds); //USE bounds OR zoom+center !
+            var bounds;
+            if (gameModeManager.currentGameMode.geoObjType == data.geoObjType.country){
+                bounds = dataManager.getBoundsForCountryGuessing(gameRoundManager.goalGeoObject.countryCode);
+            } else {
+                bounds = dataManager.getBoundsForCountry(gameRoundManager.goalGeoObject.countryCode);
+            }
             if (bounds != null) {
-
-
                 gameRoundManager.currentRoundJsonData = {
                     "event_type": data.eventType.startGame,
                     "multipleChoiceMode": gameModeManager.currentGameModeProfile.multipleChoiceMode,
