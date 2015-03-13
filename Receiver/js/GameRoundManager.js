@@ -401,7 +401,7 @@
         var points = 0;
         var distInKm = 10000000000;
         if (answerGeoObject != null) {
-            if (gameModeManager.currentGameModeProfile.pointingMode && answerGeoObject.countryCode === gameRoundManager.goalGeoObject.countryCode){
+            if (gameModeManager.currentGameModeProfile.pointingMode && cleanedAnswerString === gameRoundManager.goalGeoObject.countryCode){
                 points = gameRoundManager.getMaxPointsPerAnswer();
                 print("[GRM] " + user.name + " got " + points + " points for the RIGHT answer (" + cleanedAnswerString + ")");
 
