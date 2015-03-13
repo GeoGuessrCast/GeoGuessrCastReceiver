@@ -42,15 +42,9 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.cast.CastDevice;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.google.sample.castcompanionlibrary.cast.DataCastManager;
 import com.google.sample.castcompanionlibrary.cast.callbacks.DataCastConsumerImpl;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import de.tud.kp.geoguessrcast.adapters.HighscoreListAdapter;
 import de.tud.kp.geoguessrcast.beans.GameSetting;
@@ -380,6 +374,7 @@ public class GameActivity extends ActionBarActivity {
         return sCastManager;
     }
 
+    //TODO:  ProfileBarManager!!!
     private void initProfileBar(){
         //init profile bar
         ImageView profileAvatar = (ImageView) findViewById(R.id.profile_avatar);

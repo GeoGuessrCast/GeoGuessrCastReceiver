@@ -7,18 +7,18 @@
             android:shape="rectangle"
             android:useLevel="false">
             <solid
-                android:color="#dae1e6"/>
+                android:color="@color/colorPrimaryDark"/>
         </shape>
     </item>
 
     <!-- Progress -->
     <item android:id="@android:id/progress">
-        <clip>
+        <clip android:gravity="right">
             <shape
                 android:shape="rectangle"
                 android:useLevel="true">
                 <solid
-                    android:color="@color/colorPrimary"/>
+                    android:color="#dae1e6"/>
             </shape>
         </clip>
 
