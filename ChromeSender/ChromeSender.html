@@ -35,7 +35,7 @@ input {
 <script type="text/javascript" src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
 <script type="text/javascript">
 var applicationID = 'BB3F2634';
-var namespace = 'urn:x-cast:com.google.cast.sample.helloworld';
+var userChannelName = 'urn:x-cast:de.tud.kp.geoguessrcast.userChannel';
 var session = null;
 
 /**
@@ -92,7 +92,7 @@ function sessionListener(e) {
   appendMessage('New session ID:' + e.sessionId);
   session = e;
   session.addUpdateListener(sessionUpdateListener);  
-  session.addMessageListener(namespace, receiverMessage);
+  session.addMessageListener(userChannelName, receiverMessage);
 }
 
 /**
@@ -142,12 +142,12 @@ function stopApp() {
  */
 function sendMessage(message) {
   if (session!=null) {
-    session.sendMessage(namespace, message, onSuccess.bind(this, "Message sent: " + message), onError);
+    session.sendMessage(userChannelName, message, onSuccess.bind(this, "Message sent: " + message), onError);
   }
   else {
     chrome.cast.requestSession(function(e) {
         session = e;
-        session.sendMessage(namespace, message, onSuccess.bind(this, "Message sent: " + message), onError);
+        session.sendMessage(userChannelName, message, onSuccess.bind(this, "Message sent: " + message), onError);
       }, onError);
   }
 }
