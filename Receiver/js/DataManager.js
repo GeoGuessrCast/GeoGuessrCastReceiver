@@ -5,7 +5,7 @@
     var ftTableIdCity = "1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os";
     var ftTableIdCountry = "1Gf74ezjOHKaVxS_vF9PtbJc5yTfm8a6JsuxHGjzD"; https://www.google.com/fusiontables/DataSource?docid=1BuyI_S9TNtXhs_iOg4wwvaL1COJK_tM6UYN5drbF
     var ftTableIdCountryCodes  = "12hNfYsKsCii925gL_5WNh-TdmDu2sjUv_AVPtMeK";
-    var ftTableIdCompleteCountryCodes = "1BuyI_S9TNtXhs_iOg4wwvaL1COJK_tM6UYN5drbF";
+    var ftTableIdCompleteCountryCodes = "1BuyI_S9TNtXhs_iOg4wwvaL1COJK_tM6UYN5drbf";
 
     var queryUrlHead = 'https://www.googleapis.com/fusiontables/v2/query?sql=';
     //Google API Key
@@ -160,22 +160,26 @@
 
         // Get all Objects for the requested query, not limited for more diversity
         var select = "*";
-        var where = "population > "+ minPopulation;
+        var where = "population > " + minPopulation;
 
-        var targetCountries = _createFusionTableQuery(ftTableId, select, where, 0, 0, null, null,null);
+        var targetCountries = _createFusionTableQuery(ftTableId, select, where, 0, 0, null, null, null);
+        if (targetCountries != null) {
 
         countryGeoObjects = _createGeoObjectsForCountries(targetCountries, minPopulation);
-        console.log("[DM] Got "+ countryGeoObjects.length +" the query matching criterias.");
+        console.log("[DM] Got " + countryGeoObjects.length + " the query matching criterias.");
         if (countryGeoObjects.length < minPoolSize) {
-         var orderBy = "population DESC";
-         var result = _createFusionTableQuery(ftTableId, select, null, 0, minPoolSize, orderBy, null,null);
-         countryGeoObjects = _createGeoObjectsForCountries(result, 0);
+            var orderBy = "population DESC";
+            var result = _createFusionTableQuery(ftTableId, select, null, 0, minPoolSize, orderBy, null, null);
+            countryGeoObjects = _createGeoObjectsForCountries(result, 0);
 
             console.debug("[DM] getCityGeoObjects: had to ignore population to satisify minPopulation to , it returned now " + (countryGeoObjects.length >= minPoolSize) + " objects");
             if (!(countryGeoObjects.length >= minPoolSize)) {
                 return null;
             }
-         }
+        }
+        } else {
+            console.error("[DM] Could not access db.");
+        }
         return countryGeoObjects;
     }
 
@@ -279,12 +283,13 @@
 
         return Math.min(latZoom, lngZoom, ZOOM_MAX);
     };
+
     dm.getBoundsForCountry = function(countryCode){
 
         var select = "*";
         var where = "countryCode = '"+countryCode+"'";
         var countryCodes = _createFusionTableQuery(ftTableIdCompleteCountryCodes, select, where, 0, 0, null, null,null);
-        if (countryCode != null) {
+        if (countryCode != null && countryCodes != null) {
             if (typeof(countryCodes.rows) != 'undefined') {
                 var resultLength = countryCodes.rows.length;
                 for (var i = 0; i < resultLength; i++) {
@@ -298,20 +303,11 @@
                     var sw = new google.maps.LatLng(minLat, minLong);
                     var bounds = new google.maps.LatLngBounds(sw, ne);
 
-                    //print(minLat);
-                    //print(minLong);
-                    //print(maxLat);
-                    //print(maxLong);
-                    //print(bounds.toString());
-
-
                     console.debug("[DM] Country " + code + " bounds: " + bounds);
 
                 }
             } else {
-                //TODO If no bounds available: take center of country to get position
                 console.error("[DM] Country " + countryCode + "has no saved bounds.");
-
             }
             return bounds;
         } else {
@@ -329,6 +325,8 @@
 
         return zoom;
     };
+
+
     dm.persistHighScoreList = function(userMac, username, userPoints, maxPoints) {
         if (!window.localStorage) {
             console.error("ChromeCast does not support local stoarge.")
@@ -539,7 +537,7 @@
             }
         } else {
             console.error("[DM] Query failed.")
-
+            return null;
         }
         console.debug("[DM] Query returned "+ geo.length+ " results.");
         return geo;
