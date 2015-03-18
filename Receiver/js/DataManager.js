@@ -299,8 +299,8 @@
                     var minLong = countryCodes.rows[i][3];
                     var maxLong = countryCodes.rows[i][4];
 
-                    var ne = new google.maps.LatLng(maxLat, maxLong);
                     var sw = new google.maps.LatLng(minLat, minLong);
+                    var ne = new google.maps.LatLng(maxLat, maxLong);
                     var bounds = new google.maps.LatLngBounds(sw, ne);
 
                     console.debug("[DM] Country " + code + " bounds: " + bounds);
@@ -319,8 +319,8 @@
     dm.getBoundsForCountryGuessing = function(countryCode){
         //TODO better bounds ??
         var worldBounds = new google.maps.LatLngBounds(
-            new google.maps.LatLng(15.0, -30.0),           // top left corner of map
-            new google.maps.LatLng(-15.0, 30.0)            // bottom right corner
+            new google.maps.LatLng(-15.0, -30.0),           // southwest corner of map
+            new google.maps.LatLng(15.0, 30.0)            // northeast corner
         );
         return worldBounds;
     };
