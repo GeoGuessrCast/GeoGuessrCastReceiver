@@ -224,6 +224,29 @@ public class GameActivity extends ActionBarActivity {
             startFragment(new WaitGameFragment());
         }
 
+        //If the startGame Event already received in WelcomeActivity, but the Listeners for events are not registered...
+        //then the latejoined User will not join the game...
+        //TODO: need to find a better approach
+        if(User.getInstance().persistedStartGameMsg!=null){
+            User.PersistedStartGameMsg persistedStartGameMsg = User.getInstance().persistedStartGameMsg;
+            int roundNumber = persistedStartGameMsg.roundNumber;
+            int timeRound = persistedStartGameMsg.timeRound;
+            int maxRounds = persistedStartGameMsg.maxRounds;
+            mProfileBarMgr.updateRound(roundNumber, maxRounds);
+            mProfileBarMgr.initPointInfo();
+            if(persistedStartGameMsg.isMultipleChoiceMode){
+                String[] choices = persistedStartGameMsg.choices;
+                startFragment(GameMode2Fragment.newInstance(roundNumber, timeRound, choices));
+            }
+            else if(persistedStartGameMsg.isPointingMode){
+                double[] defaultBounds = persistedStartGameMsg.defaultBounds;
+                String mapType = persistedStartGameMsg.mapType;
+                startFragment(GameMode3Fragment.newInstance(defaultBounds, mapType, roundNumber, timeRound));
+            }
+            else{
+                startFragment(GameMode1Fragment.newInstance(roundNumber, timeRound));
+            }
+        }
 
     }
 

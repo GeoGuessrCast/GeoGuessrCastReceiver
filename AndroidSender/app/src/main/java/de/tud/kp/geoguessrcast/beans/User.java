@@ -18,6 +18,7 @@ public class User {
     private String event_type = "createUser";
     private String color;
     private int points=0;
+    public PersistedStartGameMsg persistedStartGameMsg;
 
     public User() {
     }
@@ -89,5 +90,16 @@ public class User {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    public static class PersistedStartGameMsg{
+        public boolean isMultipleChoiceMode = false;
+        public boolean isPointingMode = false;
+        public int roundNumber;
+        public int timeRound;
+        public int maxRounds;
+        public String[] choices;
+        public double[] defaultBounds;
+        public String mapType;
     }
 }

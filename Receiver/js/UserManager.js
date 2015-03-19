@@ -145,7 +145,6 @@
         }
         eventManager.send(event.senderId, data.channelName.user, jsonData);
 
-        console.log("Test: " + gameRoundManager.currentRoundJsonData);
         //start round if running
         if (gameRoundManager.currentRoundJsonData != null) {
             print('sending currentRoundJsonData @latecomer...');

@@ -164,6 +164,27 @@ public class WelcomeActivity extends ActionBarActivity {
                     }
                     Log.d(TAG, "onMessageReceived from UserChannel: " + message);
                 }
+                else if(namespace.equals(getString(R.string.gameChannel))){
+                    if(gameMessage.getEvent_type().equals("startGame")){
+                        if(gameMessage.isStarted()){
+                            User.getInstance().persistedStartGameMsg = new User.PersistedStartGameMsg();
+                            User.getInstance().persistedStartGameMsg.roundNumber = gameMessage.getRoundNumber();
+                            User.getInstance().persistedStartGameMsg.timeRound = gameMessage.getTimerRound();
+                            User.getInstance().persistedStartGameMsg.maxRounds = gameMessage.getMaxRounds();
+                            if(gameMessage.isMultipleChoiceMode()){
+                                User.getInstance().persistedStartGameMsg.isMultipleChoiceMode = true;
+                                User.getInstance().persistedStartGameMsg.choices = gameMessage.getChoices();
+                            }
+                            else if(gameMessage.isPointingMode()){
+                                User.getInstance().persistedStartGameMsg.isPointingMode = true;
+                                User.getInstance().persistedStartGameMsg.defaultBounds = gameMessage.getBounds();
+                                User.getInstance().persistedStartGameMsg.mapType = gameMessage.getMapTypeTemplate();
+                            }
+                        }
+                    }
+
+                    Log.d(TAG, "onMessageReceived from GameChannel: " + message);
+                }
             }
         };
 
