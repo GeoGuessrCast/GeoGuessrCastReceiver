@@ -197,7 +197,7 @@ data = {
             minCountryPopulation: 8111000,
             minPopulationDefault: 700111,
             scoreWeightFactor: 1.0,
-            timePerRoundSec: 20,
+            timePerRoundSec: 40,
             mapOption: {
                 mapType : google.maps.MapTypeId.SATELLITE, // ROADMAP || HYBRID || TERRAIN
                 borders: true,
