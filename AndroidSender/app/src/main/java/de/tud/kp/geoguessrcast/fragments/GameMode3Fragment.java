@@ -71,7 +71,6 @@ public class GameMode3Fragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment GameMode3Fragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static GameMode3Fragment newInstance(double[] bounds, String mapType, int roundNumber, int timeRound) {
         GameMode3Fragment fragment = new GameMode3Fragment();
         Bundle args = new Bundle();

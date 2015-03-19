@@ -55,6 +55,7 @@ import de.tud.kp.geoguessrcast.fragments.GameMode1Fragment;
 import de.tud.kp.geoguessrcast.fragments.GameMode2Fragment;
 import de.tud.kp.geoguessrcast.fragments.GameMode3Fragment;
 import de.tud.kp.geoguessrcast.fragments.WaitGameFragment;
+import de.tud.kp.geoguessrcast.managers.ProfileBarManager;
 
 /**
  * Main activity to send messages to the receiver.
@@ -79,6 +80,8 @@ public class GameActivity extends ActionBarActivity {
     private static DataCastConsumerImpl sCastManagerConsumer;
     private Context mContext;
 
+    private ProfileBarManager mProfileBarMgr;
+
 
 
     @Override
@@ -88,8 +91,9 @@ public class GameActivity extends ActionBarActivity {
         mContext = this;
 
         mUser = User.getInstance();
+        mProfileBarMgr = new ProfileBarManager(this);
 
-        initProfileBar();
+        mProfileBarMgr.initProfileBar();
 
         //Setup CastManager
         try{
@@ -126,8 +130,8 @@ public class GameActivity extends ActionBarActivity {
                             int roundNumber = gameMessage.getRoundNumber();
                             int timeRound = gameMessage.getTimerRound();
                             int maxRounds = gameMessage.getMaxRounds();
-                            updateRoundOfProfileBar(roundNumber, maxRounds);
-                            initPointInfoOfProfileBar();
+                            mProfileBarMgr.updateRound(roundNumber, maxRounds);
+                            mProfileBarMgr.initPointInfo();
                             if(gameMessage.isMultipleChoiceMode()){
                                 String[] choices = gameMessage.getChoices();
                                 startFragment(GameMode2Fragment.newInstance(roundNumber, timeRound, choices));
@@ -145,19 +149,11 @@ public class GameActivity extends ActionBarActivity {
                     else if(gameMessage.getEvent_type().equals("round_ended")) {
                         if (gameMessage.isEnded() == true) {
                             int pointsEarned = gameMessage.getPointsEarned();
-                            updatePointOfProfileBar(pointsEarned);
+                            mProfileBarMgr.updatePoint(pointsEarned);
                         }
                     }
                     else if(gameMessage.getEvent_type().equals("game_ended")){
                         if(gameMessage.isEnded()==true){
-                            //clearFragmentBackStack();
-                            //TODO: GameManager - restartGame - resetAll!!!
-                            //User.resetInstance();
-                            //TODO: GameManager-initStartPage...
-//                            ((Activity)mContext).finish();
-                            //TODO make a method called hideOptionMenu
-//                            mOptionMenu.setGroupVisible(R.id.adminMenu, false);
-
                             //TODO:  EventTransitionMngr: request HighScoreList!!!
                             try {
                                 GameMessage gameMessageToSend = new GameMessage();
@@ -181,7 +177,7 @@ public class GameActivity extends ActionBarActivity {
                     Log.d(TAG, "onMessageReceived from UserChannel: " + message);
                     if(gameMessage.getEvent_type().equals("answer_feedback")){
                         int pointsEarned = gameMessage.getPointsEarned();
-                        updatePointOfProfileBar(pointsEarned);
+                        mProfileBarMgr.updatePoint(pointsEarned);
                     }
                     else if(gameMessage.getEvent_type().equals("isAdmin")){
                         mUser.setColor(gameMessage.getUser_color());
@@ -193,7 +189,7 @@ public class GameActivity extends ActionBarActivity {
                             gameSetting.setGameProfiles(gameMessage.getGameProfiles());
                             mOptionMenu.setGroupVisible(R.id.adminMenu, true);
                             if(getCurrentFragment() instanceof WaitGameFragment){
-                                startFragment(ChooseModeFragment.newInstance(1));
+                                startFragment(ChooseModeFragment.newInstance(0));
                             }
                         }
                     }
@@ -240,7 +236,7 @@ public class GameActivity extends ActionBarActivity {
             //close the app completely! so that the connection is disabled.
             //if the user exit the game manually, then the connection will be closed
             sCastManager.disconnect();
-            this.finish();
+//            this.finish();
         }
         doubleBackToExitPressedOnce = true;
         Toast.makeText(getApplicationContext(), "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
@@ -342,6 +338,7 @@ public class GameActivity extends ActionBarActivity {
                 catch (Exception e){
                     Log.d(TAG, "Send Message to AdminChannel failed");
                 }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -374,58 +371,6 @@ public class GameActivity extends ActionBarActivity {
         return sCastManager;
     }
 
-    //TODO:  ProfileBarManager!!!
-    private void initProfileBar(){
-        //init profile bar
-        ImageView profileAvatar = (ImageView) findViewById(R.id.profile_avatar);
-        Drawable avatarDrawable = getResources().getDrawable(R.drawable.ic_account_circle_white_48dp);
-        String avatarColorString = mUser.getColor();
-        avatarDrawable.setColorFilter(Color.parseColor(avatarColorString), PorterDuff.Mode.MULTIPLY);
-        profileAvatar.setImageDrawable(avatarDrawable);
 
-        //init profile name;
-        TextView profileUsername = (TextView) findViewById(R.id.profile_username);
-        profileUsername.setText(mUser.getUserName());
-
-        //hide profile round info;
-        LinearLayout profileRoundInfo = (LinearLayout) findViewById(R.id.profile_round_info);
-        profileRoundInfo.setVisibility(View.GONE);
-
-        //hide profile point info
-        LinearLayout profilePointInfo = (LinearLayout) findViewById(R.id.profile_point_info);
-        TextView profilePoints = (TextView) findViewById(R.id.profile_points);
-        profilePoints.setText(Integer.toString(0));
-        profilePointInfo.setVisibility(View.INVISIBLE);
-    }
-
-    private void updateRoundOfProfileBar(int currentRound, int maxRound){
-        LinearLayout profileRoundInfo = (LinearLayout) findViewById(R.id.profile_round_info);
-        TextView profileCurrentRound = (TextView) findViewById(R.id.profile_current_round);
-        TextView profileMaxRound = (TextView) findViewById(R.id.profile_max_round);
-        if(profileRoundInfo.getVisibility()==View.GONE||profileRoundInfo.getVisibility()== View.INVISIBLE){
-            profileRoundInfo.setVisibility(View.VISIBLE);
-        }
-        profileCurrentRound.setText(Integer.toString(currentRound));
-        profileMaxRound.setText(Integer.toString(maxRound));
-
-    }
-
-    private void updatePointOfProfileBar(int addedPoint){
-        TextView profilePoints = (TextView) findViewById(R.id.profile_points);
-        int currentPoints = Integer.parseInt(profilePoints.getText().toString());
-        int newPoints = currentPoints + addedPoint;
-        //TODO animation probably? digital increasing
-        profilePoints.setText(Integer.toString(newPoints));
-        mUser.setPoints(newPoints);
-    }
-
-    private void initPointInfoOfProfileBar(){
-        LinearLayout profilePointInfo = (LinearLayout) findViewById(R.id.profile_point_info);
-        TextView profileMaxRound = (TextView) findViewById(R.id.profile_points);
-        if(profilePointInfo.getVisibility()==View.GONE||profilePointInfo.getVisibility()== View.INVISIBLE){
-            profilePointInfo.setVisibility(View.VISIBLE);
-            profileMaxRound.setText(Integer.toString(mUser.getPoints()));
-        }
-    }
 
 }
