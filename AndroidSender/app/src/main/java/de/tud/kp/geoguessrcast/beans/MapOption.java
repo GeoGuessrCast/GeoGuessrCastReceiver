@@ -11,6 +11,7 @@ public class MapOption {
     private boolean showRiverNames;
     private boolean showCountryNames;
 
+
     public String getMapType() {
         return mapType;
     }
