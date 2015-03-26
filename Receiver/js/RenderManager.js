@@ -28,7 +28,6 @@
                 fillOpacity: 1
             }
         });
-        gameRoundManager.markerBounds.extend(position);
 
         userMarkers.push(marker);
         var line = new google.maps.Polyline({
