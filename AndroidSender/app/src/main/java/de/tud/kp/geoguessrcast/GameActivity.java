@@ -29,6 +29,7 @@ import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -37,6 +38,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -197,13 +199,49 @@ public class GameActivity extends ActionBarActivity {
                     }
                     else if(gameMessage.getEvent_type().equals("returnHighScoreList")){
                         //TODO: aufräumen
-                        View view = getLayoutInflater().inflate(R.layout.highscore_listview, null);
+/*                        View view = getLayoutInflater().inflate(R.layout.highscore_listview, null);
                         ListView highscoreListView =  (ListView)view.findViewById(R.id.highscore_entry);
                         highscoreListView.setAdapter(new HighscoreListAdapter(gameMessage.getHighScoreList(), mContext));
                         MaterialDialog highscoreDialog = new MaterialDialog.Builder(mContext)
                                 .title(R.string.high_score)
                                 .customView(view, false)
                                 .build();
+                        highscoreDialog.setCanceledOnTouchOutside(false);
+                        highscoreDialog.show();*/
+
+                        View view = getLayoutInflater().inflate(R.layout.highscore_listview, null);
+                        TabHost highscoreTabs =  (TabHost)view.findViewById(R.id.highscore_tabhost);
+                        ListView highscoreListView =  (ListView)view.findViewById(R.id.global_highscore_entry);
+                        highscoreListView.setAdapter(new HighscoreListAdapter(gameMessage.getHighScoreList(), mContext));
+                        ListView localHighscoreListView =  (ListView)view.findViewById(R.id.local_highscore_entry);
+                        localHighscoreListView.setAdapter(new HighscoreListAdapter(gameMessage.getLocalHighScoreList(), mContext));
+
+
+                        highscoreTabs.setup();
+
+                        TabHost.TabSpec tabpage1 = highscoreTabs.newTabSpec("Local");
+                        tabpage1.setContent(R.id.local_highscore_entry);
+                        tabpage1.setIndicator("Local Score");
+
+                        TabHost.TabSpec tabpage2 = highscoreTabs.newTabSpec("Global");
+                        tabpage2.setContent(R.id.global_highscore_entry);
+                        tabpage2.setIndicator("Global Score");
+
+                        highscoreTabs.addTab(tabpage1);
+                        highscoreTabs.addTab(tabpage2);
+
+                        MaterialDialog highscoreDialog = new MaterialDialog.Builder(mContext)
+                                .negativeText(R.string.close)
+                                .callback(new MaterialDialog.ButtonCallback() {
+                                    @Override
+                                    public void onNegative(MaterialDialog dialog) {
+                                        super.onNegative(dialog);
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .customView(view, false)
+                                .build();
+
                         highscoreDialog.setCanceledOnTouchOutside(false);
                         highscoreDialog.show();
                     }

@@ -350,7 +350,7 @@
             highscores.push(new this.Highscore(userMacHash, username,userPoints, maxPoints));
 
             localStorage.setItem("highscores",JSON.stringify(highscores));
-            console.debug("[DM] Saved new user highscore: "+highscores);
+            //console.debug("[DM] Saved new user highscore: "+highscores);
         } else {
             highscores = JSON.parse(localStorage.getItem("highscores"));
             console.debug("user highscores: "+highscores.length);
@@ -361,7 +361,7 @@
                 if(oldScore.userMac === userMacHash){
                     var newScore = new this.Highscore(userMacHash,username,oldScore.points + userPoints, oldScore.totalPoints + maxPoints);
                     highscores[i] = newScore;
-                    console.debug("[DM] updated user highscore: "+oldScore.name+"->"+ newScore);
+                    //console.debug("[DM] updated user highscore: "+oldScore.name+"->"+ newScore);
                     isNewUser = false;
                     break;
                 }
@@ -369,7 +369,7 @@
             if (isNewUser){
                 var newScore = new this.Highscore(userMacHash, username ,userPoints, maxPoints);
                 highscores[i] = newScore;
-                console.debug("[DM] Saved new user highscore: "+oldScore.name+"->"+ newScore);
+                //console.debug("[DM] Saved new user highscore: "+oldScore.name+"->"+ newScore);
 
             }
             localStorage.setItem("highscores", JSON.stringify(highscores));
@@ -392,11 +392,11 @@
 
         if (localStorage.getItem("highscores") === null)
         {
-            console.debug("No Highscores available, returning empty array");
+            //console.debug("No Highscores available, returning empty array");
         } else {
 
             var highscores = JSON.parse(localStorage.getItem("highscores"));
-            console.debug("user highscores: "+highscores.length);
+            //console.debug("user highscores: "+highscores.length);
 
             for (var i = 0; i < highscores.length; i++){
                 if (highscores[i].totalPoints >= minTotalPoints){

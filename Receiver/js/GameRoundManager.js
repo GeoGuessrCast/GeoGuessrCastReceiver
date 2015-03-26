@@ -128,7 +128,6 @@
                 if (gameModeManager.currentGameModeProfile.pointingMode == false) {
                     _placeGoalMarker(goalPos);
                 } else {
-                    console.debug("GRM Bounds: "+bounds.toString()+ " Goal: ");
                     gameRoundManager.markerBounds = dataManager.getBoundsForCountry(gameRoundManager.goalGeoObject.countryCode);
 
                     if (gameModeManager.goalMarker != null) {
@@ -420,6 +419,7 @@
         var points = 0;
         var distInKm = 10000000000;
         if (answerGeoObject != null) {
+            gameRoundManager.markerBounds.extend(answerGeoObject.position);
             if (gameModeManager.currentGameModeProfile.pointingMode && cleanedAnswerString === gameRoundManager.goalGeoObject.name){
                 points = gameRoundManager.getMaxPointsPerAnswer();
                 print("[GRM] " + user.name + " got " + points + " points for the RIGHT answer (" + cleanedAnswerString + ")");

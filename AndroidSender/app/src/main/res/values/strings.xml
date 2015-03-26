@@ -17,6 +17,7 @@
     <string name="tip">Tip</string>
     <string name="loading">Loading</string>
     <string name="ok">OK</string>
+    <string name="close">Close</string>
     <string name="player_confirm_tip">Congrats! You are the admin now! Make sure that all players have already connected to the game.</string>
     <string name="high_score_tip">Global HighScore is already shown on the screen!</string>
     <string name="choose_mode">Start Choosing Mode!</string>
@@ -27,7 +28,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="points_abbreviation">&#160;Pts</string>
     <string name="slash">&#160;/&#160;</string>
-    <string name="high_score">HighScore</string>
+    <string name="high_score">High score</string>
     <string name="number_abbr">No.</string>
     <string name="username_hint">Enter your name</string>
     <string name="username_empty_tip">Please enter your name first</string>

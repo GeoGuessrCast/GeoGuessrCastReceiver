@@ -41,6 +41,7 @@ public class GameMessage {
     int pointsEarned;
 
     Highscore[] highScoreList;
+    Highscore[] localHighScoreList;
 
     public GameMessage(){
     }
@@ -262,5 +263,13 @@ public class GameMessage {
 
     public void setMapTypeTemplate(String mapTypeTemplate) {
         this.mapTypeTemplate = mapTypeTemplate;
+    }
+
+    public Highscore[] getLocalHighScoreList() {
+        return localHighScoreList;
+    }
+
+    public void setLocalHighScoreList(Highscore[] localHighScoreList) {
+        this.localHighScoreList = localHighScoreList;
     }
 }
