@@ -19,8 +19,7 @@
             eventManager.event_onUserMessage(event);
         };
         _getAdminMessageBus().onMessage = function(event) {
-            console.debug('onAdminMessage -> ' + JSON.stringify(event.data));
-            console.debug(JSON.parse(JSON.stringify(event.data)));
+            debugger;
             eventManager.event_onAdminMessage(event);
         };
         _getGameMessageBus().onMessage = function(event) {
@@ -88,7 +87,7 @@
         }
 
         if(eventData.event_type === data.eventType.setGameProfile){
-            console.debug(eventData);
+            debugger;
             gameModeManager.startGame(eventData.gameProfile);
 
         }
