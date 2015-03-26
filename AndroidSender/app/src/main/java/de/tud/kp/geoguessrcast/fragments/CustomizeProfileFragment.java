@@ -172,5 +172,16 @@ public class CustomizeProfileFragment extends Fragment {
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    }
+
 
 }

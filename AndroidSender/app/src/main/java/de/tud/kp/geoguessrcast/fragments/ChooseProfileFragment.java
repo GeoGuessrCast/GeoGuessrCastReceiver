@@ -144,4 +144,16 @@ public class ChooseProfileFragment extends Fragment {
         childView.getBackground().setColorFilter(null);
         ((Button)childView).setTextColor(Color.BLACK);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    }
+
 }

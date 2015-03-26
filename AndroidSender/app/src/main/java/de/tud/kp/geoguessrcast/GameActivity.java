@@ -51,6 +51,8 @@ import de.tud.kp.geoguessrcast.beans.GameSetting;
 import de.tud.kp.geoguessrcast.beans.User;
 import de.tud.kp.geoguessrcast.beans.GameMessage;
 import de.tud.kp.geoguessrcast.fragments.ChooseModeFragment;
+import de.tud.kp.geoguessrcast.fragments.ChooseProfileFragment;
+import de.tud.kp.geoguessrcast.fragments.CustomizeProfileFragment;
 import de.tud.kp.geoguessrcast.fragments.GameMode1Fragment;
 import de.tud.kp.geoguessrcast.fragments.GameMode2Fragment;
 import de.tud.kp.geoguessrcast.fragments.GameMode3Fragment;
@@ -232,6 +234,7 @@ public class GameActivity extends ActionBarActivity {
             int roundNumber = persistedStartGameMsg.roundNumber;
             int timeRound = persistedStartGameMsg.timeRound;
             int maxRounds = persistedStartGameMsg.maxRounds;
+            System.out.println(maxRounds);
             mProfileBarMgr.updateRound(roundNumber, maxRounds);
             mProfileBarMgr.initPointInfo();
             if(persistedStartGameMsg.isMultipleChoiceMode){
@@ -252,6 +255,11 @@ public class GameActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed(){
+        if(getCurrentFragment() instanceof ChooseProfileFragment || getCurrentFragment() instanceof CustomizeProfileFragment){
+            getFragmentManager().popBackStack();
+            return;
+        }
+
         //double click back button to exit
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
@@ -314,6 +322,11 @@ public class GameActivity extends ActionBarActivity {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
 
+            //if there's back button on the actionbar.
+            case android.R.id.home:
+                this.onBackPressed();
+                return true;
+
             case R.id.request_high_score_list:
                 //TODO:  EventTransitionMngr: request HighScoreList!!!
                 try {
@@ -368,14 +381,24 @@ public class GameActivity extends ActionBarActivity {
     }
 
     public void startFragment(Fragment fragment){
-        getFragmentManager()
+        if(fragment instanceof ChooseProfileFragment || fragment instanceof CustomizeProfileFragment){
+            getFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(R.animator.fragment_fade_enter , R.animator.fragment_fade_exit)
+                .setCustomAnimations(R.animator.fragment_fade_enter, R.animator.fragment_fade_exit)
                 .replace(R.id.main_page_container, fragment)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+        }
+        else{
+            getFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(R.animator.fragment_fade_enter , R.animator.fragment_fade_exit)
+                    .replace(R.id.main_page_container, fragment)
 //                .addToBackStack(null)
 //                .commit();
-                //instead of commit for avoiding the "after onSaveInstanceState" problem
-                .commitAllowingStateLoss();
+                            //instead of commit for avoiding the "after onSaveInstanceState" problem
+                    .commitAllowingStateLoss();
+        }
     }
 
     public Fragment getCurrentFragment(){
@@ -384,7 +407,7 @@ public class GameActivity extends ActionBarActivity {
     }
 
     public void clearFragmentBackStack(){
-        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     public static DataCastManager getCastManager() {

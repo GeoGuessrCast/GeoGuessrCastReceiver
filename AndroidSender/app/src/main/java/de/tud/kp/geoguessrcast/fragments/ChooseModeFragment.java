@@ -88,6 +88,7 @@ public class ChooseModeFragment extends Fragment {
                     .show();
             tipDialog.setCanceledOnTouchOutside(false);
             tipDialog.setCancelable(false);
+            mStartMode = 1;
         }
 
     }
@@ -207,4 +208,6 @@ public class ChooseModeFragment extends Fragment {
         childView.getBackground().setColorFilter(null);
         ((Button)childView).setTextColor(Color.BLACK);
     }
+
+
 }
