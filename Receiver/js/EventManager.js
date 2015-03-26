@@ -87,6 +87,7 @@
         }
 
         if(eventData.event_type === data.eventType.setGameProfile){
+            console.debug(eventData);
             gameModeManager.startGame(eventData.gameProfile);
 
         }
