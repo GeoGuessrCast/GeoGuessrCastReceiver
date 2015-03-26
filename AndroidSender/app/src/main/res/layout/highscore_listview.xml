@@ -4,11 +4,45 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="24dp"
-    android:paddingRight="24dp"
-    android:paddingBottom="16dp">
-    <ListView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/highscore_entry" />
+    android:paddingRight="24dp">
+
+    <TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/highscore_tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"/>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:paddingTop="16dp"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1">
+
+                <ListView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/global_highscore_entry" />
+
+                <ListView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/local_highscore_entry" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </TabHost>
 
 </LinearLayout>
+
