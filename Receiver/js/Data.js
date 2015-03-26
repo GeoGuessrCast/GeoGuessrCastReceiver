@@ -90,12 +90,6 @@ data = {
                 showRiverNames: true,
                 showCountryNames: true,
                 renderOptions: {
-                    globalHue: '#ff2b00',
-                    globalGamma: 0.2,
-                    globalSaturation: -99,
-                    waterColor: '#250d0d',
-                    borderColor: '#ffffff',
-                    borderWeight: 0.4
                 }
             }
         },
