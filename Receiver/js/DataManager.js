@@ -316,7 +316,7 @@
         }
     };
 
-    dm.getBoundsForCountryGuessing = function(countryCode){
+    dm.getBoundsForCountryGuessing = function(){
         //TODO better bounds ??
         var worldBounds = new google.maps.LatLngBounds(
             new google.maps.LatLng(-15.0, -150.0),           // southwest corner of map

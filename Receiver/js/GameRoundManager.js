@@ -341,8 +341,10 @@
                             gameRoundManager.currentGameState = data.gameState.ended;
                             gameRoundManager.gameFailed("Maximum games played today. Sorry.");
                     } else {
-
-                            console.error('No results found' + status);
+                        var distInKm = _getDistance(answerGeoObject.position, gameRoundManager.goalGeoObject.position) / 1000;
+                        answerGeoObject.name = Math.round(distInKm) + 'km';
+                        _evaluateAnswer(user, answerGeoObject.name ,answerGeoObject);
+                        //console.error('No results found' + status);
                     }
 
                 });
