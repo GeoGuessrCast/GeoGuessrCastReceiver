@@ -18,6 +18,7 @@
 
     grm.currentRoundJsonData = null;
     grm.currentRoundStartMs = 0;
+    grm.markerBounds = new google.maps.LatLngBounds();
 
     grm.getMaxPointsPerAnswer = function() {
         if (gameModeManager.currentGameModeProfile == null) {
@@ -63,7 +64,6 @@
 
     grm.startRound = function(){
         gameRoundManager.currentRoundStartMs = new Date().getTime() + 1000;
-
         print("\n======= Round " + gameModeManager.currentRound + " =======");
 
         gameRoundManager.currentGameState = data.gameState.guessing;
@@ -128,6 +128,9 @@
                 if (gameModeManager.currentGameModeProfile.pointingMode == false) {
                     _placeGoalMarker(goalPos);
                 } else {
+                    console.debug("GRM Bounds: "+bounds.toString()+ " Goal: ");
+                    gameRoundManager.markerBounds = dataManager.getBoundsForCountry(gameRoundManager.goalGeoObject.countryCode);
+
                     if (gameModeManager.goalMarker != null) {
                         gameModeManager.goalMarker.setMap(null);
                     }
@@ -190,7 +193,10 @@
         if (gameModeManager.currentGameModeProfile.pointingMode == false) {
             renderManager.showMidScreenMessage('Answer: ' + gameRoundManager.goalGeoObject.name, gameRoundManager.roundEvaluationTimeSec-3 );
         } else {
+            gameModeManager.getMap().fitBounds(gameRoundManager.markerBounds);
+            gameModeManager.getMap().setCenter(gameRoundManager.markerBounds.getCenter());
             _placeGoalMarker(gameRoundManager.goalGeoObject.position);
+
         }
 
         var userList = userManager.getUserList();
@@ -335,6 +341,7 @@
                             gameRoundManager.currentGameState = data.gameState.ended;
                             gameRoundManager.gameFailed("Maximum games played today. Sorry.");
                     } else {
+
                             console.error('No results found' + status);
                     }
 
@@ -471,6 +478,8 @@
         } else {
             gameModeManager.goalMarker.setPosition(position);
         }
+        // Extend markerBounds with each random point.
+        gameRoundManager.markerBounds.extend(position);
         gameModeManager.goalMarker.setMap(gameModeManager.getMap());
     }
 

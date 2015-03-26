@@ -9,7 +9,9 @@
     var diffusePartPercet = 3;
     rm.consoleOutPutHidden = false;
 
-
+    rm.getUserMarkers = function(){
+        return userMarkers;
+    }
 
     rm.placeUserMarkerOnMap = function(user, position){
         var marker = new google.maps.Marker({
@@ -26,6 +28,8 @@
                 fillOpacity: 1
             }
         });
+        gameRoundManager.markerBounds.extend(position);
+
         userMarkers.push(marker);
         var line = new google.maps.Polyline({
             path: [gameRoundManager.goalGeoObject.position, position],
