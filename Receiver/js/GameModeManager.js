@@ -18,8 +18,6 @@
     };
 
     gmm.setGameModeProfile = function(gameModeProfileObject){
-        //console.debug('INCOMING PROFILE OBJ.:');
-        //console.debug(gameModeProfileObject);
         if (gameModeManager.originalGameModeProfile == null) {
             gameModeManager.originalGameModeProfile = data.gameModeProfile[gameModeProfileObject.id];
         }
@@ -44,47 +42,29 @@
             }
         }
         gameModeManager.currentGameModeProfile = gameModeProfileObject;
-        //console.debug('SAVED PROFILE OBJ.:');
-        //console.debug(gameModeProfileObject);
-    };
-
-    gmm.applyHardness = function(hardness, countryCode){
-        console.debug('minCountryPopulation: ' + gameModeManager.currentGameModeProfile.minCountryPopulation);
-
-        gameModeManager.currentGameModeProfile.limitedCountry = countryCode;
-
-        var minCountryPopulationFactor = Math.abs(hardness)*(data.constants.minCountryPopulationRange-1)+1;
-        var minPopulationDefaultRangeFactor = Math.abs(hardness)*(data.constants.minPopulationDefaultRange-1)+1;
-        var scoreWeightFactorRangeFactor = Math.abs(hardness)*(data.constants.scoreWeightFactorRange-1)+1;
-
-        if (hardness > 0){
-            minCountryPopulationFactor = 1 / minCountryPopulationFactor;
-            minPopulationDefaultRangeFactor = 1 / minPopulationDefaultRangeFactor;
-            scoreWeightFactorRangeFactor = 1 / scoreWeightFactorRangeFactor;
-        }
-
-        gameModeManager.currentGameModeProfile.minCountryPopulation *= minCountryPopulationFactor;
-        gameModeManager.currentGameModeProfile.minPopulationDefault *= minPopulationDefaultRangeFactor;
-        gameModeManager.currentGameModeProfile.scoreWeightFactor *= scoreWeightFactorRangeFactor;
-        console.debug('applyHardness:');
-        console.debug('minCountryPopulation: ' + gameModeManager.currentGameModeProfile.minCountryPopulation);
     };
 
 
-    gmm.startGame = function(hardness, countryCode){
-        gameModeManager.applyHardness(hardness, countryCode);
+    /**
+     * starts a new game with config objects
+     * @param {Object} profileObject
+     */
+    gmm.startGame = function(profileObject){
+        gameModeManager.setGameModeProfile(profileObject);
         gameModeManager.resetGame();
         
-        var mapTypeTemplate = gameModeManager.currentGameModeProfile.mapOption.mapType;
-        gameModeManager.styledMapOptions = renderManager.generateStyledMapOptions(gameModeManager.currentGameMode, gameModeManager.currentGameModeProfile);
+        var mapTypeTemplate = profileObject.mapOption.mapType;
+        gameModeManager.styledMapOptions = renderManager.generateStyledMapOptions(gameModeManager.currentGameMode, profileObject);
         renderManager.applyMapOptions(mapTypeTemplate, gameModeManager.styledMapOptions);
         
         _loadGameUi();
         gameRoundManager.startRound( gameModeManager.currentRound );
     };
 
+    /**
+     * sets the current round to 1
+     */
     gmm.resetGame = function(){
-        gameModeManager.originalGameModeProfile = null;
         gameModeManager.currentRound = 1;
         gameModeManager.cancelGame();
     };
