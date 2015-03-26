@@ -98,14 +98,28 @@
             gameRoundManager.goalGeoObject = geoObjects[0];
 
             var geoNameChoices = dataManager.getCityNameArray(geoObjects);
-            console.debug('[geoObjects] ' + geoObjects);
-            print('[geoNameChoices] ' + geoNameChoices);
+            print('[GRM] - [geoNameChoices] ' + geoNameChoices);
+            var goalPos = new google.maps.LatLng(gameRoundManager.goalGeoObject.latitude, gameRoundManager.goalGeoObject.longitude);
 
             var bounds;
             if (gameModeManager.currentGameMode.geoObjType == data.geoObjType.country){
-                bounds = dataManager.getBoundsForCountryGuessing(gameRoundManager.goalGeoObject.countryCode);
+                if (gameModeManager.currentGameModeProfile.pointingMode){
+                    bounds = dataManager.getWorldBounds();
+                    gameModeManager.getMap().fitBounds(bounds);
+
+                } else {
+                    // in country guessing, get the boarders, center the map and zoom to country
+                    bounds = dataManager.getBoundsForCountry(gameRoundManager.goalGeoObject.countryCode);
+                    var zoom = dataManager.getZoomLevelForCountry(bounds);
+                    gameModeManager.getMap().setCenter(goalPos);
+                    gameModeManager.getMap().setZoom(zoom);
+
+                }
             } else {
+                //
                 bounds = dataManager.getBoundsForCountry(gameRoundManager.goalGeoObject.countryCode);
+                gameModeManager.getMap().fitBounds(bounds);
+
             }
             if (bounds != null) {
                 gameRoundManager.currentRoundJsonData = {
@@ -122,7 +136,6 @@
                     "choices": geoNameChoices
                 };
 
-                var goalPos = new google.maps.LatLng(gameRoundManager.goalGeoObject.latitude, gameRoundManager.goalGeoObject.longitude);
 
 
                 if (gameModeManager.currentGameModeProfile.pointingMode == false) {
@@ -136,10 +149,8 @@
                 }
 
 
-                //gameModeManager.getMap().setCenter(goalPos);
-                //gameModeManager.getMap().setZoom(zoom);
 
-                gameModeManager.getMap().fitBounds(bounds);
+
 
                 renderManager.displayRoundNumber(gameModeManager.currentRound, gameModeManager.maxRounds);
 

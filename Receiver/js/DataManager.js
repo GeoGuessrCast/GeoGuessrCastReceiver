@@ -258,7 +258,7 @@
     function _getBoundsZoomLevel(bounds, mapDim) {
         // http://stackoverflow.com/questions/6048975/google-maps-v3-how-to-calculate-the-zoom-level-for-a-given-bounds
         var WORLD_DIM = { height: 256, width: 256 };
-        var ZOOM_MAX = 21;
+        var ZOOM_MAX = 4;  //normal 21
 
         function latRad(lat) {
             var sin = Math.sin(lat * Math.PI / 180);
@@ -316,7 +316,7 @@
         }
     };
 
-    dm.getBoundsForCountryGuessing = function(){
+    dm.getWorldBounds = function(){
         //TODO better bounds ??
         var worldBounds = new google.maps.LatLngBounds(
             new google.maps.LatLng(-15.0, -150.0),           // southwest corner of map
@@ -353,7 +353,7 @@
             //console.debug("[DM] Saved new user highscore: "+highscores);
         } else {
             highscores = JSON.parse(localStorage.getItem("highscores"));
-            console.debug("user highscores: "+highscores.length);
+            //console.debug("user highscores: "+highscores.length);
             var isNewUser = true;
 
             for (var i = 0; i < highscores.length; i++){
