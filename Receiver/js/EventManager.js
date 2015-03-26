@@ -20,6 +20,7 @@
         };
         _getAdminMessageBus().onMessage = function(event) {
             console.debug('onAdminMessage -> ' + JSON.stringify(event.data));
+            console.debug(event.data);
             eventManager.event_onAdminMessage(event);
         };
         _getGameMessageBus().onMessage = function(event) {
