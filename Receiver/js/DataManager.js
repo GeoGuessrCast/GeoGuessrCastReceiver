@@ -141,10 +141,10 @@
                     if (typeof(code) === "string"
                     ) {
                         var geoObject = new dataManager.GeoObject(i, name, lat, long, code, population, 0, null, null, null, null);
-                        console.debug("[DM] geoObject: " + geoObject.toString());
+                        //console.debug("[DM] geoObject: " + geoObject.toString());
                         countryGeoObjects.push(geoObject);
                     } else {
-                        console.debug("Country not qualified: " + code);
+                        //console.debug("Country not qualified: " + code);
                     }
                 }
 
