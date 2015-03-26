@@ -71,7 +71,7 @@
         }
 
         if(eventData.event_type === data.eventType.requestHighScoreList) {
-            var jsondData = {event_type: 'returnHighScoreList', highScoreList: dataManager.getHighScoreList(data.constants.userMaxScoreTresholdForHighScoreList)};
+            var jsondData = {event_type: 'returnHighScoreList', highScoreList: dataManager.getHighScoreList(data.constants.userMaxScoreTresholdForHighScoreList), localHighScoreList: dataManager.createHighScoreListFromCurentUsers(data.constants.userMaxScoreTresholdForHighScoreList)};
             eventManager.send(event.senderId, data.channelName.user, jsondData);
         }
     };
