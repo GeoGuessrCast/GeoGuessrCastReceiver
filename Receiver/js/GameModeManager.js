@@ -18,10 +18,6 @@
     };
 
     gmm.setGameModeProfile = function(gameModeProfileObject){
-        console.debug('INCOMING PROFILE OBJ.:');
-        console.debug(gameModeProfileObject);
-        console.debug(gameModeProfileObject.toString());
-        debugger;
         if (gameModeManager.originalGameModeProfile == null) {
             gameModeManager.originalGameModeProfile = data.gameModeProfile[gameModeProfileObject.id];
         }
@@ -46,8 +42,6 @@
             }
         }
         gameModeManager.currentGameModeProfile = gameModeProfileObject;
-        console.debug('SAVED PROFILE OBJ.:');
-        console.debug(gameModeProfileObject);
     };
 
 
