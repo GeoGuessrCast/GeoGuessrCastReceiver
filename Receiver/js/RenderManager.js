@@ -11,7 +11,7 @@
 
     rm.getUserMarkers = function(){
         return userMarkers;
-    }
+    };
 
     rm.placeUserMarkerOnMap = function(user, position){
         var marker = new google.maps.Marker({
@@ -251,12 +251,26 @@
             $(this).html(content);
             var profileList = $('#profileList');
             for (var p = 0; p < data.gameModeProfile.length; p++){
-                profileList.append('<li class="menuButton noLinebreak" onclick="gameModeManager.startGame(data.gameModeProfile['+p+']);">'+data.gameModeProfile[p].profileName+'</li>');
+                profileList.append('<li class="menuButton noLinebreak" onclick="renderManager.loadHardnessMenu(data.gameModeProfile['+p+']);">'+data.gameModeProfile[p].profileName+'</li>');
             }
             renderManager.rebuildUserList();
         });
         $('#profileMenuHeading').html(selectedGameModeObject.gameModeName);
         $('.headers').addClass(selectedGameModeObject.iconCssClass);
+    };
+
+    rm.loadHardnessMenu = function(selectedGameModeProfileObject){
+        gameModeManager.setGameModeProfile(selectedGameModeProfileObject);
+
+        $('#gameOverlay').load('templates/GameHardnessMenu.html', function (content) {
+            $(this).html(content);
+            if (typeof(cast) == 'undefined') {
+                $('#localHardnessTest').show();
+
+            }
+            renderManager.rebuildUserList();
+        });
+        $('#hardnessMenuHeading').html(gameModeManager.currentGameMode.gameModeName + '/' + selectedGameModeProfileObject.profileName);
     };
 
     rm.loadGlobalHighScoreList = function(){

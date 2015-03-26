@@ -12,7 +12,10 @@ data = {
         maxPointsPerAnswer: 10, // use gameRoundManager.getMaxPointsPerAnswer() !
         maxNameLength: 25,
         maxAnswerLength: 25,
-        userMaxScoreTresholdForHighScoreList: 35
+        userMaxScoreTresholdForHighScoreList: 35,
+        minCountryPopulationRange: 3,
+        minPopulationDefaultRange: 2.5,
+        scoreWeightFactorRange: 0.7
     },
 
     geoObjType : {   //example: dataManager.getGeoObj(geoObjType.city, getRandomCountryCode(), 5)
@@ -40,6 +43,7 @@ data = {
         hideConsole: 'hideConsole',
         setGameMode: 'setGameMode',
         setGameProfile: 'setGameProfile',
+        setHardness: 'setHardness',
         restart: 'restart',
         startGame: 'startGame',
         isAdmin: 'isAdmin',
@@ -68,71 +72,23 @@ data = {
 
     gameModeProfile : [
         {
-            profileName: 'Free Choice [easy]',
+            profileName: 'Free Choice',
             id: 0,
             limitedCountry: null,
             multipleChoiceMode: false,
             pointingMode: false,
-            minTotalCities: 10,
-            minCountryPopulation: 50111000, //germany = 58748310
-            minPopulationDefault: 1600111,
-            scoreWeightFactor: 0.7,
-            timePerRoundSec: 30,
-            mapOption: {
-                mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
-                borders: true,
-                roads: true,
-                showCityNames: true,
-                showRiverNames: true,
-                showCountryNames: true,
-                renderOptions: {
-                    globalGamma: 0.28,
-                    globalSaturation: -35,
-                    waterColor: '#7389AB'
-                }
-            }
-        },
-        {
-            profileName: 'Free Choice [medium]',
-            id: 1,
-            limitedCountry: null,
-            multipleChoiceMode: false,
-            pointingMode: false,
-            minTotalCities: 10,
-            minCountryPopulation: 10111000,
+            minTotalCities: 5,
+            minCountryPopulation: 15111000,
             minPopulationDefault: 600111,
             scoreWeightFactor: 1.0,
             timePerRoundSec: 30,
             mapOption: {
-                mapType : google.maps.MapTypeId.ROADMAP, // ROADMAP || HYBRID || TERRAIN
+                mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
                 borders: true,
                 roads: true,
                 showCityNames: true,
                 showRiverNames: true,
                 showCountryNames: true,
-                renderOptions: {
-                    globalGamma: 0.43
-                }
-            }
-        },
-        {
-            profileName: 'Free Choice [hard]',
-            id: 2,
-            limitedCountry: null,
-            multipleChoiceMode: false,
-            pointingMode: false,
-            minTotalCities: 1,
-            minCountryPopulation: 5111000,
-            minPopulationDefault: 350111,
-            scoreWeightFactor: 1.8,
-            timePerRoundSec: 30,
-            mapOption: {
-                mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
-                borders: true,
-                roads: false,
-                showCityNames: false,
-                showRiverNames: false,
-                showCountryNames: false,
                 renderOptions: {
                     globalHue: '#ff2b00',
                     globalGamma: 0.2,
@@ -145,7 +101,7 @@ data = {
         },
         {
             profileName: 'Multiple Choice',
-            id: 3,
+            id: 1,
             limitedCountry: null,
             multipleChoiceMode: true,
             pointingMode: false,
@@ -153,28 +109,6 @@ data = {
             minCountryPopulation: 10111000,
             minPopulationDefault: 900111,
             scoreWeightFactor: 1.0,
-            timePerRoundSec: 18,
-            mapOption: {
-                mapType : google.maps.MapTypeId.HYBRID, // ROADMAP || HYBRID || TERRAIN
-                borders: true,
-                roads: true,
-                showCityNames: true,
-                showRiverNames: true,
-                showCountryNames: true,
-                renderOptions: {
-                }
-            }
-        },
-        {
-            profileName: 'Multiple Choice [GER]',
-            id: 4,
-            limitedCountry: 'DE',
-            multipleChoiceMode: true,
-            pointingMode: false,
-            minTotalCities: 10,
-            minCountryPopulation: 0,
-            minPopulationDefault: 700000, // applyHardnessFact DE=0.5 !
-            scoreWeightFactor: 0.7,
             timePerRoundSec: 18,
             mapOption: {
                 mapType : google.maps.MapTypeId.TERRAIN, // ROADMAP || HYBRID || TERRAIN
@@ -189,7 +123,7 @@ data = {
         },
         {
             profileName: 'Pointing Mode',
-            id: 5,
+            id: 2,
             limitedCountry: 'DE',
             multipleChoiceMode: false,
             pointingMode: true,
@@ -211,7 +145,7 @@ data = {
         },
         {
             profileName: 'Custom ...',
-            id: 6,
+            id: 3,
             limitedCountry: null,
             multipleChoiceMode: false,
             pointingMode: false,
