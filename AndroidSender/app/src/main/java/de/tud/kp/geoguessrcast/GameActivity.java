@@ -192,6 +192,7 @@ public class GameActivity extends ActionBarActivity {
                             GameSetting gameSetting = GameSetting.getInstance();
                             gameSetting.setGameModes(gameMessage.getGameModes());
                             gameSetting.setGameProfiles(gameMessage.getGameProfiles());
+                            gameSetting.setCountries(gameMessage.getCountries());
                             mOptionMenu.setGroupVisible(R.id.adminMenu, true);
                             if(getCurrentFragment() instanceof WaitGameFragment){
                                 startFragment(ChooseModeFragment.newInstance(0));
