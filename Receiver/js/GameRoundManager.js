@@ -291,14 +291,17 @@
     }
 
     grm.checkAndEndRound = function(){
+        console.debug('grm.checkAndEndRound():');
         for(var i = 0; i < userList.length; i++){
             var user = userList[i];
             if (user.lastAnswerGiven == null) {
+                console.debug('!FOUND user with lastAnswerGiven == null: ' + user.name);
                 return;
             }
         }
         // EVERY user has lastAnswerGiven != null... round can END
         if (gameRoundManager.currentGameState == data.gameState.guessing) {
+            print('All answers given, ending round...');
             gameRoundManager.endRound();
             if (gameRoundManager.roundTimer != null) {
                 gameRoundManager.roundTimer.terminate();
@@ -306,6 +309,8 @@
             if (gameRoundManager.roundTimerAnim != null) {
                 gameRoundManager.roundTimerAnim.terminate();
             }
+        } else {
+            print('All answers given, but gameState != guessing');
         }
     };
 
