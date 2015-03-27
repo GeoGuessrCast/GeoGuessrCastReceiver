@@ -460,6 +460,7 @@
                 print("[GRM] " + user.name + " got " + points + " points for the RIGHT answer (" + cleanedAnswerString + ")");
                 user.lastAnswerGiven = new grm.Answer(cleanedAnswerString,distInKm,answerGeoObject,points);
                 renderManager.refreshBottomScoreboard();
+                gameRoundManager.checkAndEndRound();
                 return;
             } else {
                 distInKm = _getDistance(answerGeoObject.position, gameRoundManager.goalGeoObject.position) / 1000;
@@ -483,6 +484,7 @@
         }
         user.lastAnswerGiven = new grm.Answer(cleanedAnswerString,distInKm,answerGeoObject,points);
         renderManager.refreshBottomScoreboard();
+        gameRoundManager.checkAndEndRound();
     }
 
 
