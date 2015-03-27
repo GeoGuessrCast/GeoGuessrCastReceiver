@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             app:dsb_min="0"
             app:dsb_max="4"
-            app:dsb_value="0"
+            app:dsb_value="2"
             />
 
         <RelativeLayout
@@ -43,7 +43,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Country"/>
+                    android:text="Country: "/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

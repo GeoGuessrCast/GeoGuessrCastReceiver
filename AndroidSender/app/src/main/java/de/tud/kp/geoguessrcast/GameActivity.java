@@ -220,13 +220,13 @@ public class GameActivity extends ActionBarActivity {
 
                         highscoreTabs.setup();
 
-                        TabHost.TabSpec tabpage1 = highscoreTabs.newTabSpec("Local");
+                        TabHost.TabSpec tabpage1 = highscoreTabs.newTabSpec("Session Score");
                         tabpage1.setContent(R.id.local_highscore_entry);
-                        tabpage1.setIndicator("Local Score");
+                        tabpage1.setIndicator("Session Score");
 
-                        TabHost.TabSpec tabpage2 = highscoreTabs.newTabSpec("Global");
+                        TabHost.TabSpec tabpage2 = highscoreTabs.newTabSpec("All-time Score");
                         tabpage2.setContent(R.id.global_highscore_entry);
-                        tabpage2.setIndicator("Global Score");
+                        tabpage2.setIndicator("All-time Score");
 
                         highscoreTabs.addTab(tabpage1);
                         highscoreTabs.addTab(tabpage2);

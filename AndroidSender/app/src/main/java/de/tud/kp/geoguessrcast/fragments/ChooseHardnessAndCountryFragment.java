@@ -115,7 +115,7 @@ public class ChooseHardnessAndCountryFragment extends Fragment {
                         @Override
                         public void onSelectCountry(String name, String code) {
                             mSelectedCountry = code;
-                            countryCodeTv.setText(": "+code);
+                            countryCodeTv.setText(code);
                             picker.dismiss();
                         }
                     });

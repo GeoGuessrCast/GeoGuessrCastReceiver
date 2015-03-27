@@ -87,6 +87,7 @@ public class ProfileBarManager {
                         }
                         profileCurrentRound.setText(Integer.toString(currentRound));
                         profileMaxRound.setText(Integer.toString(maxRound));
+                        System.out.println("Max round set to " + maxRound);
                     }
 
                 });

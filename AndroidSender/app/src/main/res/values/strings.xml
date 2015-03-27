@@ -19,7 +19,7 @@
     <string name="ok">OK</string>
     <string name="close">Close</string>
     <string name="player_confirm_tip">Congrats! You are the admin now! Make sure that all players have already connected to the game.</string>
-    <string name="high_score_tip">Global HighScore is already shown on the screen!</string>
+    <string name="high_score_tip"> High Score is already shown on the screen!</string>
     <string name="choose_mode">Start Choosing Mode!</string>
     <string name="back_to_menu">Back to Menu</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
