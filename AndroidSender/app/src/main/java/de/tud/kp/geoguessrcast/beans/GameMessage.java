@@ -32,6 +32,8 @@ public class GameMessage {
     String user_color;
     String bounds;
     String mapTypeTemplate;
+    double hardness;
+    String countryCode;
 
 
 
@@ -271,5 +273,21 @@ public class GameMessage {
 
     public void setLocalHighScoreList(Highscore[] localHighScoreList) {
         this.localHighScoreList = localHighScoreList;
+    }
+
+    public double getHardness() {
+        return hardness;
+    }
+
+    public void setHardness(double hardness) {
+        this.hardness = hardness;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
     }
 }

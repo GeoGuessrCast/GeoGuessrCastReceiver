@@ -80,7 +80,7 @@ public class ChooseProfileFragment extends Fragment {
                     catch (Exception e){
 
                     }
-                    mActivity.startFragment(new WaitGameFragment());
+                    mActivity.startFragment(ChooseHardnessAndCountryFragment.newInstance());
                 }
             }
         });

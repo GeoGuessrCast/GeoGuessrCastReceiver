@@ -20,6 +20,8 @@ import com.countrypicker.CountryPickerListener;
 import com.google.gson.Gson;
 import com.google.sample.castcompanionlibrary.cast.DataCastManager;
 
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
 import de.tud.kp.geoguessrcast.GameActivity;
 import de.tud.kp.geoguessrcast.R;
 import de.tud.kp.geoguessrcast.beans.GameMessage;
@@ -27,7 +29,10 @@ import de.tud.kp.geoguessrcast.beans.GameProfile;
 import de.tud.kp.geoguessrcast.beans.MapOption;
 
 
+
 public class CustomizeProfileFragment extends Fragment {
+
+
 
     private GameActivity mActivity;
     private static DataCastManager sCastManager;
@@ -90,7 +95,7 @@ public class CustomizeProfileFragment extends Fragment {
         final SeekBar minTotalCities = (SeekBar) mActivity.findViewById(R.id.min_total_cityes);
         final SeekBar minCountryPopulation = (SeekBar) mActivity.findViewById(R.id.min_country_population);
         final SeekBar minDefaultPopulation = (SeekBar) mActivity.findViewById(R.id.min_default_population);
-        final SeekBar timePerRound = (SeekBar) mActivity.findViewById(R.id.time_per_round);
+        final DiscreteSeekBar timePerRound = (DiscreteSeekBar) mActivity.findViewById(R.id.time_per_round);
         final SeekBar scoreWeightFactor = (SeekBar) mActivity.findViewById(R.id.score_weight_factor);
         final RadioGroup mapType = (RadioGroup) mActivity.findViewById(R.id.map_type);
         final Switch mapBorders = (Switch) mActivity.findViewById(R.id.map_borders);

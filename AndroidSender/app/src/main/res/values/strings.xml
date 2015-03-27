@@ -33,5 +33,6 @@
     <string name="username_hint">Enter your name</string>
     <string name="username_empty_tip">Please enter your name first</string>
     <string name="answer_label">Answer: </string>
+    <string name="hardness_label">Hardness: </string>
 
 </resources>

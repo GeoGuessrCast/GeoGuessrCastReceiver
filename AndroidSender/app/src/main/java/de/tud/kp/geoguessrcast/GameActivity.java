@@ -52,6 +52,7 @@ import de.tud.kp.geoguessrcast.adapters.HighscoreListAdapter;
 import de.tud.kp.geoguessrcast.beans.GameSetting;
 import de.tud.kp.geoguessrcast.beans.User;
 import de.tud.kp.geoguessrcast.beans.GameMessage;
+import de.tud.kp.geoguessrcast.fragments.ChooseHardnessAndCountryFragment;
 import de.tud.kp.geoguessrcast.fragments.ChooseModeFragment;
 import de.tud.kp.geoguessrcast.fragments.ChooseProfileFragment;
 import de.tud.kp.geoguessrcast.fragments.CustomizeProfileFragment;
@@ -293,7 +294,7 @@ public class GameActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed(){
-        if(getCurrentFragment() instanceof ChooseProfileFragment || getCurrentFragment() instanceof CustomizeProfileFragment){
+        if(getCurrentFragment() instanceof ChooseProfileFragment || getCurrentFragment() instanceof CustomizeProfileFragment|| getCurrentFragment() instanceof ChooseHardnessAndCountryFragment){
             getFragmentManager().popBackStack();
             return;
         }
@@ -419,7 +420,7 @@ public class GameActivity extends ActionBarActivity {
     }
 
     public void startFragment(Fragment fragment){
-        if(fragment instanceof ChooseProfileFragment || fragment instanceof CustomizeProfileFragment){
+        if(fragment instanceof ChooseProfileFragment || fragment instanceof CustomizeProfileFragment|| fragment instanceof ChooseHardnessAndCountryFragment){
             getFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.animator.fragment_fade_enter, R.animator.fragment_fade_exit)

@@ -1,3 +1,4 @@
-include ':app'
+include ':app', ':discreteSeekBar'
 include ':CastCompanionLibrary'
 include ':countryPicker'
+project(':discreteSeekBar').projectDir = new File('discreteSeekBar/library')
