@@ -266,7 +266,7 @@
         renderManager.showMidScreenMessage(errorMessage);
         // show mainMenu
         gameRoundManager.viewMainMenuTimer = executionManager.execDelayed(5000, renderManager.loadMainMenu);
-    }
+    };
 
     function _getDistance(p1, p2) {
         console.log("[GRM] DISTANCE: "+p1+ " :" +p2);
@@ -290,6 +290,24 @@
         return new google.maps.LatLng(lat, long);
     }
 
+    grm.checkAndEndRound = function(){
+        for(var i = 0; i < userList.length; i++){
+            var user = userList[i];
+            if (user.lastAnswerGiven == null) {
+                return;
+            }
+        }
+        // EVERY user has lastAnswerGiven != null... round can END
+        if (gameRoundManager.currentGameState == data.gameState.guessing) {
+            gameRoundManager.endRound();
+            if (gameRoundManager.roundTimer != null) {
+                gameRoundManager.roundTimer.terminate();
+            }
+            if (gameRoundManager.roundTimerAnim != null) {
+                gameRoundManager.roundTimerAnim.terminate();
+            }
+        }
+    };
 
     grm.choseAnswer = function(userMac, answer){
         if (gameRoundManager.currentGameState != data.gameState.guessing) {
@@ -303,13 +321,13 @@
             var pos = _latLongStringToPos(answer);
             var answerGeoObject = new dataManager.GeoObject(0, "", pos.lat(), pos.lng(), null, 0, 0, null, null, null, null);
 
-            if (gameModeManager.currentGameMode.gameModeName === 'City Guessing') {
+            if (gameModeManager.currentGameMode.geoObjType === data.geoObjType.city) {
                 var distInKm = _getDistance(answerGeoObject.position, gameRoundManager.goalGeoObject.position) / 1000;
                 answerGeoObject.name = Math.round(distInKm) + 'km';
                 _evaluateAnswer(user, answerGeoObject.name, answerGeoObject);
                 return;
-            }else if (gameModeManager.currentGameMode.gameModeName === 'Country Guessing'){
-                var locationType = "country"
+            } else if (gameModeManager.currentGameMode.geoObjType === data.geoObjType.country){
+                var locationType = "country";
                 console.debug("Country guessing - pointing mode selected");
                 gameModeManager.getGeocoder().geocode({
                     'latLng': pos

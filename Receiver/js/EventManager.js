@@ -65,9 +65,9 @@
             userManager.createOrUpdateUser(event);
         }
 
-        // update View or sth...
         if(eventData.event_type === data.eventType.submitAnswer) {
             gameRoundManager.choseAnswer(event.data.userMac, event.data.answer);
+            gameRoundManager.checkAndEndRound();
         }
 
         if(eventData.event_type === data.eventType.requestHighScoreList) {
