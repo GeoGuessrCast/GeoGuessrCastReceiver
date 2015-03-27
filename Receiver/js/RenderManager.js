@@ -274,11 +274,11 @@
     };
 
     rm.loadGlobalHighScoreList = function(){
-        renderManager.loadHighScoreList(dataManager.getHighScoreList(data.constants.userMaxScoreTresholdForHighScoreList), 'Global HighScore');
+        renderManager.loadHighScoreList(dataManager.getHighScoreList(data.constants.userMaxScoreTresholdForHighScoreList), 'All-Time HighScore');
     };
 
     rm.loadCurrentGameHighScoreList = function(){
-        renderManager.loadHighScoreList(dataManager.createHighScoreListFromCurentUsers(data.constants.userMaxScoreTresholdForHighScoreList), 'Current Game HighScore');
+        renderManager.loadHighScoreList(dataManager.createHighScoreListFromCurentUsers(data.constants.userMaxScoreTresholdForHighScoreList), 'Session HighScore');
     };
 
     rm.loadHighScoreList = function(highScoreList, heading){
