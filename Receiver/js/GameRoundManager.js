@@ -292,6 +292,7 @@
 
     grm.checkAndEndRound = function(){
         console.debug('grm.checkAndEndRound():');
+        var userList = userManager.getUserList();
         for(var i = 0; i < userList.length; i++){
             var user = userList[i];
             if (user.lastAnswerGiven == null) {
