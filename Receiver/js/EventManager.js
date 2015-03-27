@@ -86,8 +86,8 @@
         }
 
         if(eventData.event_type === data.eventType.setGameProfile){
-            gameModeManager.setGameModeProfile(eventData.gameProfile);
-
+            //gameModeManager.setGameModeProfile(eventData.gameProfile);
+            renderManager.loadHardnessMenu(eventData.gameProfile);
         }
 
         //TODO event:   gameModeManager.startGame(hardness, countryCode)   (harness = [-1...1])

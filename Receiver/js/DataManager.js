@@ -210,6 +210,40 @@
         }
         return randomObjects;
     }
+    dm.getCountries = function(){
+        var returnCountryCodes = [];
+
+        var select = "name, countryCode, relevance, nrOfCities";
+        var where = "nrOfCities > 0"
+        var orderBy = "relevance DESC"
+        var countryCodes = _createFusionTableQuery(ftTableIdCompleteCountryCodes, select, where, 0, 0, orderBy, null,null);
+        if (countryCodes != null) {
+            if (typeof(countryCodes.rows) != 'undefined') {
+                var resultLength = countryCodes.rows.length;
+                for (var i = 0; i < resultLength; i++) {
+                    var name = countryCodes.rows[i][0];
+                    var code = countryCodes.rows[i][1];
+                    var obj = {
+                        'name': name,
+                        'code': code
+                    };
+                    returnCountryCodes.push(obj);
+
+
+                }
+            } else {
+                console.error("[DM] - Get Random Country Code returned no results for given query: Cities:" + nrOfCities + " Pop: " + population);
+            }
+            console.debug("[DM] getCountries: "+ returnCountryCodes.length + " Countries qualified");
+
+
+            return returnCountryCodes;
+        } else {
+            console.error("[DM] - Get Random Country Code returned no results for given query: Cities:" + nrOfCities + " Pop: " + population);
+            return null;
+        }
+
+    };
 
     dm.getRandomCountryCode = function(nrOfCities, population){
         var returnCountryCodes = [];
@@ -230,7 +264,7 @@
             } else {
                 console.error("[DM] - Get Random Country Code returned no results for given query: Cities:" + nrOfCities + " Pop: " + population);
             }
-            console.debug(returnCountryCodes.length + " Countries qualified");
+            console.debug("[DM] getRandomCountryCode: "+ returnCountryCodes.length + " Countries qualified");
 
 
             return getRandomSubsetOfArray(returnCountryCodes, 1);
