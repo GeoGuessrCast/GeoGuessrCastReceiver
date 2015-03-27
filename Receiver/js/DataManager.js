@@ -213,9 +213,10 @@
     dm.getCountries = function(){
         var returnCountryCodes = [];
 
-        var select = "name, countryCode, relevance";
+        var select = "name, countryCode, relevance, nrOfCities";
+        var where = "nrOfCities > 0"
         var orderBy = "relevance DESC"
-        var countryCodes = _createFusionTableQuery(ftTableIdCompleteCountryCodes, select, null, 0, 0, orderBy, null,null);
+        var countryCodes = _createFusionTableQuery(ftTableIdCompleteCountryCodes, select, where, 0, 0, orderBy, null,null);
         if (countryCodes != null) {
             if (typeof(countryCodes.rows) != 'undefined') {
                 var resultLength = countryCodes.rows.length;
