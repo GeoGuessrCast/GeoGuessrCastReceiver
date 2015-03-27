@@ -270,7 +270,8 @@
             }
             renderManager.rebuildUserList();
         });
-        $('#hardnessMenuHeading').html(gameModeManager.currentGameMode.gameModeName + '/' + selectedGameModeProfileObject.profileName);
+        $('#hardnessMenuHeading').html(gameModeManager.currentGameMode.gameModeName + ' / ' + selectedGameModeProfileObject.profileName);
+        $('.headers').addClass(gameModeManager.currentGameMode.iconCssClass);
     };
 
     rm.loadGlobalHighScoreList = function(){

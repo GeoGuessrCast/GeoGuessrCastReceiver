@@ -139,7 +139,7 @@
         //inform the Sender if the user is game leader
         var jsonData;
         if (user.isAdmin()) {
-            jsonData = {event_type:data.eventType.isAdmin, admin:true, user_color: user.getColor(), gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
+            jsonData = {event_type:data.eventType.isAdmin, admin:true, user_color: user.getColor(), gameModes: data.gameMode, gameProfiles: data.gameModeProfile, countries: dataManager.getCountries()};
         } else {
             jsonData = {event_type:data.eventType.isAdmin, admin:false, user_color: user.getColor()};
         }
