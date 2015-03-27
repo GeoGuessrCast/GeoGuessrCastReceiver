@@ -1,5 +1,7 @@
 package de.tud.kp.geoguessrcast.beans;
 
+import com.countrypicker.Country;
+
 /**
  * Created by Kaijun on 22/01/15.
  */
@@ -10,6 +12,7 @@ public class GameSetting {
     private GameProfile[] gameProfiles;
     private GameMode selectedGameMode;
     private GameProfile selectedGameProfile;
+    private Country[] countries;
 
     private GameSetting() {
     }
@@ -52,5 +55,14 @@ public class GameSetting {
 
     public void setSelectedGameProfile(GameProfile selectedGameProfile) {
         this.selectedGameProfile = selectedGameProfile;
+    }
+
+
+    public Country[] getCountries() {
+        return countries;
+    }
+
+    public void setCountries(Country[] countries) {
+        this.countries = countries;
     }
 }

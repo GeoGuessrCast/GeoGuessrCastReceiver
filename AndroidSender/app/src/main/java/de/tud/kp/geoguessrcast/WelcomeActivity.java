@@ -153,6 +153,7 @@ public class WelcomeActivity extends ActionBarActivity {
                             GameSetting gameSetting = GameSetting.getInstance();
                             gameSetting.setGameModes(gameMessage.getGameModes());
                             gameSetting.setGameProfiles(gameMessage.getGameProfiles());
+                            gameSetting.setCountries(gameMessage.getCountries());
                             Intent intent = new Intent(WelcomeActivity.this, GameActivity.class);
                             WelcomeActivity.this.startActivity(intent);
                         }

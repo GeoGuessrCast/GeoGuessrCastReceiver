@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">GeoGuessrCast</string>
-    <string name="app_id">BB3F2634</string>
     <string name="userChannel">urn:x-cast:de.tud.kp.geoguessrcast.userChannel</string>
     <string name="adminChannel">urn:x-cast:de.tud.kp.geoguessrcast.adminChannel</string>
     <string name="gameChannel">urn:x-cast:de.tud.kp.geoguessrcast.gameChannel</string>
+    <string name="app_name">GeoGuessrCast</string>
+    <string name="app_id">BB3F2634</string>
     <string name="action_settings">Settings</string>
     <string name="message_to_cast">Message to Cast…</string>
     <string name="media_route_menu_title">Play on…</string>

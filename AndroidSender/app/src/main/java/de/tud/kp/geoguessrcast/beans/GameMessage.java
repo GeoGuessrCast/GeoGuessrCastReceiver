@@ -1,5 +1,6 @@
 package de.tud.kp.geoguessrcast.beans;
 
+import com.countrypicker.Country;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -44,6 +45,8 @@ public class GameMessage {
 
     Highscore[] highScoreList;
     Highscore[] localHighScoreList;
+
+    Country[] countries;
 
     public GameMessage(){
     }
@@ -289,5 +292,13 @@ public class GameMessage {
 
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
+    }
+
+    public Country[] getCountries() {
+        return countries;
+    }
+
+    public void setCountries(Country[] countries) {
+        this.countries = countries;
     }
 }

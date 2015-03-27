@@ -26,6 +26,7 @@ import de.tud.kp.geoguessrcast.GameActivity;
 import de.tud.kp.geoguessrcast.R;
 import de.tud.kp.geoguessrcast.beans.GameMessage;
 import de.tud.kp.geoguessrcast.beans.GameProfile;
+import de.tud.kp.geoguessrcast.beans.GameSetting;
 import de.tud.kp.geoguessrcast.beans.MapOption;
 
 
@@ -72,7 +73,7 @@ public class CustomizeProfileFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 final TextView countryCodeTv = (TextView) mActivity.findViewById(R.id.country_code);
                 if (isChecked){
-                    final CountryPicker picker = CountryPicker.newInstance("Select Country");
+                    final CountryPicker picker = CountryPicker.newInstance("Select Country", GameSetting.getInstance().getCountries());
                     picker.show(mActivity.getSupportFragmentManager(), "COUNTRY_PICKER");
 
                     picker.setListener(new CountryPickerListener() {
