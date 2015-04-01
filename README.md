@@ -26,15 +26,16 @@ During game creation, you can choose between:
     - Multiple Choice: choose the right city or country between possible answers, only the right answer gets points
     - Pointing Mode: you get to see the name of the city or country on the screen and point on the map on your phone to the location, nearest guess gets most points
 - Level of difficulty: You can seemlessly choose between a lower level and higher level of difficulty inside the android app
-    - Low:
-    - Medium:
-    - High:
+    - slider between low and high: changes difficulty based on e.g. country or city population
     
 - Highscores:
-    - Session Highscore:
-    - All-Time Highscore:
+    - percentage based on your expected points during the game, in harder game modes, you get higher ratings, in lower game modes, lesser ratings
+    - Session Highscore: shows the current gaming session highscore
+    - All-Time Highscore: shows the all time gaming session highscore from all games played
     
-
+- Custome Game Setting:
+    - Game mode settings for experts
+    
 Developer Documentation
 ======================
 
@@ -45,11 +46,26 @@ The chromecast receiver
 -----------------------
 Manager Architecture:
 
+- GameModeManager:  
+- GameRoundManager: 
+- EventManager: 
+- RenderManager:
+- DataManager:
+- ExecutionManager:
+- UserManager:
+
+
 Event Bus Architecture:
+
+- Admin Message Bus:
+- Game Message Bus:
+- User Message Bus:
 
 Data Sources:
 
-the app
+- Google Fusion Tables:
+
+The app
 -------
 
 
