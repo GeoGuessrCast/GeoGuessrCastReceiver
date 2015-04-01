@@ -10,7 +10,7 @@
     var queryUrlHead = 'https://www.googleapis.com/fusiontables/v2/query?sql=';
     //Google API Key
     var queryUrlTail = '&key=AIzaSyCtj5FXdE2WNZJBRVfyd2294YM0z1CDnq0'; //RN acc Api Key
-
+    dm.lastUsedGeoObjects = [];
 
     /**
      *
@@ -102,9 +102,31 @@
             } else {
                 console.log("[DM] GeoObject request not implemented.")
             }
+            //filter old answers:
+            var filteredqueryGeoObjects = [];
+            if ((queryGeoObjects.length > dataManager.lastUsedGeoObjects.length) && (queryGeoObjects.length >=  minPoolSize)){
+                for (var i = 0; i < queryGeoObjects.length; i++) {
+                    var name = queryGeoObjects[i].name;
+                    var isUsed = false;
+                    for (var y = 0; y < dataManager.lastUsedGeoObjects.length; y++) {
+                        var nameLastUsed = dataManager.lastUsedGeoObjects[y].name;
+                        if (name == nameLastUsed){
+                            isUsed = true;
+                        }
+                    }
+                    if (!isUsed) {
+                        filteredqueryGeoObjects.push(queryGeoObjects[i]);
+                    }
+                }
+            } else {
+                console.log("[DM] - Can not filter results, to few.")
+                filteredqueryGeoObjects = queryGeoObjects;
+            }
+
+            var geoObjects = getRandomSubsetOfArray(filteredqueryGeoObjects, count);
 
 
-            var geoObjects = getRandomSubsetOfArray(queryGeoObjects, count);
+
             //return query results object
             return geoObjects;
         }

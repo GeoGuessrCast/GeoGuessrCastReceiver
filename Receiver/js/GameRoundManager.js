@@ -96,7 +96,7 @@
             , 10);
         if (geoObjects != null && geoObjects[0] != null) {
             gameRoundManager.goalGeoObject = geoObjects[0];
-
+            dataManager.lastUsedGeoObjects.push(gameRoundManager.goalGeoObject);
             var geoNameChoices = dataManager.getCityNameArray(geoObjects);
             print('[GRM] - [geoNameChoices] ' + geoNameChoices);
             var goalPos = new google.maps.LatLng(gameRoundManager.goalGeoObject.latitude, gameRoundManager.goalGeoObject.longitude);
@@ -253,6 +253,9 @@
     };
 
     grm.gameEnded = function(){
+
+        dataManager.lastUsedGeoObjects = []; // game ended, so reset last answers
+
         var jsonData = {"ended": true, "event_type":"game_ended"};
         eventManager.broadcast(data.channelName.game, jsonData);
         // show roundHighscore >> globalHighscore >> mainMenu
@@ -491,6 +494,7 @@
 
 
     function _placeGoalMarker(position){
+        console.debug("[GRM] - Place Goal Marker: "+ (gameModeManager.goalMarker == null));
         if (gameModeManager.goalMarker == null) {
             //TODO create a good crosshair image
             //var image = {
@@ -520,6 +524,7 @@
         // Extend markerBounds with each random point.
         gameRoundManager.markerBounds.extend(position);
         gameModeManager.goalMarker.setMap(gameModeManager.getMap());
+        console.debug("[GRM] - Marker Position: "+position+ " on available map: " + (gameModeManager.getMap() != null));
     }
 
 
