@@ -86,8 +86,12 @@
         }
 
         if(eventData.event_type === data.eventType.setGameProfile){
-            //gameModeManager.setGameModeProfile(eventData.gameProfile);
-            renderManager.loadHardnessMenu(eventData.gameProfile);
+            if (eventData.gameProfile.id == 3){
+                gameModeManager.setGameModeProfile(eventData.gameProfile);
+                gameModeManager.startGame(0, eventData.gameProfile.limitedCountry || null);
+            } else {
+                renderManager.loadHardnessMenu(eventData.gameProfile);
+            }
         }
 
         //TODO event:   gameModeManager.startGame(hardness, countryCode)   (harness = [-1...1])

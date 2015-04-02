@@ -245,7 +245,7 @@
             var newAdmin = userList[0];
             console.debug('setting new admin: ' + newAdmin.name);
             newAdmin.admin = true;
-            var jsonData = {event_type:data.eventType.isAdmin, admin:true, user_color: newAdmin.getColor(), gameModes: data.gameMode, gameProfiles: data.gameModeProfile};
+            var jsonData = {event_type:data.eventType.isAdmin, admin:true, user_color: newAdmin.getColor(), gameModes: data.gameMode, gameProfiles: data.gameModeProfile, countries: dataManager.getCountries()};
             eventManager.send(newAdmin.senderId, data.channelName.user, jsonData);
         }
         _setUserList(userList);
