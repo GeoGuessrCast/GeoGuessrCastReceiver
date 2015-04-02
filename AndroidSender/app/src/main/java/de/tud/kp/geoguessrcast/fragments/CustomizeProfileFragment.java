@@ -148,8 +148,11 @@ public class CustomizeProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //Build MapOption Object
+
+
+                //TODO: not hard codieren!!!
                 gameProfile.setProfileName("Custom Profile");
-                gameProfile.setId(5);
+                gameProfile.setId(3);
 
                 //TODO: country choose!!!
                 //gameProfile.setLimitedCountry(null);
