@@ -139,7 +139,7 @@ data = {
         },
         {
             profileName: 'Custom ...',
-            id: 3,
+            id: 3, // 3 = RESERVED ID FOR CUSTOM MODE !!!
             limitedCountry: null,
             multipleChoiceMode: false,
             pointingMode: false,
