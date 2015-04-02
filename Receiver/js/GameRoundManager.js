@@ -161,7 +161,7 @@
                         renderManager.showMidScreenMessage('- Round ' + gameModeManager.currentRound + ' -', 0.6);
                     } else {
                         constMobileAppBroadcastDelay = 0;
-                        renderManager.showMidScreenMessage('Where is ' + gameRoundManager.goalGeoObject.name + ' ?', gameModeManager.currentGameModeProfile.timePerRoundSec * 0.8);
+                        renderManager.setMidScreenMessage('Where is ' + gameRoundManager.goalGeoObject.name + ' ?');
                     }
 
                     gameRoundManager.roundTimer = executionManager.execDelayed(gameModeManager.currentGameModeProfile.timePerRoundSec * 1000, gameRoundManager.endRound);
@@ -203,6 +203,7 @@
         if (gameModeManager.currentGameModeProfile.pointingMode == false) {
             renderManager.showMidScreenMessage('Answer: ' + gameRoundManager.goalGeoObject.name, gameRoundManager.roundEvaluationTimeSec-3 );
         } else {
+            renderManager.clearMidScreenMessage();
             gameModeManager.getMap().fitBounds(gameRoundManager.markerBounds);
             gameModeManager.getMap().setCenter(gameRoundManager.markerBounds.getCenter());
             _placeGoalMarker(gameRoundManager.goalGeoObject.position);
