@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ import de.tud.kp.geoguessrcast.adapters.GameModeAdapter;
 import de.tud.kp.geoguessrcast.beans.GameMessage;
 import de.tud.kp.geoguessrcast.beans.GameMode;
 import de.tud.kp.geoguessrcast.beans.GameSetting;
+import de.tud.kp.geoguessrcast.beans.User;
 
 public class ChooseHardnessAndCountryFragment extends Fragment {
 
@@ -100,34 +102,34 @@ public class ChooseHardnessAndCountryFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_choose_hardness, null, false);
 
+        //check if the game mode is Country Guessing, if true -> hide country setting view
+        if(GameSetting.getInstance().getSelectedGameMode().getGameModeName().equals("Country Guessing")){
+            view.findViewById(R.id.country_setting).setVisibility(View.GONE);
+        }
+
+
         mGameHardnessSeekBar = (DiscreteSeekBar)view.findViewById(R.id.game_hardness);
         mGameHardnessSeekBar.setNumericTransformer(new HardnessNumericTransformer());
 
-        final Switch limitedCountry = (Switch) view.findViewById(R.id.limited_country);
-        limitedCountry.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final TextView limitedCountry = (TextView) view.findViewById(R.id.limited_country);
+        limitedCountry.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                final TextView countryCodeTv = (TextView) mActivity.findViewById(R.id.country_code);
-                if (isChecked){
-                    final CountryPicker picker = CountryPicker.newInstance("Select Country", GameSetting.getInstance().getCountries());
-                    picker.show(mActivity.getSupportFragmentManager(), "COUNTRY_PICKER");
-                    picker.setListener(new CountryPickerListener() {
-                        @Override
-                        public void onSelectCountry(String name, String code) {
-                            mSelectedCountry = code;
-                            countryCodeTv.setText(code);
-                            picker.dismiss();
-                        }
-                    });
+            public void onClick(View v) {
+                final CountryPicker picker = CountryPicker.newInstance("Select Country", GameSetting.getInstance().getCountries());
+                picker.show(mActivity.getSupportFragmentManager(), "COUNTRY_PICKER");
+                picker.setListener(new CountryPickerListener() {
+                    @Override
+                    public void onSelectCountry(String countryName, String countryCode) {
+                        mSelectedCountry = countryCode;
+                        limitedCountry.setText(countryName);
+                        picker.dismiss();
+                    }
+                });
 
-                    //TODO: picer dismissed when click back button, but the switcher is not notified... must implement a interface in onCancle
-                }
-                else {
-                    mSelectedCountry = null;
-                    countryCodeTv.setText("Global");
-                }
+                //TODO: picer dismissed when click back button, but the switcher is not notified... must implement a interface in onCancle
             }
         });
+
 
         chooseModeBtn = (FloatingActionButton) view.findViewById(R.id.choose_mode_btn);
         chooseModeBtn.setOnClickListener(new View.OnClickListener() {

@@ -8,10 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -21,6 +24,9 @@ import com.google.gson.Gson;
 import com.google.sample.castcompanionlibrary.cast.DataCastManager;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.tud.kp.geoguessrcast.GameActivity;
 import de.tud.kp.geoguessrcast.R;
@@ -67,37 +73,68 @@ public class CustomizeProfileFragment extends Fragment {
         sCastManager = mActivity.getCastManager();
         final GameProfile gameProfile = new GameProfile();
 
-        final Switch limitedCountry = (Switch) mActivity.findViewById(R.id.limited_country);
-        limitedCountry.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final TextView limitedCountry = (TextView) mActivity.findViewById(R.id.limited_country);
+        limitedCountry.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                final TextView countryCodeTv = (TextView) mActivity.findViewById(R.id.country_code);
-                if (isChecked){
-                    final CountryPicker picker = CountryPicker.newInstance("Select Country", GameSetting.getInstance().getCountries());
-                    picker.show(mActivity.getSupportFragmentManager(), "COUNTRY_PICKER");
+            public void onClick(View v) {
+                final CountryPicker picker = CountryPicker.newInstance("Select Country", GameSetting.getInstance().getCountries());
+                picker.show(mActivity.getSupportFragmentManager(), "COUNTRY_PICKER");
+                picker.setListener(new CountryPickerListener() {
+                    @Override
+                    public void onSelectCountry(String countryName, String countryCode) {
+                        gameProfile.setLimitedCountry(countryCode);
+                        limitedCountry.setText(countryName);
+                        picker.dismiss();
+                    }
+                });
 
-                    picker.setListener(new CountryPickerListener() {
-                        @Override
-                        public void onSelectCountry(String name, String code) {
-                            gameProfile.setLimitedCountry(code);
-                            countryCodeTv.setText(": "+code);
-                            picker.dismiss();
-                        }
-                    });
-                }
-                else {
-                    gameProfile.setLimitedCountry(null);
-                    countryCodeTv.setText("");
-                }
             }
         });
-        final Switch multipleChoice = (Switch) mActivity.findViewById(R.id.multiple_choice_mode);
-        final Switch pointingMode = (Switch) mActivity.findViewById(R.id.pointing_mode);
-        final SeekBar minTotalCities = (SeekBar) mActivity.findViewById(R.id.min_total_cityes);
-        final SeekBar minCountryPopulation = (SeekBar) mActivity.findViewById(R.id.min_country_population);
-        final SeekBar minDefaultPopulation = (SeekBar) mActivity.findViewById(R.id.min_default_population);
+
+        final Spinner gameChoice = (Spinner) mActivity.findViewById(R.id.multiple_choice_mode);
+        List<String> list = new ArrayList<String>();
+        list.add("Free Choice");
+        list.add("Multiple Choice");
+        list.add("Pointing Mode");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(mActivity,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        gameChoice.setAdapter(dataAdapter);
+
+        gameChoice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 0:
+                        gameChoice.setSelection(position);
+                        gameProfile.setMultipleChoiceMode(false);
+                        gameProfile.setPointingMode(false);
+                        break;
+                    case 1:
+                        gameChoice.setSelection(position);
+                        gameProfile.setMultipleChoiceMode(true);
+                        gameProfile.setPointingMode(false);
+                        break;
+                    case 2:
+                        gameChoice.setSelection(position);
+                        gameProfile.setMultipleChoiceMode(false);
+                        gameProfile.setPointingMode(true);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        final DiscreteSeekBar minTotalCities = (DiscreteSeekBar) mActivity.findViewById(R.id.min_total_cityes);
+        final DiscreteSeekBar minCountryPopulation = (DiscreteSeekBar) mActivity.findViewById(R.id.min_country_population);
+        final DiscreteSeekBar minDefaultPopulation = (DiscreteSeekBar) mActivity.findViewById(R.id.min_default_population);
         final DiscreteSeekBar timePerRound = (DiscreteSeekBar) mActivity.findViewById(R.id.time_per_round);
-        final SeekBar scoreWeightFactor = (SeekBar) mActivity.findViewById(R.id.score_weight_factor);
+        final DiscreteSeekBar scoreWeightFactor = (DiscreteSeekBar) mActivity.findViewById(R.id.score_weight_factor);
         final RadioGroup mapType = (RadioGroup) mActivity.findViewById(R.id.map_type);
         final Switch mapBorders = (Switch) mActivity.findViewById(R.id.map_borders);
         final Switch mapRoads = (Switch) mActivity.findViewById(R.id.map_roads);
@@ -116,8 +153,10 @@ public class CustomizeProfileFragment extends Fragment {
 
                 //TODO: country choose!!!
                 //gameProfile.setLimitedCountry(null);
-                gameProfile.setMultipleChoiceMode(multipleChoice.isChecked());
-                gameProfile.setPointingMode(pointingMode.isChecked());
+
+//                gameProfile.setMultipleChoiceMode(multipleChoice.isChecked());
+//                gameProfile.setPointingMode(pointingMode.isChecked());
+
                 gameProfile.setMinTotalCities(minTotalCities.getProgress());
                 gameProfile.setMinCountryPopulation(minCountryPopulation.getProgress());
                 gameProfile.setScoreWeightFactor(scoreWeightFactor.getProgress());

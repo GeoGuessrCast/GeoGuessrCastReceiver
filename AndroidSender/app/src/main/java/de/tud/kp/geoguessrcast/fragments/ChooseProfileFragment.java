@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.sample.castcompanionlibrary.cast.DataCastManager;
@@ -39,6 +43,9 @@ public class ChooseProfileFragment extends Fragment {
 
     private FloatingActionButton chooseProfileBtn;
     private GameProfile mGameProfile;
+    private ImageView customizeBtn;
+
+    Toast mToast;
 
     public ChooseProfileFragment() {
     }
@@ -46,7 +53,29 @@ public class ChooseProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mGameProfileAdapter = new GameProfileAdapter(GameSetting.getInstance().getGameProfiles(), getActivity());
+
+        mToast = Toast.makeText(mActivity, "", Toast.LENGTH_LONG);
+
+        mGameProfileAdapter = new GameProfileAdapter(GameSetting.getInstance().getGameProfiles(), getActivity(), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = (Integer)v.getTag();
+                switch (position){
+                    case 0:
+                        mToast.setText(mActivity.getString(R.string.freechoice_tooltip));
+                        mToast.show();
+                        break;
+                    case 1:
+                        mToast.setText(mActivity.getString(R.string.multiplechoice_tooltip));
+                        mToast.show();
+                        break;
+                    case 2:
+                        mToast.setText(mActivity.getString(R.string.pointingmode_tooltip));
+                        mToast.show();
+                        break;
+                }
+            }
+        });
     }
 
     @Override
@@ -93,7 +122,7 @@ public class ChooseProfileFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                //set  color of selected button
+//                set  color of selected button
                 for(int i=0; i<parent.getCount(); i++){
                     resetItemEffect(parent.getChildAt(i));
                 }
@@ -102,14 +131,36 @@ public class ChooseProfileFragment extends Fragment {
                 //show ChooseModeBtn with animation
                 showChooseModeBtn();
 
-                if(position==parent.getCount()-1){
-                    mGameProfile = null;
-                }
-                else{
-                    mGameProfile = (GameProfile) parent.getItemAtPosition(position);
-                }
+                mGameProfile = (GameProfile) parent.getItemAtPosition(position);
             }
         });
+
+        customizeBtn = (ImageView) view.findViewById(R.id.customize_btn);
+        customizeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                MaterialDialog tipDialog = new MaterialDialog.Builder(mActivity)
+                        .title(R.string.customize_tip_title)
+                        .content(R.string.customize_confirm_tip)
+                        .positiveText(R.string.start_customize)
+                        .callback(new MaterialDialog.ButtonCallback() {
+                            @Override
+                            public void onPositive(MaterialDialog dialog) {
+                                super.onNegative(dialog);
+                                mGameProfile = null;
+                                mActivity.startFragment(CustomizeProfileFragment.newInstance());
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+                tipDialog.setCanceledOnTouchOutside(true);
+                tipDialog.setCancelable(true);
+
+            }
+        });
+
+
         return view;
     }
 
@@ -137,12 +188,14 @@ public class ChooseProfileFragment extends Fragment {
     }
 
     private void renderItemSelectedEffect(View view){
-        view.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
-        ((Button)view).setTextColor(Color.WHITE);
+        Button buttonItem = (Button) view.findViewById(R.id.button_list_item);
+        buttonItem.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+        buttonItem.setTextColor(Color.WHITE);
     }
     private void resetItemEffect(View childView){
-        childView.getBackground().setColorFilter(null);
-        ((Button)childView).setTextColor(Color.BLACK);
+        Button buttonItem = (Button) childView.findViewById(R.id.button_list_item);
+        buttonItem.getBackground().setColorFilter(null);
+        buttonItem.setTextColor(Color.BLACK);
     }
 
     @Override

@@ -51,13 +51,14 @@
                 </LinearLayout>
 
 
-                <Switch
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/limited_country"
-                    android:checked="false"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_horizontal" />
+                    style="@android:style/Widget.Holo.Light.Spinner"
+                    android:gravity="center_horizontal"
+                    android:text="Global"/>
+
 
 
             </TableRow>
@@ -71,33 +72,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Multiple Choice Mode" />
+                    android:text="Game Choice Mode" />
 
-                <Switch
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <Spinner
                     android:id="@+id/multiple_choice_mode"
-                    android:checked="true"
-                    android:layout_gravity="center_horizontal" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pointing Mode" />
-
-                <Switch
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/pointing_mode"
-                    android:checked="false"
-                    android:layout_gravity="center_horizontal" />
-
+                    style="@android:style/Widget.Holo.Light.Spinner"
+                    android:gravity="center_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </TableRow>
 
             <TableRow
@@ -111,12 +93,15 @@
                     android:layout_height="wrap_content"
                     android:text="Min Total Cities" />
 
-                <SeekBar
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
                     android:id="@+id/min_total_cityes"
-                    android:max="10"
-                    android:progress="5" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dsb_min="1"
+                    app:dsb_max="10"
+                    app:dsb_value="5"
+                    android:indeterminate="false" />
+
             </TableRow>
 
             <TableRow
@@ -130,12 +115,14 @@
                     android:layout_height="wrap_content"
                     android:text="Min Country Population" />
 
-                <SeekBar
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
                     android:id="@+id/min_country_population"
-                    android:max="10000000"
-                    android:progress="5000000" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dsb_min="1"
+                    app:dsb_max="10000000"
+                    app:dsb_value="5000000"
+                    android:indeterminate="false" />
             </TableRow>
 
             <TableRow
@@ -149,12 +136,15 @@
                     android:layout_height="wrap_content"
                     android:text="Min Default Population" />
 
-                <SeekBar
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+
+                <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
                     android:id="@+id/min_default_population"
-                    android:max="5000000"
-                    android:progress="2500000" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dsb_min="1"
+                    app:dsb_max="5000000"
+                    app:dsb_value="2500000"
+                    android:indeterminate="false" />
             </TableRow>
 
             <TableRow
@@ -168,12 +158,15 @@
                     android:layout_height="wrap_content"
                     android:text="Score Weight Factor" />
 
-                <SeekBar
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+
+                <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
                     android:id="@+id/score_weight_factor"
-                    android:max="10"
-                    android:progress="5" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:dsb_min="1"
+                    app:dsb_max="10"
+                    app:dsb_value="5"
+                    android:indeterminate="false" />
 
 
             </TableRow>
@@ -196,7 +189,7 @@
                     app:dsb_min="10"
                     app:dsb_max="50"
                     app:dsb_value="30"
-                    />
+                    android:indeterminate="false" />
 
             </TableRow>
 

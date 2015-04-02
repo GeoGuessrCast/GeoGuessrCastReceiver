@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+
+import java.util.Arrays;
 
 import de.tud.kp.geoguessrcast.R;
 import de.tud.kp.geoguessrcast.beans.GameMode;
@@ -17,10 +20,14 @@ import de.tud.kp.geoguessrcast.beans.GameProfile;
 public class GameProfileAdapter extends BaseAdapter {
     private GameProfile[] mGameProfiles;
     private LayoutInflater mLayoutInflater;
+    private View.OnClickListener mTooltipClickListener;
 
-    public GameProfileAdapter(GameProfile[] gameProfiles, Context context) {
+    public GameProfileAdapter(GameProfile[] gameProfiles, Context context, View.OnClickListener tooltipClickListener) {
         mGameProfiles = gameProfiles;
+        mGameProfiles = Arrays.copyOf(mGameProfiles, mGameProfiles.length-1);
+
         mLayoutInflater = LayoutInflater.from(context);
+        mTooltipClickListener = tooltipClickListener;
     }
 
     public int getCount() {
@@ -37,8 +44,11 @@ public class GameProfileAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        convertView= mLayoutInflater.inflate(R.layout.fragment_button_list_item, null);
+        convertView= mLayoutInflater.inflate(R.layout.fragment_button_with_tooltip_list_item, null);
         Button btnItem = (Button) convertView.findViewById(R.id.button_list_item);
+        ImageView tooltipIcon = (ImageView) convertView.findViewById(R.id.tooltip_icon);
+        tooltipIcon.setTag(position);
+        tooltipIcon.setOnClickListener(mTooltipClickListener);
         btnItem.setText(mGameProfiles[position].getProfileName());
 //        btnItem.setClickable(false);
         return convertView;

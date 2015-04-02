@@ -26,6 +26,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.sample.castcompanionlibrary.cast.DataCastManager;
+import com.nhaarman.supertooltips.ToolTip;
+import com.nhaarman.supertooltips.ToolTipRelativeLayout;
+import com.nhaarman.supertooltips.ToolTipView;
 
 import de.tud.kp.geoguessrcast.GameActivity;
 import de.tud.kp.geoguessrcast.R;
@@ -51,6 +54,7 @@ public class ChooseModeFragment extends Fragment {
     private int mStartMode;
 
 
+
     public static ChooseModeFragment newInstance(int startMode) {
         ChooseModeFragment fragment = new ChooseModeFragment();
         Bundle args = new Bundle();
@@ -62,7 +66,9 @@ public class ChooseModeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mGameModeAdapter = new GameModeAdapter(GameSetting.getInstance().getGameModes(), getActivity());
+
         if (getArguments() != null) {
             mStartMode = getArguments().getInt(START_MODE);
         }
@@ -79,7 +85,6 @@ public class ChooseModeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mActivity = (GameActivity)getActivity();
         sCastManager = mActivity.getCastManager();
-        System.out.println(mStartMode);
         if(mStartMode==0){
             MaterialDialog tipDialog = new MaterialDialog.Builder(mActivity)
                     .title(R.string.tip)
@@ -90,6 +95,10 @@ public class ChooseModeFragment extends Fragment {
             tipDialog.setCancelable(false);
             mStartMode = 1;
         }
+
+
+
+//        mToolTipView.setOnToolTipViewClickedListener(MainActivity.this);
 
     }
 
@@ -146,6 +155,10 @@ public class ChooseModeFragment extends Fragment {
                         gameMessage.setEvent_type("setGameMode");
                         gameMessage.setGameMode(mGameMode);
                         sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.adminChannel));
+
+                        //persist the gameMode
+                        GameSetting.getInstance().setSelectedGameMode(mGameMode);
+
                     } catch (Exception e) {
                     }
                     mActivity.startFragment(new ChooseProfileFragment());

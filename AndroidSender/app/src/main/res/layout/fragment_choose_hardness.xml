@@ -32,35 +32,29 @@
             app:dsb_value="2"
             />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
+            android:layout_height="wrap_content"
+            android:id="@+id/country_setting">
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Country: "/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/country_code"
-                    android:text="Global"
-                    android:layout_marginLeft="1dp"/>
-            </LinearLayout>
+                android:paddingRight="20dp"
+                android:layout_alignParentLeft="true"
+                android:text="Country: "/>
 
-            <Switch
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/limited_country"
-                android:checked="false"
+                style="@android:style/Widget.Holo.Light.Spinner"
+                android:gravity="center_horizontal"
                 android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"/>
+                android:layout_alignParentRight="true"
+                android:text="Global"/>
 
-        </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <com.getbase.floatingactionbutton.FloatingActionButton

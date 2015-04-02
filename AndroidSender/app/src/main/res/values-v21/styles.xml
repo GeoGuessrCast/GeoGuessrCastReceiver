@@ -10,4 +10,5 @@
 
         <item name="android:textColorTertiary">@color/mainText</item>
     </style>
+
 </resources>

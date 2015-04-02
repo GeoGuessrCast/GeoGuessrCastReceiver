@@ -30,6 +30,7 @@ dependencies {
 
     compile 'com.getbase:floatingactionbutton:1.7.0'
     compile 'com.afollestad:material-dialogs:0.6.2.3'
+    compile 'com.nhaarman.supertooltips:library:3.0.+'
 
     compile project(':CastCompanionLibrary')
     compile project(':countryPicker')
