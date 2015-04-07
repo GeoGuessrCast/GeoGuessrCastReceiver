@@ -4,9 +4,13 @@ GeoGuesserCastReceiver
 License
 =======
 
-The code is open source. ....
+Copyright (C) 2015  TU Dresden
 
-TODO: Licencse
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 User Documentation
 =================
@@ -46,24 +50,25 @@ The chromecast receiver
 -----------------------
 Manager Architecture:
 
-- GameModeManager:  
-- GameRoundManager: 
-- EventManager: 
-- RenderManager:
-- DataManager:
-- ExecutionManager:
-- UserManager:
-
+- GameModeManager:  starts, stops game rounds, sets difficulties and applys them to the game profil.
+- GameRoundManager: handling of game rounds, like evaluation of answers
+- EventManager: handling of incoming events from the android app
+- RenderManager: handles rendering of the game ui, e.g. shows on screen messages during game
+- DataManager: handles database connection for fusion table, creates neccessary geo objects for the game rounds, saves/loads user highscores
+- ExecutionManager: enables the app to use multi-threading in javascript
+- UserManager: handles all user information during the game
 
 Event Bus Architecture:
 
-- Admin Message Bus:
-- Game Message Bus:
-- User Message Bus:
+- Admin Message Bus: all configuration related are on here
+- Game Message Bus: all game events, e.g. game started, all android clients are notified
+- User Message Bus: all user related events, e.g. user anserws, users joining/leaving
 
 Data Sources:
 
-- Google Fusion Tables:
+- Google Fusion Tables: 
+    - Country Data: https://www.google.com/fusiontables/data?docid=1BuyI_S9TNtXhs_iOg4wwvaL1COJK_tM6UYN5drbF#rows:id=1
+    - City Data: https://www.google.com/fusiontables/DataSource?docid=1yVMRD6LP8FwWGRLa1p5RIVBN0p6B2mNGaesxX0os#rows:id=1
 
 The app
 -------
@@ -71,6 +76,9 @@ The app
 
 known bugs
 ----------
+
+- sometimes app is not connecting right to the chromecast
+- random disconnects from the chromecast
 
 
 

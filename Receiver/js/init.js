@@ -8,7 +8,7 @@ function initialize() {
         return this.indexOf(obj) > -1;
     };
 
-
+    console.log("[Programm]  Copyright (C) 2015  TU Dresden.\n This program comes with ABSOLUTELY NO WARRANTY. \n This is free software, and you are welcome to redistribute it under certain conditions.")
     if (typeof(cast) !== 'undefined') {
         cast.receiver.logger.setLevelValue(1000); //= ERROR
         console.log("[init] ChromeCast mode started");
