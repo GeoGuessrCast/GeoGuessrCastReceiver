@@ -48,16 +48,23 @@ public class ChooseHardnessAndCountryFragment extends Fragment {
             return value;
         };
         public String transformToString(int value) {
-            if(value==0){
-                return "E";
+
+            switch (value){
+                case 0:
+                    return "Child's\nPlay";
+                case 1:
+                    return "Easy";
+                case 2:
+                    return "Medium";
+                case 3:
+                    return "Hard";
+                case 4:
+                    //must extend the String to the max length comparing to all other strings... due to the library DiscreteSeekBar...
+                    return " Insane ";
+                default:
+                    return "";
             }
-            else if(value==2){
-                return "M";
-            }
-            else if(value==4){
-                return "H";
-            }
-            return "";
+
         }
         public boolean useStringTransform() {
             return true;

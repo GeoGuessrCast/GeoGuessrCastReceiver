@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.Image;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ public class ChooseProfileFragment extends Fragment {
     private ImageView customizeBtn;
 
     Toast mToast;
+    CountDownTimer mToastTimer;
 
     public ChooseProfileFragment() {
     }
@@ -63,17 +65,20 @@ public class ChooseProfileFragment extends Fragment {
                 switch (position){
                     case 0:
                         mToast.setText(mActivity.getString(R.string.freechoice_tooltip));
-                        mToast.show();
-                        break;
+
                     case 1:
                         mToast.setText(mActivity.getString(R.string.multiplechoice_tooltip));
-                        mToast.show();
                         break;
                     case 2:
                         mToast.setText(mActivity.getString(R.string.pointingmode_tooltip));
-                        mToast.show();
                         break;
                 }
+                //show the Toast for more than Toast.LENGTH_LONG
+                mToastTimer = new CountDownTimer(5000, 1000)
+                {
+                    public void onTick(long millisUntilFinished) {mToast.show();}
+                    public void onFinish() {mToast.show();}
+                }.start();
             }
         });
     }
@@ -207,6 +212,10 @@ public class ChooseProfileFragment extends Fragment {
     public void onPause() {
         super.onPause();
         mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        mToast.cancel();
+        if(mToastTimer!=null){
+            mToastTimer.cancel();
+        }
     }
 
 }

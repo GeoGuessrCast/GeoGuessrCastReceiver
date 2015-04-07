@@ -2,4 +2,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="de.tud.kp.geoguessrcast.WelcomeActivity">
+
+    <item
+        android:id="@+id/start_about"
+        android:title="@string/about_label"
+        app:showAsAction="always"/>
+
 </menu>

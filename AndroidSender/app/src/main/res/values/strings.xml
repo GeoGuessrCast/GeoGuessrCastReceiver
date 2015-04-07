@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="package_name">de.tud.kp.geoguessrcast</string>
     <string name="userChannel">urn:x-cast:de.tud.kp.geoguessrcast.userChannel</string>
     <string name="adminChannel">urn:x-cast:de.tud.kp.geoguessrcast.adminChannel</string>
     <string name="gameChannel">urn:x-cast:de.tud.kp.geoguessrcast.gameChannel</string>
@@ -36,9 +37,18 @@
     <string name="username_hint">Enter your name</string>
     <string name="username_empty_tip">Please enter your name first</string>
     <string name="answer_label">Answer: </string>
-    <string name="hardness_label">Hardness: </string>
+    <string name="hardness_label">Difficulty Levels: </string>
     <string name="freechoice_tooltip">Freely type in the name of the given city or country on your phone, nearest guess gets most points.</string>
     <string name="multiplechoice_tooltip">Choose the right city or country between possible answers, only the right answer gets points.</string>
     <string name="pointingmode_tooltip">You get to see the name of the city or country on the screen and point on the map on your phone to the location, nearest guess gets most points.</string>
 
+    <string name="about_label">About</string>
+    <!--TODO: add version control library...-->
+    <string name="pref_version_label">Version</string>
+    <string name="pref_version">0.1</string>
+    <string name="pref_developer_label">Developer</string>
+    <string name="pref_developer">Falk Morus, Kaijun Chen, Martin Haut, Stefan Herrmann</string>
+    <string name="pref_promoted_by_label">Promoted by</string>
+    <string name="pref_promoted_by">Chair for Computer Networks at Dresden University of Technology</string>
+    <string name="pref_licence_label">License</string>
 </resources>

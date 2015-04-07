@@ -9,6 +9,7 @@ import android.support.v7.app.MediaRouteButton;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -155,12 +156,12 @@ public class WelcomeActivity extends ActionBarActivity {
                             gameSetting.setGameProfiles(gameMessage.getGameProfiles());
                             gameSetting.setCountries(gameMessage.getCountries());
                             Intent intent = new Intent(WelcomeActivity.this, GameActivity.class);
-                            WelcomeActivity.this.startActivity(intent);
+                            startActivity(intent);
                         }
                         else{
                             mUser.setAdmin(false);
                             Intent intent = new Intent(WelcomeActivity.this, GameActivity.class);
-                            WelcomeActivity.this.startActivity(intent);
+                            startActivity(intent);
                         }
                     }
                     Log.d(TAG, "onMessageReceived from UserChannel: " + message);
@@ -199,6 +200,25 @@ public class WelcomeActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_welcome, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+
+            //if there's back button on the actionbar.
+            case android.R.id.home:
+                this.onBackPressed();
+                return true;
+
+            case R.id.start_about:
+                Intent intent = new Intent(WelcomeActivity.this, AboutActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void initializeCastManager() {
