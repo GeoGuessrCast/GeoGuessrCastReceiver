@@ -3,6 +3,8 @@ package de.tud.kp.geoguessrcast;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.MediaRouteButton;
@@ -11,6 +13,9 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -39,6 +44,12 @@ public class WelcomeActivity extends ActionBarActivity {
     private User mUser;
     public static final String GAME_PREFS = "GamePreference";
     private static final String USER_NAME_STORED = "UserNameStored";
+    private static final long RECONNECT_TIMEOUT = 10;
+    private Thread mConnectionCheckThread;
+
+    EditText usernameEditText;
+    FloatingActionButton startGameBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +65,8 @@ public class WelcomeActivity extends ActionBarActivity {
         final MediaRouteButton mediaRouteButton = (MediaRouteButton) findViewById(R.id.media_route_button);
         sCastManager.addMediaRouterButton(mediaRouteButton);
 
-        final EditText usernameEditText = (EditText) findViewById(R.id.playername);
-        final FloatingActionButton startGameBtn = (FloatingActionButton) findViewById(R.id.start_game);
+        usernameEditText = (EditText) findViewById(R.id.playername);
+        startGameBtn = (FloatingActionButton) findViewById(R.id.start_game);
 
         //check if username stored
         //show default Username in editText
@@ -119,15 +130,15 @@ public class WelcomeActivity extends ActionBarActivity {
             @Override
             public void onDeviceSelected(CastDevice device) {
 
-                startGameBtn.setIcon(R.drawable.ic_refresh_white_48dp);
-                startGameBtn.setEnabled(false);
+                updateStartBtn();
+
             }
 
             @Override
             public void onApplicationConnected(ApplicationMetadata appMetadata, String applicationStatus,
                                                String sessionId, boolean wasLaunched) {
-                startGameBtn.setIcon(R.drawable.ic_play_arrow_white_48dp);
-                startGameBtn.setEnabled(true);
+
+                updateStartBtn();
 
                 //TODO: GameManager - StartGame
                 try {
@@ -141,6 +152,21 @@ public class WelcomeActivity extends ActionBarActivity {
                 } catch (Exception e) {
                     Log.e("Error", "Exception while sending message", e);
                 }
+            }
+            @Override
+            public boolean onApplicationConnectionFailed(int errorCode){
+                Toast.makeText(getApplicationContext(), getString(R.string.connect_failed_info), Toast.LENGTH_LONG).show();
+                //call internal disconnect due to the bug of chromecast->isDisconnected and isConnected the both are false
+                sCastManager.disconnectDevice(false, true, true);
+
+                updateStartBtn();
+
+                return false;
+            }
+
+            @Override
+            public void onDisconnected(){
+                updateStartBtn();
             }
 
             @Override
@@ -280,6 +306,26 @@ public class WelcomeActivity extends ActionBarActivity {
     @Override
     public void onStop(){
         super.onStop();
+
+        if(mConnectionCheckThread!=null){
+            mConnectionCheckThread.interrupt();
+            mConnectionCheckThread=null;
+        }
+    }
+
+    private void updateStartBtn(){
+        if(!sCastManager.isConnected()){
+            startGameBtn.setIcon(R.drawable.ic_cast_white_48dp);
+            startGameBtn.setEnabled(true);
+        }
+        if(sCastManager.isConnected()){
+            startGameBtn.setIcon(R.drawable.ic_play_arrow_white_48dp);
+            startGameBtn.setEnabled(true);
+        }
+        if(sCastManager.isConnecting()){
+            startGameBtn.setIcon(R.drawable.ic_refresh_white_48dp);
+            startGameBtn.setEnabled(false);
+        }
     }
 
 }

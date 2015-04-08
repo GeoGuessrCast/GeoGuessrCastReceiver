@@ -41,6 +41,7 @@
     <string name="freechoice_tooltip">Freely type in the name of the given city or country on your phone, nearest guess gets most points.</string>
     <string name="multiplechoice_tooltip">Choose the right city or country between possible answers, only the right answer gets points.</string>
     <string name="pointingmode_tooltip">You get to see the name of the city or country on the screen and point on the map on your phone to the location, nearest guess gets most points.</string>
+    <string name="connect_failed_info">Connection Failed, please try again!</string>
 
     <string name="about_label">About</string>
     <!--TODO: add version control library...-->

@@ -1,11 +1,10 @@
 package de.tud.kp.geoguessrcast.managers;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
+import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,6 +33,8 @@ public class ProfileBarManager {
     private LinearLayout profilePointInfo;
     private TextView profilePoints;
 
+    private String avatarColorString;
+
     public ProfileBarManager(GameActivity activity){
         mActivity = activity;
         mUser = User.getInstance();
@@ -43,14 +44,16 @@ public class ProfileBarManager {
         profileUsername = (TextView) mActivity.findViewById(R.id.profile_username);
 
         profileRoundInfo = (LinearLayout) mActivity.findViewById(R.id.profile_round_info);
-        profileCurrentRound = (TextView) mActivity.findViewById(R.id.profile_current_round);
-        profileMaxRound = (TextView) mActivity.findViewById(R.id.profile_max_round);
+        profileCurrentRound = (TextView) mActivity.findViewById(R.id.profile_round_current);
+        profileMaxRound = (TextView) mActivity.findViewById(R.id.profile_round_max);
 
         profilePointInfo = (LinearLayout) mActivity.findViewById(R.id.profile_point_info);
         profilePoints = (TextView) mActivity.findViewById(R.id.profile_points);
+
+        avatarColorString = mUser.getColor();
     }
 
-    //TODO:  ProfileBarManager!!!
+
     public void initProfileBar(){
 
         new Thread() {
@@ -59,7 +62,6 @@ public class ProfileBarManager {
                     public void run()
                     {
                         //init profile bar
-                        String avatarColorString = mUser.getColor();
                         avatarDrawable.setColorFilter(Color.parseColor(avatarColorString), PorterDuff.Mode.MULTIPLY);
                         profileAvatar.setImageDrawable(avatarDrawable);
 
@@ -76,23 +78,25 @@ public class ProfileBarManager {
 
     }
 
+
     public void updateRound(final int currentRound, final int maxRound){
+
         new Thread() {
             public void run() {
                 mActivity.runOnUiThread(new Runnable(){
                     public void run()
                     {
-                        if(profileRoundInfo.getVisibility()==View.GONE||profileRoundInfo.getVisibility()== View.INVISIBLE){
+                        if(profileRoundInfo.getVisibility()==View.GONE || profileRoundInfo.getVisibility()== View.INVISIBLE){
                             profileRoundInfo.setVisibility(View.VISIBLE);
                         }
                         profileCurrentRound.setText(Integer.toString(currentRound));
                         profileMaxRound.setText(Integer.toString(maxRound));
-                        System.out.println("Max round set to " + maxRound);
                     }
 
                 });
             }
         }.start();
+
     }
 
     public void updatePoint(final int addedPoint){
@@ -121,7 +125,7 @@ public class ProfileBarManager {
                     {
                         if(profilePointInfo.getVisibility()==View.GONE||profilePointInfo.getVisibility()== View.INVISIBLE){
                             profilePointInfo.setVisibility(View.VISIBLE);
-                            profileMaxRound.setText(Integer.toString(mUser.getPoints()));
+                            profilePoints.setText(Integer.toString(mUser.getPoints()));
                         }
                     }
 
