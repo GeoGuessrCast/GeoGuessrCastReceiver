@@ -65,7 +65,7 @@ public class ChooseProfileFragment extends Fragment {
                 switch (position){
                     case 0:
                         mToast.setText(mActivity.getString(R.string.freechoice_tooltip));
-
+                        break;
                     case 1:
                         mToast.setText(mActivity.getString(R.string.multiplechoice_tooltip));
                         break;

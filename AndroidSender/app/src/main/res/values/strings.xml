@@ -46,7 +46,7 @@
     <string name="about_label">About</string>
     <!--TODO: add version control library...-->
     <string name="pref_version_label">Version</string>
-    <string name="pref_version">0.1</string>
+    <string name="pref_version"></string>
     <string name="pref_developer_label">Developer</string>
     <string name="pref_developer">Falk Morus, Kaijun Chen, Martin Haut, Stefan Herrmann</string>
     <string name="pref_promoted_by_label">Promoted by</string>

@@ -3,6 +3,8 @@ package de.tud.kp.geoguessrcast;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -61,8 +63,36 @@ public class AboutActivity extends ActionBarActivity {
         {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_about);
+
+            findPreference("pref_version_key").setSummary(buildVersionInfo());
+
+
+
+        }
+
+        private String buildVersionInfo() {
+            String version = "";
+            PackageManager packageManager = getActivity().getPackageManager();
+            PackageInfo packInfo = null;
+            try {
+                packInfo = packageManager.getPackageInfo(getActivity().getPackageName(), 0);
+            } catch (PackageManager.NameNotFoundException e) {
+
+            }
+
+            if (packInfo != null) {
+                version = packInfo.versionName + "(" + packInfo.versionCode + ")";
+            }
+
+            if (!TextUtils.isEmpty(version)) {
+                return version;
+            } else {
+                return "";
+            }
         }
     }
+
+
 
 
 }
