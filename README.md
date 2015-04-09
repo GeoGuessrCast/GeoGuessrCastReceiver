@@ -72,8 +72,39 @@ Data Sources:
 
 The app
 -------
-
-
+- Managers:
+  * `EventRequestManager`: provided methods for all requests of ChromeCast events.
+  * `GameManager`: has delegations of EventRequestManager and Activity, handles the main logic of the game.
+  * `ProfileBarManager`: handles the initialisation and updating of profile bar at bottom of screen.
+- Activities:
+  * `WelcomeActivity`: handles the connection to ChromeCast device, as well as the User informations.
+  * `GameActivity`: controlles the main game flow, it registered an event listener for CastManager, and GameManager responds to the events sended by Web-App. It will responsively replace the current fragment according to the arrived events.
+  * `About Activity`: about the App
+  * `Licence Activity`: Licence of the App, shown in Webview
+- Fragments:
+  * `FreeChoiceModeFragment`: handles the main logic of specific game mode(free choice mode). it sends the the answer given by user to the Web-App, then it's replaced by WaitRoundFragment. Additionally it contains also a Timer with vibration.
+  * `MultipleChoiceModeFragment`: as above, similar
+  * `PointingModeFragment`: as above, similar
+  * `ChooseModeFragment`: generated dynamically with the datas received from Web-App. it is shown in listView with adapter.
+  * `ChooseProfleFragment`: as above, similar
+  * ......
+  
+- Beans:
+  * `GameMessage`: a class for creating request message or persisting messages received from Web-App. it's jsonified/parsed by using a library called `Gson`.
+  * `User`: a ***singleton*** for creating/updating/persisting informations of user
+  * ......
+  
+- Utilities:
+  * `DeviceInfo`: provides methods for acquiring username of device(by splitting Gmail username) and mac address of device.
+  * `TimerWithVibration`: encapsulated CountDownTimer with vibration and customised settings
+  * `Utility`: other help functions
+  
+- External Libraries used:
+  * [`CastCompanionLibrary-android`](https://github.com/googlecast/CastCompanionLibrary-android)
+  * [`FloatingActionButton`](https://github.com/futuresimple/android-floating-action-button)
+  * [`Material Dialogs`](https://github.com/afollestad/material-dialogs)
+  * [`AndroidCountryPicker`](https://github.com/roomorama/AndroidCountryPicker) (source code modified)
+  * [`DiscreteSeekBar`](https://github.com/AnderWeb/discreteSeekBar)
 known bugs
 ----------
 
