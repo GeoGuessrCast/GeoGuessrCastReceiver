@@ -84,7 +84,41 @@ AndroidSender/CastCompanionLibrary/*.iml
 AndroidSender/CastCompanionLibrary/.idea
 
 # CountryPicker
-AndroidSender/countryPicker/*
+AndroidSender/countryPicker/*.apk
+AndroidSender/countryPicker/*.ap_
+AndroidSender/countryPicker/*.dex
+AndroidSender/countryPicker/*.class
+AndroidSender/countryPicker/bin/
+AndroidSender/countryPicker/gen/
+AndroidSender/countryPicker/.gradle/
+AndroidSender/countryPicker/build/
+AndroidSender/countryPicker/local.properties
+AndroidSender/countryPicker/proguard/
+AndroidSender/countryPicker/proguard-project.txt
+AndroidSender/countryPicker/.project
+AndroidSender/countryPicker/.classpath
+AndroidSender/countryPicker/.settings/
+AndroidSender/countryPicker/*.iml
+AndroidSender/countryPicker/.idea
+
+# discreteSeekBar
+
+AndroidSender/discreteSeekBar/*.apk
+AndroidSender/discreteSeekBar/*.ap_
+AndroidSender/discreteSeekBar/*.dex
+AndroidSender/discreteSeekBar/*.class
+AndroidSender/discreteSeekBar/bin/
+AndroidSender/discreteSeekBar/gen/
+AndroidSender/discreteSeekBar/.gradle/
+AndroidSender/discreteSeekBar/library/build/
+AndroidSender/discreteSeekBar/local.properties
+AndroidSender/discreteSeekBar/proguard/
+AndroidSender/discreteSeekBar/proguard-project.txt
+AndroidSender/discreteSeekBar/.project
+AndroidSender/discreteSeekBar/.classpath
+AndroidSender/discreteSeekBar/.settings/
+AndroidSender/discreteSeekBar/*.iml
+AndroidSender/discreteSeekBar/.idea
 
 
 # keys

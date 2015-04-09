@@ -63,7 +63,6 @@ public class ProfileBarManager {
                     public void run()
                     {
                         //init profile bar
-                        Log.d("Color 4", mUser.getColor());
                         avatarDrawable.setColorFilter(Color.parseColor(avatarColorString), PorterDuff.Mode.MULTIPLY);
                         profileAvatar.setImageDrawable(avatarDrawable);
 
