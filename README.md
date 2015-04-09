@@ -105,6 +105,8 @@ The app
   * [`Material Dialogs`](https://github.com/afollestad/material-dialogs)
   * [`AndroidCountryPicker`](https://github.com/roomorama/AndroidCountryPicker) (source code modified)
   * [`DiscreteSeekBar`](https://github.com/AnderWeb/discreteSeekBar)
+
+
 known bugs
 ----------
 
