@@ -74,7 +74,7 @@ The app
 -------
 - Managers:
   * `EventRequestManager`: provided methods for all requests of ChromeCast events.
-  * `GameManager`: has delegations of EventRequestManager and Activity, handles the main logic of the game.
+  * `GameManager`: has delegation of EventRequestManager and Activity, handles the main logic of the game behaviours.
   * `ProfileBarManager`: handles the initialisation and updating of profile bar at bottom of screen.
 - Activities:
   * `WelcomeActivity`: handles the connection to ChromeCast device, as well as the User informations.
