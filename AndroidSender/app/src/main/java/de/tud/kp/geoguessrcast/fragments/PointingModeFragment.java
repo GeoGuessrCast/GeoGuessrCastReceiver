@@ -12,15 +12,11 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -34,14 +30,15 @@ import de.tud.kp.geoguessrcast.GameActivity;
 import de.tud.kp.geoguessrcast.R;
 import de.tud.kp.geoguessrcast.beans.GameMessage;
 import de.tud.kp.geoguessrcast.beans.User;
+import de.tud.kp.geoguessrcast.managers.GameManager;
 import de.tud.kp.geoguessrcast.utilities.TimerWithVibration;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link GameMode3Fragment#newInstance} factory method to
+ * Use the {@link PointingModeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GameMode3Fragment extends Fragment {
+public class PointingModeFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String BOUNDS_PARAM = "boundsArray";
@@ -56,7 +53,7 @@ public class GameMode3Fragment extends Fragment {
     private int mTimeRound;
 
     private GameActivity mActivity;
-    private static DataCastManager sCastManager;
+    private GameManager mGameManager;
     private FloatingActionButton confirmBtn;
     private GoogleMap googleMap;
     private LatLng selectedPoi;
@@ -71,8 +68,8 @@ public class GameMode3Fragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment GameMode3Fragment.
      */
-    public static GameMode3Fragment newInstance(double[] bounds, String mapType, int roundNumber, int timeRound) {
-        GameMode3Fragment fragment = new GameMode3Fragment();
+    public static PointingModeFragment newInstance(double[] bounds, String mapType, int roundNumber, int timeRound) {
+        PointingModeFragment fragment = new PointingModeFragment();
         Bundle args = new Bundle();
         args.putDoubleArray(BOUNDS_PARAM, bounds);
         args.putString(MAPTYPE_PARAM, mapType);
@@ -82,7 +79,7 @@ public class GameMode3Fragment extends Fragment {
         return fragment;
     }
 
-    public GameMode3Fragment() {
+    public PointingModeFragment() {
         // Required empty public constructor
     }
 
@@ -108,19 +105,8 @@ public class GameMode3Fragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(selectedPoi!=null){
-
-                    try {
-                        GameMessage gameMessage = new GameMessage();
-                        gameMessage.setEvent_type("gameRound_answerChosen");
-                        String answer = "{\"longitude\":" + selectedPoi.longitude + ", \"latitude\":" + selectedPoi.latitude + "}";
-                        gameMessage.setAnswer(answer);
-                        gameMessage.setUserMac(User.getInstance().getUserMac());
-                        sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.userChannel));
-                    }
-                    catch (Exception e) {
-                    }
-
-                    mActivity.startFragment(new WaitRoundFragment());
+                    mGameManager.requestAnswerChosen(selectedPoi.latitude, selectedPoi.longitude);
+                    mGameManager.startWaitingRound(mActivity);
                 }
 
             }
@@ -133,7 +119,7 @@ public class GameMode3Fragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mActivity = (GameActivity) getActivity();
-        sCastManager = mActivity.getCastManager();
+        mGameManager = mActivity.getGameManager();
         setUpMap();
 
 
@@ -146,7 +132,7 @@ public class GameMode3Fragment extends Fragment {
             }
             @Override
             public void onTimerFinish() {
-                mActivity.startFragment(new WaitRoundFragment());
+                mGameManager.startWaitingRound(mActivity);
             }
         };
         mTimer.start();

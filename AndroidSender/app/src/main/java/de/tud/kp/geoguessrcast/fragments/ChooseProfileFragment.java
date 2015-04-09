@@ -33,11 +33,12 @@ import de.tud.kp.geoguessrcast.adapters.GameProfileAdapter;
 import de.tud.kp.geoguessrcast.beans.GameMessage;
 import de.tud.kp.geoguessrcast.beans.GameProfile;
 import de.tud.kp.geoguessrcast.beans.GameSetting;
+import de.tud.kp.geoguessrcast.managers.GameManager;
 
 public class ChooseProfileFragment extends Fragment {
 
     private GameActivity mActivity;
-    private static DataCastManager sCastManager;
+    private GameManager mGameManager;
 
     private ListView mGameProfileListView;
     private GameProfileAdapter mGameProfileAdapter;
@@ -87,7 +88,7 @@ public class ChooseProfileFragment extends Fragment {
     public void onAttach(Activity activity){
         super.onAttach(activity);
         mActivity = (GameActivity)getActivity();
-        sCastManager = mActivity.getCastManager();
+        mGameManager = mActivity.getGameManager();
     }
 
     @Override
@@ -101,20 +102,11 @@ public class ChooseProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(mGameProfile==null){
-                    mActivity.startFragment(CustomizeProfileFragment.newInstance());
+                    mGameManager.startCustomizingProfile(mActivity);
                 }
                 else{
-                    //TODO: EventTransitionManager:  add SendMessage for channels. adding try catch.
-                    try {
-                        GameMessage gameMessage = new GameMessage();
-                        gameMessage.setEvent_type("setGameProfile");
-                        gameMessage.setGameProfile(mGameProfile);
-                        sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.adminChannel));
-                    }
-                    catch (Exception e){
-
-                    }
-                    mActivity.startFragment(ChooseHardnessAndCountryFragment.newInstance());
+                    mGameManager.requestSetGameProfile(mGameProfile);
+                    mGameManager.startChoosingHardness(mActivity);
                 }
             }
         });

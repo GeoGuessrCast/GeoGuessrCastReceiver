@@ -18,32 +18,23 @@ package de.tud.kp.geoguessrcast;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 //import android.support.v4.app.FragmentManager;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.cast.CastDevice;
+import com.google.android.gms.games.Game;
 import com.google.gson.Gson;
 import com.google.sample.castcompanionlibrary.cast.DataCastManager;
 import com.google.sample.castcompanionlibrary.cast.callbacks.DataCastConsumerImpl;
@@ -56,10 +47,11 @@ import de.tud.kp.geoguessrcast.fragments.ChooseHardnessAndCountryFragment;
 import de.tud.kp.geoguessrcast.fragments.ChooseModeFragment;
 import de.tud.kp.geoguessrcast.fragments.ChooseProfileFragment;
 import de.tud.kp.geoguessrcast.fragments.CustomizeProfileFragment;
-import de.tud.kp.geoguessrcast.fragments.GameMode1Fragment;
-import de.tud.kp.geoguessrcast.fragments.GameMode2Fragment;
-import de.tud.kp.geoguessrcast.fragments.GameMode3Fragment;
+import de.tud.kp.geoguessrcast.fragments.FreeChoiceModeFragment;
+import de.tud.kp.geoguessrcast.fragments.MultipleChoiceModeFragment;
+import de.tud.kp.geoguessrcast.fragments.PointingModeFragment;
 import de.tud.kp.geoguessrcast.fragments.WaitGameFragment;
+import de.tud.kp.geoguessrcast.managers.GameManager;
 import de.tud.kp.geoguessrcast.managers.ProfileBarManager;
 
 /**
@@ -83,8 +75,9 @@ public class GameActivity extends ActionBarActivity {
     private User mUser;
     private static DataCastManager sCastManager;
     private static DataCastConsumerImpl sCastManagerConsumer;
-    private Context mContext;
+    private GameActivity mContext;
 
+    private GameManager mGameManager;
     private ProfileBarManager mProfileBarMgr;
 
 
@@ -96,8 +89,8 @@ public class GameActivity extends ActionBarActivity {
         mContext = this;
 
         mUser = User.getInstance();
-        mProfileBarMgr = new ProfileBarManager(this);
 
+        mProfileBarMgr = new ProfileBarManager(this);
         mProfileBarMgr.initProfileBar();
 
         //Setup CastManager
@@ -107,29 +100,27 @@ public class GameActivity extends ActionBarActivity {
         catch (Exception e){
             Log.e(TAG, "DataCastManager Instance doesn't exist!");
         }
+
+        mGameManager = new GameManager(this);
+
+
         //set EventListener for DataCastManager
         sCastManagerConsumer = new DataCastConsumerImpl(){
             @Override
             public void onDisconnected(){
-                //TODO: GameManager - restartGame - resetAll!!!
-                User.resetInstance();
-                ((Activity)mContext).finish();
+                mGameManager.restartGame(mContext);
             }
             @Override
             public void onMessageReceived(CastDevice castDevice, String namespace, String message) {
                 if (namespace.equals(getString(R.string.adminChannel))){
                     GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
                     if(gameMessage.getEvent_type().equals("restart")){
-                        //TODO: GameManager - restartGame - resetAll!!!
-                        User.resetInstance();
-                        //TODO: GameManager-initStartPage...
-                        ((Activity)mContext).finish();
+                        mGameManager.restartGame(mContext);
                     }
                     Log.d(TAG, "onMessageReceived from AdminChannel: " + message);
                 }
                 else if (namespace.equals(getString(R.string.gameChannel))){
                     GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
-                    Log.d(TAG, "onMessageReceived from GameChannel: " + message);
                     if(gameMessage.getEvent_type().equals("startGame")){
                         if(gameMessage.isStarted()){
                             int roundNumber = gameMessage.getRoundNumber();
@@ -139,15 +130,15 @@ public class GameActivity extends ActionBarActivity {
                             mProfileBarMgr.initPointInfo();
                             if(gameMessage.isMultipleChoiceMode()){
                                 String[] choices = gameMessage.getChoices();
-                                startFragment(GameMode2Fragment.newInstance(roundNumber, timeRound, choices));
+                                mGameManager.startMultipleChoiceMode(mContext, roundNumber, timeRound, choices);
                             }
                             else if(gameMessage.isPointingMode()){
                                 double[] defaultBounds = gameMessage.getBounds();
                                 String mapType = gameMessage.getMapTypeTemplate();
-                                startFragment(GameMode3Fragment.newInstance(defaultBounds, mapType, roundNumber, timeRound));
+                                mGameManager.startPointingMode(mContext, defaultBounds, mapType, roundNumber, timeRound);
                             }
                             else{
-                                startFragment(GameMode1Fragment.newInstance(roundNumber, timeRound));
+                                mGameManager.startFreeChoiceMode(mContext, roundNumber, timeRound);
                             }
                         }
                     }
@@ -159,27 +150,15 @@ public class GameActivity extends ActionBarActivity {
                     }
                     else if(gameMessage.getEvent_type().equals("game_ended")){
                         if(gameMessage.isEnded()==true){
-                            //TODO:  EventTransitionMngr: request HighScoreList!!!
-                            try {
-                                GameMessage gameMessageToSend = new GameMessage();
-                                gameMessageToSend.setEvent_type("requestHighScoreList");
-                                sCastManager.sendDataMessage(new Gson().toJson(gameMessageToSend), getString(R.string.userChannel));
-                            }
-                            catch (Exception e) {
-                            }
 
-                            if(mUser.isAdmin()){
-                                startFragment(ChooseModeFragment.newInstance(1));
-                            }
-                            else {
-                                startFragment(new WaitGameFragment());
-                            }
+                            mGameManager.requestHighScore();
+                            mGameManager.startNewRound(mContext);
                         }
                     }
+                    Log.d(TAG, "onMessageReceived from GameChannel: " + message);
                 }
                 else if (namespace.equals(getString(R.string.userChannel))){
                     GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
-                    Log.d(TAG, "onMessageReceived from UserChannel: " + message);
                     if(gameMessage.getEvent_type().equals("answer_feedback")){
                         int pointsEarned = gameMessage.getPointsEarned();
                         mProfileBarMgr.updatePoint(pointsEarned);
@@ -188,11 +167,8 @@ public class GameActivity extends ActionBarActivity {
                         mUser.setColor(gameMessage.getUser_color());
                         if(gameMessage.isAdmin()==true){
                             //TODO: admin setup ()...
-                            mUser.setAdmin(true);
-                            GameSetting gameSetting = GameSetting.getInstance();
-                            gameSetting.setGameModes(gameMessage.getGameModes());
-                            gameSetting.setGameProfiles(gameMessage.getGameProfiles());
-                            gameSetting.setCountries(gameMessage.getCountries());
+                            mGameManager.setupAdmin(gameMessage.getGameModes(), gameMessage.getGameProfiles(), gameMessage.getCountries());
+                            Log.d("Color 4"+TAG, mUser.getColor());
                             mOptionMenu.setGroupVisible(R.id.adminMenu, true);
                             if(getCurrentFragment() instanceof WaitGameFragment){
                                 startFragment(ChooseModeFragment.newInstance(0));
@@ -201,15 +177,7 @@ public class GameActivity extends ActionBarActivity {
                     }
                     else if(gameMessage.getEvent_type().equals("returnHighScoreList")){
                         //TODO: aufräumen
-/*                        View view = getLayoutInflater().inflate(R.layout.highscore_listview, null);
-                        ListView highscoreListView =  (ListView)view.findViewById(R.id.highscore_entry);
-                        highscoreListView.setAdapter(new HighscoreListAdapter(gameMessage.getHighScoreList(), mContext));
-                        MaterialDialog highscoreDialog = new MaterialDialog.Builder(mContext)
-                                .title(R.string.high_score)
-                                .customView(view, false)
-                                .build();
-                        highscoreDialog.setCanceledOnTouchOutside(false);
-                        highscoreDialog.show();*/
+
 
                         View view = getLayoutInflater().inflate(R.layout.highscore_listview, null);
                         TabHost highscoreTabs =  (TabHost)view.findViewById(R.id.highscore_tabhost);
@@ -247,11 +215,12 @@ public class GameActivity extends ActionBarActivity {
                         highscoreDialog.setCanceledOnTouchOutside(false);
                         highscoreDialog.show();
                     }
-
+                    Log.d(TAG, "onMessageReceived from UserChannel: " + message);
                 }
                 else{
                     return;
                 }
+
             }
         };
 
@@ -259,12 +228,7 @@ public class GameActivity extends ActionBarActivity {
         sCastManager.addDataCastConsumer(sCastManagerConsumer);
 
         //Start Game
-        if(mUser.isAdmin()){
-            startFragment(ChooseModeFragment.newInstance(0));
-        }
-        else{
-            startFragment(new WaitGameFragment());
-        }
+        mGameManager.startGame(mContext);
 
         //If the startGame Event already received in WelcomeActivity, but the Listeners for events are not registered...
         //then the latejoined User will not join the game...
@@ -279,15 +243,15 @@ public class GameActivity extends ActionBarActivity {
             mProfileBarMgr.initPointInfo();
             if(persistedStartGameMsg.isMultipleChoiceMode){
                 String[] choices = persistedStartGameMsg.choices;
-                startFragment(GameMode2Fragment.newInstance(roundNumber, timeRound, choices));
+                mGameManager.startMultipleChoiceMode(mContext, roundNumber, timeRound, choices);
             }
             else if(persistedStartGameMsg.isPointingMode){
                 double[] defaultBounds = persistedStartGameMsg.defaultBounds;
                 String mapType = persistedStartGameMsg.mapType;
-                startFragment(GameMode3Fragment.newInstance(defaultBounds, mapType, roundNumber, timeRound));
+                mGameManager.startPointingMode(mContext, defaultBounds, mapType, roundNumber, timeRound);
             }
             else{
-                startFragment(GameMode1Fragment.newInstance(roundNumber, timeRound));
+                mGameManager.startFreeChoiceMode(mContext, roundNumber, timeRound);
             }
         }
 
@@ -368,52 +332,22 @@ public class GameActivity extends ActionBarActivity {
                 return true;
 
             case R.id.request_high_score_list:
-                //TODO:  EventTransitionMngr: request HighScoreList!!!
-                try {
-                    GameMessage gameMessage = new GameMessage();
-                    gameMessage.setEvent_type("requestHighScoreList");
-                    sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.userChannel));
-                }
-                catch (Exception e) {
-                }
+                mGameManager.requestHighScore();
                 return true;
             case R.id.toggleConsole:
                 if(mUser.isAdmin()){
                     if (!item.isChecked()) {
                         item.setChecked(true);
-                        //TODO use the Class/Object to send the json string!!!
-                        //TODO SendDataMessageToAdminChannel!
-                        try{
-                            sCastManager.sendDataMessage("{\"event_type\": \"hideConsole\", \"hide\": false }", getString(R.string.adminChannel));
-                        }
-                        catch (Exception e){
-                            Log.d(TAG, "Send Message to AdminChannel failed");
-                        }
+                        mGameManager.requestHideConsole(false);
                     }
                     else{
                         item.setChecked(false);
-
-                        //TODO use the Class/Object to send the json string!!!
-                        //TODO SendDataMessageToAdminChannel!
-                        try{
-                            sCastManager.sendDataMessage("{\"event_type\": \"hideConsole\", \"hide\": true }", getString(R.string.adminChannel));
-                        }
-                        catch (Exception e){
-                            Log.d(TAG, "Send Message to AdminChannel failed");
-                        }
-
+                        mGameManager.requestHideConsole(true);
                     }
                 }
                 return true;
             case R.id.restartApp:
-                //TODO use the Class/Object to send the json string!!!
-                //TODO SendDataMessageToAdminChannel!
-                try{
-                    sCastManager.sendDataMessage("{\"event_type\": \"restart\"}", getString(R.string.adminChannel));
-                }
-                catch (Exception e){
-                    Log.d(TAG, "Send Message to AdminChannel failed");
-                }
+                mGameManager.requestRestart();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -436,7 +370,7 @@ public class GameActivity extends ActionBarActivity {
                     .replace(R.id.main_page_container, fragment)
 //                .addToBackStack(null)
 //                .commit();
-                            //instead of commit for avoiding the "after onSaveInstanceState" problem
+                    //instead of commit for avoiding the "after onSaveInstanceState" problem
                     .commitAllowingStateLoss();
         }
     }
@@ -455,6 +389,13 @@ public class GameActivity extends ActionBarActivity {
             throw new IllegalStateException("Application has not been started");
         }
         return sCastManager;
+    }
+
+    public GameManager getGameManager() {
+        if (mGameManager == null) {
+            throw new IllegalStateException("Application has not been started");
+        }
+        return mGameManager;
     }
 
 

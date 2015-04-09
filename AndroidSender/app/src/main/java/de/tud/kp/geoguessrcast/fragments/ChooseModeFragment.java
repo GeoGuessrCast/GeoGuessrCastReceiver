@@ -37,11 +37,12 @@ import de.tud.kp.geoguessrcast.beans.GameMode;
 import de.tud.kp.geoguessrcast.beans.GameProfile;
 import de.tud.kp.geoguessrcast.beans.GameSetting;
 import de.tud.kp.geoguessrcast.beans.User;
+import de.tud.kp.geoguessrcast.managers.GameManager;
 
 public class ChooseModeFragment extends Fragment {
 
     private GameActivity mActivity;
-    private static DataCastManager sCastManager;
+    private GameManager mGameManager;
     private ListView mGameModeListView;
     private GameModeAdapter mGameModeAdapter;
 
@@ -81,7 +82,7 @@ public class ChooseModeFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         mActivity = (GameActivity)getActivity();
-        sCastManager = mActivity.getCastManager();
+        mGameManager = mActivity.getGameManager();
         if(mStartMode==0){
             MaterialDialog tipDialog = new MaterialDialog.Builder(mActivity)
                     .title(R.string.tip)
@@ -109,35 +110,8 @@ public class ChooseModeFragment extends Fragment {
         showHighScoreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    GameMessage gameMessage = new GameMessage();
-                    gameMessage.setEvent_type("loadHighScore");
-                    sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.adminChannel));
-
-                    MaterialDialog highScoreTipDialog = new MaterialDialog.Builder(mActivity)
-                            .title(R.string.tip)
-                            .content(R.string.high_score_tip)
-                            .positiveText(R.string.back_to_menu)
-                            .callback(new MaterialDialog.ButtonCallback() {
-                                @Override
-                                public void onPositive(MaterialDialog dialog) {
-                                    super.onPositive(dialog);
-                                    try {
-                                        GameMessage gameMessage = new GameMessage();
-                                        gameMessage.setEvent_type("loadMainMenu");
-                                        sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.adminChannel));
-                                    }
-                                    catch (Exception e) {
-                                    }
-                                }
-                            })
-                            .show();
-                    highScoreTipDialog.setCanceledOnTouchOutside(false);
-                    highScoreTipDialog.setCancelable(false);
-
-                }
-                catch (Exception e) {
-                }
+                mGameManager.requestLoadHighScore();
+                showHighScoreDialog();
             }
         });
 
@@ -146,19 +120,10 @@ public class ChooseModeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(mGameMode != null){
-                    //TODO: EventTransitionManager:  add SendMessage for channels. adding try catch.
-                    try {
-                        GameMessage gameMessage = new GameMessage();
-                        gameMessage.setEvent_type("setGameMode");
-                        gameMessage.setGameMode(mGameMode);
-                        sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.adminChannel));
-
-                        //persist the gameMode
-                        GameSetting.getInstance().setSelectedGameMode(mGameMode);
-
-                    } catch (Exception e) {
-                    }
-                    mActivity.startFragment(new ChooseProfileFragment());
+                    mGameManager.requestSetGameMode(mGameMode);
+                    //persist the gameMode
+                    GameSetting.getInstance().setSelectedGameMode(mGameMode);
+                    mGameManager.startChoosingProfile(mActivity);
                 }
             }
         });
@@ -192,6 +157,23 @@ public class ChooseModeFragment extends Fragment {
     }
 
 
+    private void showHighScoreDialog (){
+        MaterialDialog highScoreTipDialog = new MaterialDialog.Builder(mActivity)
+                .title(R.string.tip)
+                .content(R.string.high_score_tip)
+                .positiveText(R.string.back_to_menu)
+                .callback(new MaterialDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(MaterialDialog dialog) {
+                        super.onPositive(dialog);
+                        mGameManager.requestLoadMainMenu();
+                    }
+                })
+                .show();
+        highScoreTipDialog.setCanceledOnTouchOutside(false);
+        highScoreTipDialog.setCancelable(false);
+
+    }
 
     private void showChooseModeBtn(){
         if(chooseModeBtn.getVisibility()==View.INVISIBLE || chooseModeBtn.getVisibility()==View.GONE){

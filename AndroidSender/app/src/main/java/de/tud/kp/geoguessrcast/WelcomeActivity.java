@@ -31,6 +31,7 @@ import com.google.sample.castcompanionlibrary.cast.callbacks.DataCastConsumerImp
 import de.tud.kp.geoguessrcast.beans.GameMessage;
 import de.tud.kp.geoguessrcast.beans.GameSetting;
 import de.tud.kp.geoguessrcast.beans.User;
+import de.tud.kp.geoguessrcast.managers.GameManager;
 import de.tud.kp.geoguessrcast.utilities.DeviceInfo;
 import de.tud.kp.geoguessrcast.utilities.Utility;
 
@@ -39,13 +40,12 @@ public class WelcomeActivity extends ActionBarActivity {
 
     public static final String TAG = WelcomeActivity.class.getSimpleName();
     private static DataCastManager sCastManager;
+    private GameManager mGameManager;
     private static DataCastConsumerImpl sCastManagerConsumer;
     private Context mContext;
     private User mUser;
     public static final String GAME_PREFS = "GamePreference";
     private static final String USER_NAME_STORED = "UserNameStored";
-    private static final long RECONNECT_TIMEOUT = 10;
-    private Thread mConnectionCheckThread;
 
     EditText usernameEditText;
     FloatingActionButton startGameBtn;
@@ -61,6 +61,7 @@ public class WelcomeActivity extends ActionBarActivity {
         SharedPreferences settings = getSharedPreferences(GAME_PREFS, MODE_PRIVATE);
 
         initializeCastManager();
+        mGameManager = new GameManager(this);
 
         final MediaRouteButton mediaRouteButton = (MediaRouteButton) findViewById(R.id.media_route_button);
         sCastManager.addMediaRouterButton(mediaRouteButton);
@@ -105,18 +106,11 @@ public class WelcomeActivity extends ActionBarActivity {
                         mediaRouteButton.performClick();
                     }
                     else{
-                        //TODO: GameManager - StartGame
-                        try {
-                            String userName = usernameEditText.getText().toString();
-                            String userMac = DeviceInfo.getDeviceMacAddr(mContext);
-                            mUser = User.getInstance();
-                            mUser.setUserName(userName);
-                            mUser.setUserMac(userMac);
-                            storeUsername(userName);
-                            sCastManager.sendDataMessage(mUser.toJSONString(), getString(R.string.userChannel));
-                        } catch (Exception e) {
-                            Log.e("Error", "Exception while sending message", e);
-                        }
+                        String userName = usernameEditText.getText().toString();
+                        String userMac = DeviceInfo.getDeviceMacAddr(mContext);
+                        mGameManager.setupUserInfo(userName, userMac);
+                        storeUsername(userName);
+                        mGameManager.requestCreateUser();
                     }
                 }
 
@@ -140,18 +134,11 @@ public class WelcomeActivity extends ActionBarActivity {
 
                 updateStartBtn();
 
-                //TODO: GameManager - StartGame
-                try {
-                    String userName = usernameEditText.getText().toString();
-                    String userMac = DeviceInfo.getDeviceMacAddr(mContext);
-                    mUser = User.getInstance();
-                    mUser.setUserName(userName);
-                    mUser.setUserMac(userMac);
-                    storeUsername(userName);
-                    sCastManager.sendDataMessage(mUser.toJSONString(), getString(R.string.userChannel));
-                } catch (Exception e) {
-                    Log.e("Error", "Exception while sending message", e);
-                }
+                String userName = usernameEditText.getText().toString();
+                String userMac = DeviceInfo.getDeviceMacAddr(mContext);
+                mGameManager.setupUserInfo(userName, userMac);
+                storeUsername(userName);
+                mGameManager.requestCreateUser();
             }
             @Override
             public boolean onApplicationConnectionFailed(int errorCode){
@@ -174,18 +161,14 @@ public class WelcomeActivity extends ActionBarActivity {
                 GameMessage gameMessage = new Gson().fromJson(message, GameMessage.class);
                 if (namespace.equals(getString(R.string.userChannel))){
                     if(gameMessage.getEvent_type().equals("isAdmin")){
-                        mUser.setColor(gameMessage.getUser_color());
+                        User.getInstance().setColor(gameMessage.getUser_color());
                         if(gameMessage.isAdmin()==true){
-                            mUser.setAdmin(true);
-                            GameSetting gameSetting = GameSetting.getInstance();
-                            gameSetting.setGameModes(gameMessage.getGameModes());
-                            gameSetting.setGameProfiles(gameMessage.getGameProfiles());
-                            gameSetting.setCountries(gameMessage.getCountries());
+                            mGameManager.setupAdmin(gameMessage.getGameModes(), gameMessage.getGameProfiles(), gameMessage.getCountries());
                             Intent intent = new Intent(WelcomeActivity.this, GameActivity.class);
                             startActivity(intent);
                         }
                         else{
-                            mUser.setAdmin(false);
+                            mGameManager.setAdmin(false);
                             Intent intent = new Intent(WelcomeActivity.this, GameActivity.class);
                             startActivity(intent);
                         }
@@ -306,11 +289,6 @@ public class WelcomeActivity extends ActionBarActivity {
     @Override
     public void onStop(){
         super.onStop();
-
-        if(mConnectionCheckThread!=null){
-            mConnectionCheckThread.interrupt();
-            mConnectionCheckThread=null;
-        }
     }
 
     private void updateStartBtn(){

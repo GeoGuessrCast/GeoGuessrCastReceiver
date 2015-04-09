@@ -19,13 +19,13 @@ import android.widget.TextView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.sample.castcompanionlibrary.cast.DataCastManager;
-import com.google.sample.castcompanionlibrary.cast.callbacks.DataCastConsumerImpl;
 
 import de.tud.kp.geoguessrcast.GameActivity;
 import de.tud.kp.geoguessrcast.R;
 import de.tud.kp.geoguessrcast.adapters.CityChoiceAdapter;
 import de.tud.kp.geoguessrcast.beans.GameMessage;
 import de.tud.kp.geoguessrcast.beans.User;
+import de.tud.kp.geoguessrcast.managers.GameManager;
 import de.tud.kp.geoguessrcast.utilities.TimerWithVibration;
 
 /**
@@ -38,7 +38,7 @@ import de.tud.kp.geoguessrcast.utilities.TimerWithVibration;
  * interface.
  */
 
-public class GameMode2Fragment extends Fragment  {
+public class MultipleChoiceModeFragment extends Fragment  {
 
     private static final String ROUND_NUMBER = "currentRound";
     private static final String TIME_ROUND = "timeRound";
@@ -52,11 +52,10 @@ public class GameMode2Fragment extends Fragment  {
     private TimerWithVibration mTimer;
     private FloatingActionButton confirmBtn;
     private String mAnswer;
-    private static DataCastManager sCastManager;
+    private GameManager mGameManager;
 
-    // TODO: Rename and change types of parameters
-    public static GameMode2Fragment newInstance(int roundNumber, int timeRound, String[] choices) {
-        GameMode2Fragment fragment = new GameMode2Fragment();
+    public static MultipleChoiceModeFragment newInstance(int roundNumber, int timeRound, String[] choices) {
+        MultipleChoiceModeFragment fragment = new MultipleChoiceModeFragment();
         Bundle args = new Bundle();
         args.putInt(ROUND_NUMBER, roundNumber);
         args.putInt(TIME_ROUND, timeRound);
@@ -89,16 +88,8 @@ public class GameMode2Fragment extends Fragment  {
             @Override
             public void onClick(View v) {
                 if(mAnswer!=null){
-                    try {
-                        GameMessage gameMessage = new GameMessage();
-                        gameMessage.setEvent_type("gameRound_answerChosen");
-                        gameMessage.setAnswer(mAnswer);
-                        gameMessage.setUserMac(User.getInstance().getUserMac());
-                        sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.userChannel));
-                    }
-                    catch (Exception e) {
-                    }
-                    mActivity.startFragment(new WaitRoundFragment());
+                    mGameManager.requestAnswerChosen(mAnswer);
+                    mGameManager.startWaitingRound(mActivity);
                 }
 
             }
@@ -130,7 +121,7 @@ public class GameMode2Fragment extends Fragment  {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mActivity = (GameActivity) getActivity();
-        sCastManager = mActivity.getCastManager();
+        mGameManager = mActivity.getGameManager();
 
         final ProgressBar countDownProgressBar = (ProgressBar) mActivity.findViewById(R.id.countDownProgressBar);
         final TextView countDownTimeTextView = (TextView) mActivity.findViewById(R.id.countDownTime);
@@ -144,7 +135,7 @@ public class GameMode2Fragment extends Fragment  {
             }
             @Override
             public void onTimerFinish() {
-                mActivity.startFragment(new WaitRoundFragment());
+                mGameManager.startWaitingRound(mActivity);
             }
         };
         mTimer.start();

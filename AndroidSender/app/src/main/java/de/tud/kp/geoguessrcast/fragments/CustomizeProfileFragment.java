@@ -34,7 +34,7 @@ import de.tud.kp.geoguessrcast.beans.GameMessage;
 import de.tud.kp.geoguessrcast.beans.GameProfile;
 import de.tud.kp.geoguessrcast.beans.GameSetting;
 import de.tud.kp.geoguessrcast.beans.MapOption;
-
+import de.tud.kp.geoguessrcast.managers.GameManager;
 
 
 public class CustomizeProfileFragment extends Fragment {
@@ -42,7 +42,8 @@ public class CustomizeProfileFragment extends Fragment {
 
 
     private GameActivity mActivity;
-    private static DataCastManager sCastManager;
+    private GameManager mGameManager;
+
 
     public static CustomizeProfileFragment newInstance() {
         CustomizeProfileFragment fragment = new CustomizeProfileFragment();
@@ -70,7 +71,8 @@ public class CustomizeProfileFragment extends Fragment {
 
         super.onActivityCreated(savedInstanceState);
         mActivity = (GameActivity) getActivity();
-        sCastManager = mActivity.getCastManager();
+        mGameManager = mActivity.getGameManager();
+
         final GameProfile gameProfile = new GameProfile();
 
         final TextView limitedCountry = (TextView) mActivity.findViewById(R.id.limited_country);
@@ -191,18 +193,8 @@ public class CustomizeProfileFragment extends Fragment {
 
                 gameProfile.setMapOption(mapOption);
 
-                //TODO: EventTransitionManager:  add SendMessage for channels. adding try catch.
-                try {
-                    GameMessage gameMessage = new GameMessage();
-                    gameMessage.setEvent_type("setGameProfile");
-                    gameMessage.setGameProfile(gameProfile);
-                    Log.d("test", new Gson().toJson(gameMessage));
-                    sCastManager.sendDataMessage(new Gson().toJson(gameMessage), getString(R.string.adminChannel));
-                }
-                catch (Exception e){
-
-                }
-                mActivity.startFragment(new WaitGameFragment());
+                mGameManager.requestSetGameProfile(gameProfile);
+                mGameManager.startWaitingGame(mActivity);
 
 
             }

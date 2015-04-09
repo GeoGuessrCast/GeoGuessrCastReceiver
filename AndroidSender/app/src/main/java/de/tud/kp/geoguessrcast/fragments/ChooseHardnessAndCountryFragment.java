@@ -38,6 +38,7 @@ import de.tud.kp.geoguessrcast.beans.GameMessage;
 import de.tud.kp.geoguessrcast.beans.GameMode;
 import de.tud.kp.geoguessrcast.beans.GameSetting;
 import de.tud.kp.geoguessrcast.beans.User;
+import de.tud.kp.geoguessrcast.managers.GameManager;
 
 public class ChooseHardnessAndCountryFragment extends Fragment {
 
@@ -73,9 +74,9 @@ public class ChooseHardnessAndCountryFragment extends Fragment {
 
 
     private GameActivity mActivity;
-    private static DataCastManager sCastManager;
     private DiscreteSeekBar mGameHardnessSeekBar;
     private String mSelectedCountry;
+    private GameManager mGameManager;
 
     private FloatingActionButton chooseModeBtn;
 
@@ -100,7 +101,7 @@ public class ChooseHardnessAndCountryFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         mActivity = (GameActivity)getActivity();
-        sCastManager = mActivity.getCastManager();
+        mGameManager = mActivity.getGameManager();
     }
 
     @Override
@@ -133,7 +134,6 @@ public class ChooseHardnessAndCountryFragment extends Fragment {
                     }
                 });
 
-                //TODO: picer dismissed when click back button, but the switcher is not notified... must implement a interface in onCancle
             }
         });
 
@@ -142,17 +142,9 @@ public class ChooseHardnessAndCountryFragment extends Fragment {
         chooseModeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    //TODO: EventTransitionManager:  add SendMessage for channels. adding try catch.
-                    try {
-                        //TODO set hardness
-                        GameMessage gameMessage2 = new GameMessage();
-                        gameMessage2.setEvent_type("setHardness");
-                        gameMessage2.setHardness(transformHardness(mGameHardnessSeekBar.getProgress()));
-                        gameMessage2.setCountryCode(mSelectedCountry);
-                        sCastManager.sendDataMessage(new Gson().toJson(gameMessage2), getString(R.string.adminChannel));
-                    } catch (Exception e) {
-                    }
-                    mActivity.startFragment(new WaitGameFragment());
+                double hardness = transformHardness(mGameHardnessSeekBar.getProgress());
+                mGameManager.requestSetHardness(hardness, mSelectedCountry);
+                mGameManager.startWaitingGame(mActivity);
                 }
 
         });

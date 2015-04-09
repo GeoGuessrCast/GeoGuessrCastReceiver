@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="google_map_key">Apply your Google Map Key Here</string>
+    <!--<string name="google_map_key">Apply your Google Map Key Here</string>-->
+    <string name="google_map_key">AIzaSyBxL29FEADNDxv_nMLkrGmTr_aNmnpcwAA</string>
 </resources>

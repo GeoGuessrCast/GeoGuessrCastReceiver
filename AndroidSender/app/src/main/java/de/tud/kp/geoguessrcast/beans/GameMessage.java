@@ -35,6 +35,7 @@ public class GameMessage {
     String mapTypeTemplate;
     double hardness;
     String countryCode;
+    boolean hide;
 
 
 
@@ -300,5 +301,13 @@ public class GameMessage {
 
     public void setCountries(Country[] countries) {
         this.countries = countries;
+    }
+
+    public boolean isHide() {
+        return hide;
+    }
+
+    public void setHide(boolean hide) {
+        this.hide = hide;
     }
 }

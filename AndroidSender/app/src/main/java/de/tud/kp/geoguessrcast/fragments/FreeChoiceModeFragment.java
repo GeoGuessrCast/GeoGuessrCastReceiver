@@ -15,6 +15,7 @@ import android.widget.TextView;
 import de.tud.kp.geoguessrcast.GameActivity;
 import de.tud.kp.geoguessrcast.R;
 import de.tud.kp.geoguessrcast.beans.User;
+import de.tud.kp.geoguessrcast.managers.GameManager;
 import de.tud.kp.geoguessrcast.utilities.TimerWithVibration;
 import de.tud.kp.geoguessrcast.utilities.Utility;
 
@@ -22,7 +23,9 @@ import de.tud.kp.geoguessrcast.utilities.Utility;
  * Created by Kaijun on 11/12/14.
  */
 
-public class GameMode1Fragment extends Fragment {
+public class FreeChoiceModeFragment extends Fragment {
+
+    private GameManager mGameManager;
 
     static String CURRENT_ROUND = "currentRound";
     static String TIME_ROUND = "timeRound";
@@ -33,7 +36,7 @@ public class GameMode1Fragment extends Fragment {
     int currentRound;
     int timeRound;
 
-    public GameMode1Fragment() {
+    public FreeChoiceModeFragment() {
         this.isAnswerSendet = false;
     }
 
@@ -54,6 +57,7 @@ public class GameMode1Fragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         mActivity = (GameActivity)getActivity();
+        mGameManager = mActivity.getGameManager();
 
         final EditText cityNameEditText = (EditText) mActivity.findViewById(R.id.cityNameEditText);
         final Button sendCityNameBtn = (Button) mActivity.findViewById(R.id.sendCityName);
@@ -65,9 +69,9 @@ public class GameMode1Fragment extends Fragment {
                 Utility.hideSoftKeyboard(mActivity);
                 String answer = cityNameEditText.getText().toString();
                 if(!answer.isEmpty()){
-                    sendAnswer(answer);
+                    mGameManager.requestAnswerChosen(answer);
                     isAnswerSendet = true;
-                    mActivity.startFragment(new WaitRoundFragment());
+                    mGameManager.startWaitingRound(mActivity);
                 }
             }
         });
@@ -94,8 +98,9 @@ public class GameMode1Fragment extends Fragment {
             @Override
             public void onTimerFinish() {
                 if(!isAnswerSendet){
-                    sendAnswer(cityNameEditText.getText().toString());
-                    mActivity.startFragment(new WaitRoundFragment());
+                    String answer = cityNameEditText.getText().toString();
+                    mGameManager.requestAnswerChosen(answer);
+                    mGameManager.startWaitingRound(mActivity);
                 }
             }
         };
@@ -129,22 +134,9 @@ public class GameMode1Fragment extends Fragment {
         }
     }
 
-    //TODO: EventTransitionManager - send ansewer!
-    private void sendAnswer(String answer){
-        if(!answer.isEmpty()){
-            String cityNameJSON = "{\"event_type\":\"gameRound_answerChosen\" , \"answer\":" + "\"" + answer +  "\""+ ", \"userMac\":\"" + User.getInstance().getUserMac() + "\"}";
-            //TODO: add SendMessage for channels. adding try catch.
-            try {
-                mActivity.getCastManager().sendDataMessage(cityNameJSON, getString(R.string.userChannel));
-            }
-            catch (Exception e){
-
-            }
-        }
-    }
-    public static final GameMode1Fragment newInstance(int currentRound, int timeRound)
+    public static final FreeChoiceModeFragment newInstance(int currentRound, int timeRound)
     {
-        GameMode1Fragment f = new GameMode1Fragment();
+        FreeChoiceModeFragment f = new FreeChoiceModeFragment();
         Bundle bdl = new Bundle(2);
         bdl.putInt(CURRENT_ROUND, currentRound);
         bdl.putInt(TIME_ROUND, timeRound);
