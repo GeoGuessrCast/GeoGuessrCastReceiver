@@ -73,7 +73,7 @@ Data Sources:
 The app
 -------
 - Managers:
-  * `EventRequestManager`: provided methods for all requests of ChromeCast events.
+  * `EventRequestManager`: provided methods for all requests of ChromeCast events. (it was designed as an adapter for different request methods of different cast devices produced by different vendors. )
   * `GameManager`: has delegation of EventRequestManager and Activity, handles the main logic of the game behaviours.
   * `ProfileBarManager`: handles the initialisation and updating of profile bar at bottom of screen.
 - Activities:
